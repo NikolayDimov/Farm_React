@@ -1,9 +1,16 @@
 import { ReactNode } from "react";
 
 export interface User {
-    id: string;
-    username: string;
     access_token: string;
+    id: string;
+    email: string;
+    role: string;
+}
+
+export interface JwtPayload {
+    sub: string;
+    email: string;
+    role: string;
 }
 
 export interface AuthContextType {

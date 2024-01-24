@@ -143,75 +143,75 @@ function Register() {
         setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
     };
 
-    // const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-
-    //     try {
-    //         let isEmailValid = validateEmail(values.email);
-    //         let isPasswordValid = validatePassword(values.password);
-    //         let isConfirmPasswordValid = validateConfirmPassword(values.confirmPassword, values.password);
-
-    //         if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-    //             console.log(`email: ${values.email}`);
-    //             console.log(`password: ${values.password}`);
-    //             console.log(`confirmPass: ${values.confirmPassword}`);
-    //         } else {
-    //             await register(values.email, values.password);
-    //             console.log('Register successful.');
-    //         }
-    //     } catch (error: any) {
-    //         console.error('Registration error:', error);
-    //         console.error('Registration error message:', error.message);
-    //     }
-    // };
-
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-    
-      try {
-        const isEmailValid = validateEmail(values.email);
-        const isPasswordValid = validatePassword(values.password);
-        const isConfirmPasswordValid = validateConfirmPassword(
-          values.confirmPassword,
-          values.password
-        );
-    
-        if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-          console.log(`email: ${values.email}`);
-          console.log(`password: ${values.password}`);
-          console.log(`confirmPass: ${values.confirmPassword}`);
-        } else {
-          const response = await fetch(`${BASE_URL}/auth/register`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-              email: values.email,
-              password: values.password,
-            }),
-          });
+        e.preventDefault();
 
-          console.log('response', response)
-    
-          if (!response.ok) {
-            const errorData: ErrorResponseType = await response.json();
-            throw { error: errorData.message || "Registration failed" };
+        try {
+            let isEmailValid = validateEmail(values.email);
+            let isPasswordValid = validatePassword(values.password);
+            let isConfirmPasswordValid = validateConfirmPassword(values.confirmPassword, values.password);
+
+            if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
+                console.log(`email: ${values.email}`);
+                console.log(`password: ${values.password}`);
+                console.log(`confirmPass: ${values.confirmPassword}`);
+            } else {
+                await register(values.email, values.password);
+                console.log('Register successful.');
+            }
+        } catch (error: any) {
+            console.error('Registration error:', error);
+            console.error('Registration error message:', error.message);
         }
+    };
+
+    // const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    //   e.preventDefault();
+    
+    //   try {
+    //     const isEmailValid = validateEmail(values.email);
+    //     const isPasswordValid = validatePassword(values.password);
+    //     const isConfirmPasswordValid = validateConfirmPassword(
+    //       values.confirmPassword,
+    //       values.password
+    //     );
+    
+    //     if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
+    //       console.log(`email: ${values.email}`);
+    //       console.log(`password: ${values.password}`);
+    //       console.log(`confirmPass: ${values.confirmPassword}`);
+    //     } else {
+    //       const response = await fetch(`${BASE_URL}/auth/register`, {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         credentials: 'include',
+    //         body: JSON.stringify({
+    //           email: values.email,
+    //           password: values.password,
+    //         }),
+    //       });
+
+    //       console.log('response', response)
+    
+    //       if (!response.ok) {
+    //         const errorData: ErrorResponseType = await response.json();
+    //         throw { error: errorData.message || "Registration failed" };
+    //     }
         
     
-          // Registration successful, you can handle it accordingly
-          console.log("Registration successful.");
-        }
-      } catch (error: any) {
-        console.error("Registration error:", error);
-        console.error("Registration error message:", error.message);
-      }
+    //       // Registration successful, you can handle it accordingly
+    //       console.log("Registration successful.");
+    //     }
+    //   } catch (error: any) {
+    //     console.error("Registration error:", error);
+    //     console.error("Registration error message:", error.message);
+    //   }
 
-      console.error("email", values.email);
-      console.error("pass", values.password);
-    };
+    //   console.error("email", values.email);
+    //   console.error("pass", values.password);
+    // };
     
 
 

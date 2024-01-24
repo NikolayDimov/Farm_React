@@ -1,9 +1,11 @@
-import { SignInDto } from "../types/types";
+import { SignInDto, User } from "../types/types";
 import authHeader from "./authHeader";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from "../types/types";
 
 const BASE_URL = "http://localhost:3000";
 
-export const loginUser = async (signInDto: SignInDto) => {
+export const loginUser = async (signInDto: SignInDto): Promise<User> => {
     try {
         const authHeaders = authHeader();
         const headers: Record<string, string> = {
@@ -14,6 +16,7 @@ export const loginUser = async (signInDto: SignInDto) => {
         const response = await fetch(`${BASE_URL}/auth/login`, {
             method: "POST",
             headers,
+            credentials: "include",
             body: JSON.stringify(signInDto),
         });
 
@@ -22,35 +25,62 @@ export const loginUser = async (signInDto: SignInDto) => {
             throw new Error(`Login failed: ${errorMessage}`);
         }
 
-        const userData = await response.json();
-        return {
-            id: userData.id,
-            userEmail: userData.email,
-            access_token: userData.access_token,
+        const { access_token } = await response.json();
+        const decodedToken: JwtPayload = jwtDecode(access_token);
+
+        const userFromToken: User = {
+            access_token,
+            id: decodedToken.sub,
+            email: decodedToken.email,
+            role: decodedToken.role,
         };
+
+        localStorage.setItem("user", JSON.stringify(userFromToken));
+        return userFromToken;
     } catch (error) {
         console.error("Login error:", error);
         throw error;
     }
 };
 
-// Similar modifications for registerUser, logoutUser, and checkUser functions
-
-export const registerUser = async (email: string, password: string) => {
-    const response = await fetch(`${BASE_URL}/auth/register`, {
-        method: "POST",
-        headers: {
+export const registerUser = async (signInDto: SignInDto): Promise<User> => {
+    try {
+        const authHeaders = authHeader();
+        const headers: Record<string, string> = {
             "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-    });
+            ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+        };
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
+        const response = await fetch(`${BASE_URL}/auth/register`, {
+            method: "POST",
+            headers,
+            credentials: "include",
+            body: JSON.stringify(signInDto),
+        });
+
+        console.log("Registration API response:", response);
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Registration failed");
+        }
+
+        const { access_token } = await response.json();
+        const decodedToken: JwtPayload = jwtDecode(access_token);
+
+        const userFromToken: User = {
+            access_token,
+            id: decodedToken.sub,
+            email: decodedToken.email,
+            role: decodedToken.role,
+        };
+
+        localStorage.setItem("user", JSON.stringify(userFromToken));
+        return userFromToken;
+    } catch (error) {
+        console.error("Registration error:", error);
+        throw error;
     }
-
-    return response.json();
 };
 
 export const logoutUser = async () => {
@@ -58,7 +88,6 @@ export const logoutUser = async () => {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            // Include any necessary authentication headers here
         },
     });
 
@@ -75,7 +104,6 @@ export const checkUser = async () => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            // Include any necessary authentication headers here
         },
     });
 
