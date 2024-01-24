@@ -3,15 +3,10 @@ import { useAuth } from "../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { createGlobalStyle } from 'styled-components';
 import loginImage from "../../../public/360_F_502186443_Kubg3Wl76uE8BYl1tcAuYYXgGKAaO6r4.jpg"; 
+import Layout from "../common/Layout";
 
-const GlobalStyles = createGlobalStyle`
-  body {
-    display: block;
-    margin: 0;
-  }
-`;
+
 
 const Container = styled.div`
   display: flex;
@@ -67,6 +62,7 @@ const StyledInput = styled.input`
   margin-top: 5px;
   background-color: white;
   border-radius: 5px;
+  color: black;
 `;
 
 const StyledButton = styled.button`
@@ -133,6 +129,9 @@ function Login() {
       const isEmailValid = validateEmail(values.email);
       const isPasswordValid = validatePassword(values.password);
 
+      // Ensure the state is updated before checking validation
+    setValues((prevValues) => ({ ...prevValues, email: values.email, password: values.password }));
+
       if (!isEmailValid || !isPasswordValid) {
         console.log(`email: ${values.email}`);
         console.log(`password: ${values.password}`);
@@ -152,7 +151,7 @@ function Login() {
 
   return (
     <>
-    <GlobalStyles />
+    <Layout>
     <Container>
       <LeftPanel>
       <Logo>Farm BG</Logo>
@@ -206,6 +205,7 @@ function Login() {
       </LeftPanel>
       <RightPanel />
     </Container>
+    </Layout>
     </>
   );
 }

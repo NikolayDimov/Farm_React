@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Layout from '../../common/Layout';
 
 const Container = styled.div`
   background-color: #f8f9fa;
@@ -71,6 +72,8 @@ const SubmitButton = styled.button`
 const ContactInfo = styled.div`
   margin-top: 20px;
   text-align: center;
+  margin: 0 auto;
+  
 `;
 
 const Address = styled.p`
@@ -88,11 +91,12 @@ const PhoneNumber = styled.p`
 `;
 
 const GoogleMap = styled.iframe`
-  width: 100%; // Set back to 100%
+  width: 200%; 
   height: 500px;
   border: none;
   border-radius: 5px;
   margin: 20px 0;
+  
 `;
 
 
@@ -115,6 +119,9 @@ const ContainerText = styled.div`
 
 const Contact = () => {
   return (
+    <>
+    <Layout>
+
     <Container>
       <ContentWrapper>
         <Title>Contact Us</Title>
@@ -153,6 +160,9 @@ const Contact = () => {
         </AdditionalText>
       </ContentWrapper>
     </Container>
+
+    </Layout>
+      </>
   );
 };
 

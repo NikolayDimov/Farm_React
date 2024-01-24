@@ -4,15 +4,16 @@ import { useAuth } from '../../context/AuthContext';
 import { useRegsterFormError } from './RegisterErrorHadnler'
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
-import { createGlobalStyle } from 'styled-components';
 import loginImage from "../../../public/360_F_502186443_Kubg3Wl76uE8BYl1tcAuYYXgGKAaO6r4.jpg"; 
+import Layout from '../common/Layout';
+import { ErrorResponseType } from '../../types/types';
 
-const GlobalStyles = createGlobalStyle`
-  body {
-    display: block;
-    margin: 0; /* Remove default body margin */
-  }
-`;
+const BASE_URL = "http://localhost:3000";
+
+const Error = styled.p`
+  color: red;
+  margin-top: 8px;
+` as React.FC;
 
 const Container = styled.div`
   display: flex;
@@ -57,7 +58,7 @@ const FormGroup = styled.div`
   }
 `;
 
-const Error = styled.p`
+const ErrorStyles = styled.p`
   color: red;
   margin-top: 8px;
 `;
@@ -68,6 +69,7 @@ const StyledInput = styled.input`
   margin-top: 5px;
   background-color: white;
   border-radius: 5px;
+  color: black;
 `;
 
 const StyledButton = styled.button`
@@ -141,31 +143,81 @@ function Register() {
         setValues((state) => ({ ...state, [e.target.name]: e.target.value }));
     };
 
-    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            let isEmailValid = validateEmail(values.email);
-            let isPasswordValid = validatePassword(values.password);
-            let isConfirmPasswordValid = validateConfirmPassword(values.confirmPassword, values.password);
+    // const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
 
-            if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-                console.log(`email: ${values.email}`);
-                console.log(`password: ${values.password}`);
-                console.log(`confirmPass: ${values.confirmPassword}`);
-            } else {
-                await register(values.email, values.password);
-                console.log('Register successful.');
-            }
-        } catch (error: any) {
-            console.error('Registration error:', error);
-            console.error('Registration error message:', error.message);
+    //     try {
+    //         let isEmailValid = validateEmail(values.email);
+    //         let isPasswordValid = validatePassword(values.password);
+    //         let isConfirmPasswordValid = validateConfirmPassword(values.confirmPassword, values.password);
+
+    //         if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
+    //             console.log(`email: ${values.email}`);
+    //             console.log(`password: ${values.password}`);
+    //             console.log(`confirmPass: ${values.confirmPassword}`);
+    //         } else {
+    //             await register(values.email, values.password);
+    //             console.log('Register successful.');
+    //         }
+    //     } catch (error: any) {
+    //         console.error('Registration error:', error);
+    //         console.error('Registration error message:', error.message);
+    //     }
+    // };
+
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    
+      try {
+        const isEmailValid = validateEmail(values.email);
+        const isPasswordValid = validatePassword(values.password);
+        const isConfirmPasswordValid = validateConfirmPassword(
+          values.confirmPassword,
+          values.password
+        );
+    
+        if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
+          console.log(`email: ${values.email}`);
+          console.log(`password: ${values.password}`);
+          console.log(`confirmPass: ${values.confirmPassword}`);
+        } else {
+          const response = await fetch(`${BASE_URL}/auth/register`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: values.email,
+              password: values.password,
+            }),
+          });
+
+          console.log('response', response)
+    
+          if (!response.ok) {
+            const errorData: ErrorResponseType = await response.json();
+            throw { error: errorData.message || "Registration failed" };
         }
+        
+    
+          // Registration successful, you can handle it accordingly
+          console.log("Registration successful.");
+        }
+      } catch (error: any) {
+        console.error("Registration error:", error);
+        console.error("Registration error message:", error.message);
+      }
+
+      console.error("email", values.email);
+      console.error("pass", values.password);
     };
+    
 
 
     return (
         <>
-        <GlobalStyles />
+        <Layout>
         <Container>
           <LeftPanel>
             <Logo>Farm BG</Logo>
@@ -186,7 +238,7 @@ function Register() {
                     onChange={changeHandler}
                     onBlur={handleEmailBlur}
                   />
-                  {formErrors.email && <Error>{formErrors.email}</Error>}
+                  {formErrors.email && <ErrorStyles>{formErrors.email}</ErrorStyles>}
                 </FormGroup>
     
                 <FormGroup>
@@ -200,7 +252,7 @@ function Register() {
                     onChange={changeHandler}
                     onBlur={handlePasswordBlur}
                   />
-                  {formErrors.password && <Error>{formErrors.password}</Error>}
+                  {formErrors.password && <ErrorStyles>{formErrors.password}</ErrorStyles>}
                 </FormGroup>
     
                 <FormGroup>
@@ -214,7 +266,7 @@ function Register() {
                     onChange={changeHandler}
                     onBlur={handleConfirmPasswordBlur}
                   />
-                  {formErrors.confirmPassword && <Error>{formErrors.confirmPassword}</Error>}
+                  {formErrors.confirmPassword && <ErrorStyles>{formErrors.confirmPassword}</ErrorStyles>}
                 </FormGroup>
     
                 <div className="d-sm-flex mb-5 align-items-center">
@@ -240,6 +292,7 @@ function Register() {
           </LeftPanel>
           <RightPanel />
         </Container>
+        </Layout>
         </>
     );
     

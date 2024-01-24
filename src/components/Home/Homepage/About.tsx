@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import Layout from '../../common/Layout';
+
 
 const Container = styled.div`
     margin: 0 auto; 
@@ -69,6 +71,8 @@ const LogoImage = styled.img`
 
 export default function About() {
     return (
+        <>
+        <Layout>
         <Container>
                 <div>
                     <Title>
@@ -122,5 +126,7 @@ export default function About() {
                 </div>
             
         </Container>
+        </Layout>
+        </>
     );
 }

@@ -27,7 +27,6 @@ export const loginUser = async (signInDto: SignInDto) => {
             id: userData.id,
             userEmail: userData.email,
             access_token: userData.access_token,
-            // other properties from userData
         };
     } catch (error) {
         console.error("Login error:", error);
