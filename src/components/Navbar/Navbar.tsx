@@ -1,9 +1,10 @@
-
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { useAuth } from '../../context/AuthContext';
 
 const NavbarContainer = styled.div`
-  background-color: #343a40; 
+  background-color: #343a40;
 `;
 
 const ContentWrapper = styled.div`
@@ -34,6 +35,12 @@ const NavbarButton = styled(Link)`
 `;
 
 const Navbar = () => {
+  const { isLoggedIn, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
   return (
     <NavbarContainer>
       <ContentWrapper>
@@ -43,8 +50,20 @@ const Navbar = () => {
           <NavbarButton to="/about">About</NavbarButton>
           <NavbarButton to="/service">Service</NavbarButton>
           <NavbarButton to="/contact">Contact</NavbarButton>
-          <NavbarButton to="/login">Login</NavbarButton>
-          <NavbarButton to="/register">Register</NavbarButton>
+
+          {!isLoggedIn ? (
+            <>
+              <NavbarButton to="/login">Login</NavbarButton>
+              <NavbarButton to="/register">Register</NavbarButton>
+            </>
+          ) : (
+            <>
+              <NavbarButton to="/profile">Profile</NavbarButton>
+              <NavbarButton to="/logout" onClick={handleLogout}>
+                Logout
+              </NavbarButton>
+            </>
+          )}
         </NavbarButtons>
       </ContentWrapper>
     </NavbarContainer>
