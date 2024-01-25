@@ -1,5 +1,3 @@
-// authHeader.js
-
 export default function authHeader() {
     const userString = localStorage.getItem("user");
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import AuthGuard from './guards/AuthGuard';
+
 
 import { AuthProvider } from './context/AuthContext';
 import Login from './components/Login/Login';
@@ -21,13 +23,16 @@ function App() {
 				<Route path='/home' element={<Home />} />
 				<Route path='/login' element={<Login />} />
 				<Route path='/register' element={<Register />} />
-				<Route path='/profile' element={<ProfilePage />} />
 				<Route path='/about' element={<About />} />
 				<Route path='/contact' element={<Contact />} />
+
+				<Route element={<AuthGuard />}>
+					<Route path='/profile' element={<ProfilePage />} />
+				</Route>
+
 			</Routes>
 		</AuthProvider>
-		// 	<Footer />
-		// 	<BackToTheTop />
+		
 	);
 }
 
