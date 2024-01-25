@@ -10,11 +10,7 @@ const MachineComponent: React.FC = () => {
   const handleMachineAdded = (newMachine: Machine) => {
     setMachines((prevMachines) => [...prevMachines, newMachine]);
   };
-
-  // const convertedMachines: MachineListReport[] = machines.map((machine) => {
-  //   // Assuming farmName should be an empty string here, you may need to fetch it.
-  //   return { ...machine, farmName: '' };
-  // });
+  
 
   return (
     <>

@@ -1,8 +1,11 @@
 // SoilList.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import authHeader from '../../../services/authHeader';
 import { Soil } from "./interface";
+
+const BASE_URL = "http://localhost:3000";
+
 
 const SoilListContainer = styled.div`
   /* Add styles for the block list container */
@@ -29,7 +32,7 @@ const SoilList: React.FC<SoilListProps> = ({ soils, setSoils }) => {
           ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
         };
 
-        const response = await fetch('http://localhost:3000/soil', {
+        const response = await fetch(`${BASE_URL}/soil`, {
           method: 'GET',
           headers,
         });

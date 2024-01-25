@@ -1,8 +1,9 @@
-// SoilList.tsx
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import authHeader from '../../../services/authHeader';
 import { Machine } from "./interface";
+const BASE_URL = "http://localhost:3000";
+
 
 const MachineListContainer = styled.div`
   /* Add styles for the block list container */
@@ -30,7 +31,7 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
           ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
         };
 
-        const response = await fetch('http://localhost:3000/machine', {
+        const response = await fetch(`${BASE_URL}/machine`, {
           method: 'GET',
           headers,
         });
@@ -47,10 +48,11 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
       }
     };
 
-    console.log(machines)
-
+    
     fetchMachines();
   }, [setMachines]);
+  
+  console.log(machines)
 
   return (
     <MachineListContainer>
@@ -60,7 +62,7 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
           <strong>Brand:</strong> {machine.brand}
           <strong>Model:</strong> {machine.model}
           <strong>Register Number:</strong> {machine.registerNumber}
-          <strong>Farm:</strong> {machine.farmId}
+          <strong>Farm:</strong> {machine.farm?.name}
         </MachineItem>
       ))}
     </MachineListContainer>

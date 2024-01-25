@@ -7,10 +7,6 @@ export interface Machine {
     farm?: Farm;
 }
 
-// export interface MachineListReport extends Machine {
-//     name: string;
-// }
-
 export interface Farm {
     id: string;
     name: string;
