@@ -1,5 +1,4 @@
-// Layout.js
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyles = createGlobalStyle`

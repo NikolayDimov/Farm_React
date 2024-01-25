@@ -6,14 +6,9 @@ import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import loginImage from "../../../public/360_F_502186443_Kubg3Wl76uE8BYl1tcAuYYXgGKAaO6r4.jpg"; 
 import Layout from '../common/Layout';
-import { ErrorResponseType } from '../../types/types';
+import InputField from '../common/InputFieldLoginRegister';
+import StyledButton from '../common/StyledButtonComponent';
 
-const BASE_URL = "http://localhost:3000";
-
-const Error = styled.p`
-  color: red;
-  margin-top: 8px;
-` as React.FC;
 
 const Container = styled.div`
   display: flex;
@@ -60,31 +55,11 @@ const FormGroup = styled.div`
 
 const ErrorStyles = styled.p`
   color: red;
-  margin-top: 8px;
+  font-size: 12px; 
+  position: relative;
+  top: -10px;
 `;
 
-const StyledInput = styled.input`
-  width: 95%;
-  padding: 10px;
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 5px;
-  color: black;
-`;
-
-const StyledButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #ddd;
-  border: none;
-  cursor: pointer;
-`;
-
-const LabelForm = styled.label`
-  color: black;
-  margin-bottom: 5px; /* Add margin bottom to separate labels from inputs */
-`;
 
 const LoginLink = styled.div`
   display: flex;
@@ -95,7 +70,6 @@ const Logintext = styled.span`
   color: black;
   margin-right: 5px; 
 `;
-
 
 
 const Logo = styled.div`
@@ -164,54 +138,6 @@ function Register() {
             console.error('Registration error message:', error.message);
         }
     };
-
-    // const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-    //   e.preventDefault();
-    
-    //   try {
-    //     const isEmailValid = validateEmail(values.email);
-    //     const isPasswordValid = validatePassword(values.password);
-    //     const isConfirmPasswordValid = validateConfirmPassword(
-    //       values.confirmPassword,
-    //       values.password
-    //     );
-    
-    //     if (!isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
-    //       console.log(`email: ${values.email}`);
-    //       console.log(`password: ${values.password}`);
-    //       console.log(`confirmPass: ${values.confirmPassword}`);
-    //     } else {
-    //       const response = await fetch(`${BASE_URL}/auth/register`, {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         credentials: 'include',
-    //         body: JSON.stringify({
-    //           email: values.email,
-    //           password: values.password,
-    //         }),
-    //       });
-
-    //       console.log('response', response)
-    
-    //       if (!response.ok) {
-    //         const errorData: ErrorResponseType = await response.json();
-    //         throw { error: errorData.message || "Registration failed" };
-    //     }
-        
-    
-    //       // Registration successful, you can handle it accordingly
-    //       console.log("Registration successful.");
-    //     }
-    //   } catch (error: any) {
-    //     console.error("Registration error:", error);
-    //     console.error("Registration error message:", error.message);
-    //   }
-
-    //   console.error("email", values.email);
-    //   console.error("pass", values.password);
-    // };
     
 
 
@@ -228,12 +154,11 @@ function Register() {
              
               <form onSubmit={handleRegister} noValidate>
                 <FormGroup>
-                  <LabelForm htmlFor="email">Email</LabelForm>
-                  <StyledInput
-                    type="email"
-                    placeholder="Enter your email"
-                    id="email"
-                    name="email"
+                  <InputField
+                     label="Email"
+                     type="email"
+                     id="email"
+                     name="email"
                     value={values.email}
                     onChange={changeHandler}
                     onBlur={handleEmailBlur}
@@ -242,10 +167,9 @@ function Register() {
                 </FormGroup>
     
                 <FormGroup>
-                  <LabelForm htmlFor="password">Password</LabelForm>
-                  <StyledInput
+                  <InputField
+                    label="Password"
                     type="password"
-                    placeholder="Enter your password"
                     id="password"
                     name="password"
                     value={values.password}
@@ -256,16 +180,15 @@ function Register() {
                 </FormGroup>
     
                 <FormGroup>
-                  <LabelForm htmlFor="confirmPassword">Confirm Password</LabelForm>
-                  <StyledInput
-                    type="password"
-                    placeholder="Confirm your password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={values.confirmPassword}
-                    onChange={changeHandler}
-                    onBlur={handleConfirmPasswordBlur}
-                  />
+                  <InputField
+                  label="Confirm Password"
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={changeHandler}
+                  onBlur={handleConfirmPasswordBlur}
+                />
                   {formErrors.confirmPassword && <ErrorStyles>{formErrors.confirmPassword}</ErrorStyles>}
                 </FormGroup>
     
@@ -277,7 +200,7 @@ function Register() {
                   </label>
                 </div>
     
-                <StyledButton type="submit">Create Account</StyledButton>
+                <StyledButton type="submit"><span>Create Account</span></StyledButton>
               </form>
 
               <LoginLink>
@@ -300,3 +223,9 @@ function Register() {
 
 
 export default Register;
+
+
+
+
+
+

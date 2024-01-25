@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import loginImage from "../../../public/360_F_502186443_Kubg3Wl76uE8BYl1tcAuYYXgGKAaO6r4.jpg"; 
 import Layout from "../common/Layout";
+import InputField from '../common/InputFieldLoginRegister';
+import StyledButton from '../common/StyledButtonComponent';
 
 
 
@@ -53,30 +55,9 @@ const FormGroup = styled.div`
 
 const Error = styled.p`
   color: red;
-  margin-top: 8px;
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 5px;
-  color: black;
-`;
-
-const StyledButton = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  color: #ddd;
-  border: none;
-  cursor: pointer;
-`;
-
-const LabelForm = styled.label`
-  color: black;
-  margin-bottom: 5px; 
+  font-size: 12px; 
+  position: relative;
+  top: -10px;
 `;
 
 const RegisterLink = styled.div`
@@ -133,21 +114,30 @@ function Login() {
     setValues((prevValues) => ({ ...prevValues, email: values.email, password: values.password }));
 
       if (!isEmailValid || !isPasswordValid) {
-        console.log(`email: ${values.email}`);
-        console.log(`password: ${values.password}`);
+        // console.log(`email: ${values.email}`);
+        // console.log(`password: ${values.password}`);
       } else {
         await login(values.email, values.password);
-        console.log("Login successful.");
+        // console.log("Login successful.");
       }
     } catch (error: any) {
       console.error("Login error:", error);
       console.error("login error message:", error.message);
 
       const errorMessage = "Invalid email or password!";
-      console.log("Setting error:", errorMessage);
+    //   console.log("Setting error:", errorMessage);
       setError(errorMessage);
     }
   };
+
+  useEffect(() => {
+    console.log('InputField component mounted');
+    return () => {
+      console.log('InputField component unmounted');
+    };
+  }, []);
+
+  
 
   return (
     <>
@@ -162,12 +152,12 @@ function Login() {
          
           <form onSubmit={handleLogin} noValidate>
             <FormGroup>
-              <LabelForm htmlFor="email">Email</LabelForm>
-              <StyledInput
-                type="email"
-                placeholder="Enter your email"
-                id="email"
-                name="email"
+              {/* <LabelForm htmlFor="email">Email</LabelForm> */}
+              <InputField
+                  label="Email"
+                  type="email"
+                  id="email"
+                  name="email"
                 value={values.email}
                 onChange={changeHandler}
                 onBlur={handleEmailBlur}
@@ -176,12 +166,12 @@ function Login() {
             </FormGroup>
 
             <FormGroup>
-              <LabelForm htmlFor="password">Password</LabelForm>
-              <StyledInput
-                type="password"
-                placeholder="Enter your password"
-                id="password"
-                name="password"
+              {/* <LabelForm htmlFor="password">Password</LabelForm> */}
+              <InputField
+                  label="Password"
+                  type="password"
+                  id="password"
+                  name="password"
                 value={values.password}
                 onChange={changeHandler}
                 onBlur={handlePasswordBlur}
@@ -191,7 +181,7 @@ function Login() {
 
             {error && <Error>{error}</Error>}
 
-            <StyledButton type="submit">Log In</StyledButton>
+            <StyledButton type="submit"><span>Log In</span></StyledButton>
           </form>
           
           <RegisterLink>
