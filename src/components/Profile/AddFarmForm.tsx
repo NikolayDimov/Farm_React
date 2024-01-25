@@ -13,7 +13,7 @@ const AddFarmForm: React.FC<AddFarmFormProps> = ({ onFarmAdded }) => {
     const newFarmCoordinates = [42.6977, 23.3219];
     
     const newFarm: Farm = {
-      id: String(Math.random()), // Ensure the id is of type string
+      id: 'temporary-id-' + Date.now(),
       name: newFarmName,
       location: {
         type: 'Point', // Add the 'type' property

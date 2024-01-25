@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -41,7 +41,7 @@ const Navbar = () => {
         <NavbarButtons>
           <NavbarButton to="/home">Home</NavbarButton>
           <NavbarButton to="/about">About</NavbarButton>
-          <NavbarButton to="/services">Services</NavbarButton>
+          <NavbarButton to="/service">Service</NavbarButton>
           <NavbarButton to="/contact">Contact</NavbarButton>
           <NavbarButton to="/login">Login</NavbarButton>
           <NavbarButton to="/register">Register</NavbarButton>

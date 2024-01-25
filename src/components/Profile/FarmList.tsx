@@ -1,20 +1,23 @@
-import {FarmListProps} from "./profile-types";
-  
-  const FarmList: React.FC<FarmListProps> = ({ farms, onFarmLocationClick }) => {
-    return (
-      <div>
-        <h3>Farm List</h3>
-        <ul>
-          {farms.map((farm) => (
-            <li key={farm.id}>
-              <span>{farm.name}</span>
-              <button onClick={() => onFarmLocationClick(farm)}>View Location</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
-  
-  export default FarmList;
-  
+// FarmList.tsx
+import React from 'react';
+import { Farm } from './profile-types';
+
+interface FarmListProps {
+  farms: Farm[];
+}
+
+const FarmList: React.FC<FarmListProps> = ({ farms }) => {
+  return (
+    <ul>
+      {farms.map((farm) => (
+        <li key={farm.id}>
+          {/* Render farm details here */}
+          <p>Farm Name: {farm.name}</p>
+          <p>Location: {farm.location.coordinates.join(', ')}</p>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default FarmList;

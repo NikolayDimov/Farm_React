@@ -1,5 +1,5 @@
 export interface Farm {
-    id: string;
+    id?: string;
     name: string;
     location: {
         type: string;

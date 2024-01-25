@@ -76,7 +76,7 @@ const ProfilePage: React.FC = () => {
       <AddFarmForm onFarmAdded={handleFarmAdded} />
 
       {/* FarmList component */}
-      <FarmList farms={farms} onFarmLocationClick={handleFarmLocationClick} />
+      <FarmList farms={farms} />
     </Layout>
   );
 };

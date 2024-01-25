@@ -11,6 +11,7 @@ import Navbar from './components/Navbar/Navbar';
 import About from './components/Home/Homepage/About';
 import Contact from './components/Home/Homepage/Contact';
 import ProfilePage from './components/Profile/Profile';
+import Service from './components/Service/ServicePage';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
 
 				<Route element={<AuthGuard />}>
 					<Route path='/profile' element={<ProfilePage />} />
+					<Route path='/service' element={<Service />} />
 				</Route>
 
 			</Routes>
