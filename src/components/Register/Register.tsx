@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRegsterFormError } from './RegisterErrorHadnler'
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
-import loginImage from "../../../public/360_F_502186443_Kubg3Wl76uE8BYl1tcAuYYXgGKAaO6r4.jpg"; 
+import loginImage from "../../../public/nivata.jpg"; 
 import Layout from '../common/Layout';
 import InputField from '../common/InputFieldLoginRegister';
 import StyledButton from '../common/StyledButtonComponent';

@@ -51,8 +51,6 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
     
     fetchMachines();
   }, [setMachines]);
-  
-  console.log(machines)
 
   return (
     <MachineListContainer>

@@ -1,7 +1,21 @@
-import React from 'react';
 import styled from 'styled-components';
 import Layout from '../../common/Layout';
+import aboutPageImage from "../../../../public/farmLand.jpg"; 
 
+
+const BackgroundImage = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(${aboutPageImage}); 
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  z-index: -1;
+`;
 
 const Container = styled.div`
     margin: 0 auto; 
@@ -54,16 +68,6 @@ const FeatureIcon = styled.i`
     margin-right: 0.5em;
 `;
 
-const ImageContainer = styled.div`
-    position: relative;
-    background: radial-gradient(circle at 50% 50%, #212121, #000);
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-`;
 
 const LogoImage = styled.img`
     max-width: 150px;
@@ -74,6 +78,7 @@ export default function About() {
         <>
         <Layout>
         <Container>
+            <BackgroundImage />
                 <div>
                     <Title>
                         Welcome to <span>FarmApp</span>
@@ -115,16 +120,6 @@ export default function About() {
                     </Paragraph>
                     <LogoImage src="img/farm-logo.png" alt="FarmApp Logo" />
                 </div>
-                <div className="col-lg-5 pb-5" style={{ minHeight: 400 }}>
-                    <ImageContainer className="position-relative bg-dark-radial h-100 ms-5">
-                        <img
-                            className="position-absolute w-100 h-100 mt-5 ms-n5"
-                            src="img/farm-field.jpg"
-                            alt="Farm Field"
-                        />
-                    </ImageContainer>
-                </div>
-            
         </Container>
         </Layout>
         </>

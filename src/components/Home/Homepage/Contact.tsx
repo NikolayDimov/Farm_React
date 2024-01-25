@@ -1,4 +1,4 @@
-import React from 'react';
+
 import styled from 'styled-components';
 import Layout from '../../common/Layout';
 
@@ -8,7 +8,7 @@ const Container = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
   display: flex;
@@ -91,37 +91,19 @@ const PhoneNumber = styled.p`
 `;
 
 const GoogleMap = styled.iframe`
-  width: 200%; 
+  width: 100%; 
   height: 500px;
   border: none;
   border-radius: 5px;
-  margin: 20px 0;
-  
+  margin: 20px auto;
 `;
 
 
 
-const AdditionalText = styled.div`
-  width: 200%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-`;
-
-const ContainerText = styled.div`
-  max-width: 300px;
-  background-color: #fff;
-  color: black;
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
-`;
 
 const Contact = () => {
   return (
-    <>
     <Layout>
-
     <Container>
       <ContentWrapper>
         <Title>Contact Us</Title>
@@ -152,17 +134,9 @@ const Contact = () => {
             loading="lazy"
           ></GoogleMap>
         </ContactInfo>
-
-        <AdditionalText>
-          <ContainerText>
-            Some address - put it on the right side of the Google container
-          </ContainerText>
-        </AdditionalText>
       </ContentWrapper>
     </Container>
-
     </Layout>
-      </>
   );
 };
 
