@@ -192,14 +192,6 @@ function Register() {
                   {formErrors.confirmPassword && <ErrorStyles>{formErrors.confirmPassword}</ErrorStyles>}
                 </FormGroup>
     
-                <div className="d-sm-flex mb-5 align-items-center">
-                  <label className="control control--checkbox mb-3 mb-sm-0">
-                    <input type="checkbox" defaultChecked={true} />
-                    <span className="caption">Remember me</span>
-                    <div className="control__indicator" />
-                  </label>
-                </div>
-    
                 <StyledButton type="submit"><span>Create Account</span></StyledButton>
               </form>
 

@@ -1,9 +1,9 @@
-// ServicePage.tsx
 import React from 'react';
 import MapComponent from './MapComponent';
 import BlockList from './BlockList';
 import SoilComponent from './SoilComponent/SoilComponent';
 import Layout from '../common/Layout';
+import MachineComponent from './MachineComponent/MachineComponent';
 
 
 
@@ -15,6 +15,7 @@ const ServicePage: React.FC = () => {
       <MapComponent />
       <BlockList />
       <SoilComponent />
+      <MachineComponent />
       
     </Layout>
   );
