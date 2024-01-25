@@ -16,7 +16,6 @@ const MachineItem = styled.div`
 
 interface MachinesListProps {
   machines: Machine[];
-  
   setMachines: React.Dispatch<React.SetStateAction<Machine[]>>;
 }
 

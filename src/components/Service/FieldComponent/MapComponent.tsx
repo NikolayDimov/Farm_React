@@ -1,6 +1,6 @@
 // MapComponent.tsx
 import React from 'react';
-import { MapContainer } from './styledComponents';
+import { MapContainer } from '../styledComponents';
 
 interface MapComponentProps {
   // Add any necessary props

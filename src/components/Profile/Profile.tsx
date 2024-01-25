@@ -8,6 +8,7 @@ import FarmList from './FarmList';
 import { Farm } from './profile-types';
 import styled from 'styled-components';
 import authHeader from "../../services/authHeader";
+import WelcomeUser from './Welcomeuser';
 
 
 const BASE_URL = "http://localhost:3000";
@@ -17,6 +18,7 @@ const BASE_URL = "http://localhost:3000";
 const StyledMapContainer = styled(MapContainer)`
   height: 600px;
 `;
+
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth();
@@ -61,8 +63,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <Layout>
-      <h2>Welcome, {user?.email}!</h2>
-      <p>Your role: {user?.role}</p>
+      <WelcomeUser />
 
       {/* Use the StyledMapContainer component */}
       <StyledMapContainer onSelectLocation={onSelectLocation} />
@@ -76,9 +77,11 @@ const ProfilePage: React.FC = () => {
       <AddFarmForm onFarmAdded={handleFarmAdded} />
 
       {/* FarmList component */}
-      <FarmList farms={farms} />
+      <FarmList farms={farms} setFarms={setFarms} />
+
     </Layout>
   );
 };
 
 export default ProfilePage;
+

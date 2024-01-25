@@ -1,4 +1,3 @@
-// AddMachine.tsx
 import React, { useState, useEffect } from 'react';
 import authHeader from '../../../services/authHeader';
 import { Machine } from "./interface";
