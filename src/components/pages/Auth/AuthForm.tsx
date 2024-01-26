@@ -1,25 +1,6 @@
+// InputFieldLoginRegister.js
 import React from 'react';
-import styled from 'styled-components';
-
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-`;
-
-const LabelForm = styled.label`
-  color: black;
-  margin-bottom: 5px;
-`;
-
-const StyledInput = styled.input`
-  box-sizing: border-box;
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 5px;
-  color: black;
-`;
-
+import { FormGroup, LabelForm, StyledInput } from './StyledComponents';
 
 interface InputFieldProps {
   label: string;
@@ -55,5 +36,3 @@ const InputField: React.FC<InputFieldProps> = ({
 );
 
 export default InputField;
-
-

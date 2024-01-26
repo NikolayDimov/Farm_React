@@ -1,81 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import loginImage from "../../../../public/nivata.jpg"; 
-import Layout from "../../common/Layout";
-import InputField from '../../common/InputFieldLoginRegister';
-import {StyledButton} from '../../common/StyledButtonComponent';
+import Layout from "../../../common/Layout";
+import InputField from '../AuthForm';
+import {Container, ErrorStyles, FormBlock, FormGroup, LeftPanel, Logo, RightPanel, StyledButton, Title} from '../StyledComponents';
+import { AuthLink } from "../StyledComponents";
 
 
 
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
-`;
 
-const LeftPanel = styled.div`
-  flex: 1;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; 
-  padding: 20px;
-`;
-
-const RightPanel = styled.div`
-  flex: 1;
-  background-image: url(${loginImage});
-  background-size: cover;
-  background-position: center;
-`;
-
-const FormBlock = styled.div`
-    max-width: 600px;
-    width: 70%;
-    margin: 100px auto 0 auto;  
-`;
-
-const Title = styled.div`
-  text-align: center;
-  margin-bottom: 20px;
-  color: black;
-  font-family: Noto Sans;
-  font-size: 1.5em;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-  &:first-child {
-    margin-bottom: 30px;
-  }
-`;
-
-const Error = styled.p`
-  color: red;
-  font-size: 12px; 
-  position: relative;
-  top: -10px;
-`;
-
-const RegisterLink = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Registertext = styled.span`
-  color: black;
-  margin-right: 5px; 
-`;
-
-const Logo = styled.div`
-  font-size: 24px;
-  color: black;
-  font-weight: bold;
-  margin-bottom: 20px;
-`;
 
 function Login() {
   const { login } = useAuth();
@@ -144,7 +78,7 @@ function Login() {
     <Layout>
     <Container>
       <LeftPanel>
-      <Logo>Farm BG</Logo>
+      <Logo>MyFarm</Logo>
         <FormBlock>
           <Title>
             <h3>Login</h3>
@@ -162,7 +96,7 @@ function Login() {
                 onChange={changeHandler}
                 onBlur={handleEmailBlur}
               />
-              {formErrors.email && <Error>{formErrors.email}</Error>}
+              {formErrors.email && <ErrorStyles>{formErrors.email}</ErrorStyles>}
             </FormGroup>
 
             <FormGroup>
@@ -176,20 +110,17 @@ function Login() {
                 onChange={changeHandler}
                 onBlur={handlePasswordBlur}
               />
-              {formErrors.password && <Error>{formErrors.password}</Error>}
+              {formErrors.password && <ErrorStyles>{formErrors.password}</ErrorStyles>}
             </FormGroup>
 
-            {error && <Error>{error}</Error>}
+            {error && <ErrorStyles>{error}</ErrorStyles>}
 
             <StyledButton type="submit"><span>Log In</span></StyledButton>
           </form>
           
-          <RegisterLink>
-            <Registertext>{`You don't have an account`}</Registertext>
-            <Link to="/register">
-              Register here
-            </Link>
-          </RegisterLink>
+          <AuthLink>
+            <Link to="/register">Create an account instead</Link>
+          </AuthLink>
 
         </FormBlock>
       </LeftPanel>

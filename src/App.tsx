@@ -1,8 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import AuthGuard from './guards/AuthGuard';
 import { AuthProvider } from './context/AuthContext';
-import Login from './components/pages/Login/Login';
-import Register from './components/pages/Register/Register';
+import Login from './components/pages/Auth/Login/Login';
+import Register from './components/pages/Auth/Register/Register';
 import Home from './components/pages/Home/Home';
 import ProfilePage from './components/pages/Profile/Profile';
 import Service from './components/pages/Service/ServicePage';

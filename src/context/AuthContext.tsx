@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { loginUser, registerUser, logoutUser } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from '../types/types';
+import { JwtPayload } from './interfaces';
 
 import { useNavigate } from 'react-router-dom';
-import { AuthContextType } from '../types/types';
-import { User } from '../types/types';
-import { AuthProviderProps } from '../types/types';
+import { AuthContextType } from './interfaces';
+import { User } from './interfaces';
+import { AuthProviderProps } from './interfaces';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 

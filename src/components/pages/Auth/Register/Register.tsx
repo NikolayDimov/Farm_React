@@ -1,83 +1,14 @@
 import React from 'react';
 import { useState } from 'react';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
 import { useRegsterFormError } from './RegisterErrorHadnler'
 import { Link } from 'react-router-dom';
-import styled from "styled-components";
-import loginImage from "../../../../public/nivata.jpg"; 
-import Layout from '../../common/Layout';
-import InputField from '../../common/InputFieldLoginRegister';
-import { StyledButton } from '../../common/StyledButtonComponent';
+import Layout from '../../../common/Layout';
+import InputField from '../AuthForm';
+import { Container, ErrorStyles, FormBlock, FormGroup, LeftPanel, Logo, RightPanel, StyledButton, Title } from '../StyledComponents';
+import { AuthLink } from '../StyledComponents';
 
 
-const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  width: 100%;
-`;
-
-const LeftPanel = styled.div`
-  flex: 1;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; 
-  padding: 20px;
-`;
-
-const RightPanel = styled.div`
-  flex: 1;
-  background-image: url(${loginImage});
-  background-size: cover;
-  background-position: center;
-`;
-
-const FormBlock = styled.div`
-  max-width: 600px;
-  width: 70%;
-  margin: 100px auto 0 auto;  
-`;
-
-const Title = styled.div`
-  text-align: center;
-  margin-bottom: 20px;
-  color: black;
-  font-family: Noto Sans;
-  font-size: 1.5em;
-`;
-
-const FormGroup = styled.div`
-  margin-bottom: 20px;
-  &:first-child {
-    margin-bottom: 30px;  
-  }
-`;
-
-const ErrorStyles = styled.p`
-  color: red;
-  font-size: 12px; 
-  position: relative;
-  top: -10px;
-`;
-
-
-const LoginLink = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const Logintext = styled.span`
-  color: black;
-  margin-right: 5px; 
-`;
-
-
-const Logo = styled.div`
-  font-size: 24px;
-  color: black;
-  font-weight: bold;
-  margin-bottom: 20px;
-`;
 
 
 function Register() {
@@ -146,7 +77,7 @@ function Register() {
         <Layout>
         <Container>
           <LeftPanel>
-            <Logo>Farm BG</Logo>
+            <Logo>MyFarm</Logo>
             <FormBlock>
               <Title>
                 <h3>Register</h3>
@@ -195,12 +126,11 @@ function Register() {
                 <StyledButton type="submit"><span>Create Account</span></StyledButton>
               </form>
 
-              <LoginLink>
-            <Logintext>{`You already have an account`}</Logintext>
+              <AuthLink>
             <Link to="/">
-              Login here
+              Have an account Login here
             </Link>
-          </LoginLink>
+          </AuthLink>
               
            
             </FormBlock>

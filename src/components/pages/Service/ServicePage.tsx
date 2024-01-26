@@ -6,6 +6,7 @@ import Layout from '../../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
 import servicePageImage from "../../../../public/nivaSand.jpg"; 
 import FieldComponent from './FieldComponent/FieldComponent';
+//import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
   position: fixed;
