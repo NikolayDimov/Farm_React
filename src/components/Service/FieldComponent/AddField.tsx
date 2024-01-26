@@ -3,6 +3,7 @@ import authHeader from '../../../services/authHeader';
 import { Field } from "./interface";
 import { Farm } from './interface';
 import { Soil } from './interface';
+import MapContainer from '../MapContainer';
 
 
 const BASE_URL = "http://localhost:3000";
@@ -19,6 +20,13 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [soils, setSoils] = useState<Soil[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
+
+  const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
+  const handleSelectLocation = (coordinates: number[][]) => {
+    console.log('Newly outlined coordinates:', coordinates);
+    setOutlinedCoordinates(coordinates);
+  };
+
 
 
   useEffect(() => {
@@ -81,6 +89,11 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
   
   const handleAddField = async () => {
     try {
+      if (outlinedCoordinates.length === 0) {
+        setErrorMessage('Please outline the field boundaries.');
+        return;
+      }
+
       const authHeaders = authHeader();
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -93,7 +106,10 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         credentials: 'include',
         body: JSON.stringify({ 
           name: newFieldName, 
-          boundary: newBoundary,
+          boundary: {
+            type: 'Polygon',
+            coordinates: outlinedCoordinates,
+          },
           farmId: newFarmId,
           soilId: newSoilId
         }),
@@ -117,10 +133,10 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
       } else {
         console.error('Failed to create a new field in the database');
         console.error('Failed to create a new field in the database');
-      console.error('Response status:', response.status);
-      console.error('Response status text:', response.statusText);
-      const responseText = await response.text();
-      console.error('Response text:', responseText);
+        console.error('Response status:', response.status);
+        console.error('Response status text:', response.statusText);
+        const responseText = await response.text();
+        console.error('Response text:', responseText);
       }
     } catch (error) {
       console.error('Failed to create a new field in the database');
@@ -128,13 +144,14 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
     }
   };
 
+
   return (
     <div>
       <h3>Add a New Field</h3>
       <label>Field name:</label>
       <input type="text" value={newFieldName} onChange={(e) => setNewFieldName(e.target.value)} />
-      <label>Field Boubdary:</label>
-      <input type="text" value={newBoundary} onChange={(e) => setNewBoundary(e.target.value)} />
+      {/* <label>Field Boubdary:</label>
+      <input type="text" value={newBoundary} onChange={(e) => setNewBoundary(e.target.value)} /> */}
       <label>Farm:</label>
       <select
         value={newFarmId}
@@ -161,6 +178,8 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
       </select>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       <button onClick={handleAddField}>Create Field</button>
+
+      <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
     </div>
   );
 };

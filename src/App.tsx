@@ -8,8 +8,8 @@ import Login from './components/Login/Login';
 import Register from './components/Register/Register';
 import Home from './components/Home/Home';
 import Navbar from './components/Navbar/Navbar';
-import About from './components/Home/Homepage/About';
-import Contact from './components/Home/Homepage/Contact';
+import About from './components/Home/HomePages/About';
+import Contact from './components/Home/HomePages/Contact';
 import ProfilePage from './components/Profile/Profile';
 import Service from './components/Service/ServicePage';
 

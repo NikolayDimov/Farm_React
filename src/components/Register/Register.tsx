@@ -7,7 +7,7 @@ import styled from "styled-components";
 import loginImage from "../../../public/nivata.jpg"; 
 import Layout from '../common/Layout';
 import InputField from '../common/InputFieldLoginRegister';
-import StyledButton from '../common/StyledButtonComponent';
+import { StyledButton } from '../common/StyledButtonComponent';
 
 
 const Container = styled.div`

@@ -1,13 +1,12 @@
+// ServicePage.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import MapContainer from './MapContainer'; 
+import MapContainer from './MapContainer';  
 import SoilComponent from './SoilComponent/SoilComponent';
 import Layout from '../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
 import servicePageImage from "../../../public/nivaSand.jpg"; 
 import FieldComponent from './FieldComponent/FieldComponent';
-
-
 
 const BackgroundImage = styled.div`
   position: fixed;
@@ -39,23 +38,23 @@ const MapWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
+// ServicePage.tsx
+// ServicePage.tsx
 const ServicePage: React.FC = () => {
-    // State to hold the selected location coordinates
-    const [selectedLocation, setSelectedLocation] = useState<number[][]>([]);
+  const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
 
-    // Function to handle location selection
-    const handleSelectLocation = (coordinates: number[][]) => {
-      setSelectedLocation(coordinates);
-    };
-    
+  const handleSelectLocation = (coordinates: number[][]) => {
+    setOutlinedCoordinates(coordinates);
+  };
+
   return (
     <Layout>
       <BackgroundImage />
-      <MapWrapper>
-          <MapContainer onSelectLocation={handleSelectLocation} />
-        </MapWrapper>
+      {/* <MapWrapper>
+        <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
+      </MapWrapper> */}
       <Window>
-        <FieldComponent />
+        <FieldComponent coordinates={outlinedCoordinates} />
       </Window>
       <Window>
         <SoilComponent />
@@ -66,5 +65,7 @@ const ServicePage: React.FC = () => {
     </Layout>
   );
 };
+
+
 
 export default ServicePage;

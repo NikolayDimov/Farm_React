@@ -1,6 +1,6 @@
-import FontHomepage from './Homepage/FontHomepage';
-import About from './Homepage/About';
-import Contact from './Homepage/Contact';
+import FontHomepage from './HomePages/FontHomepage';
+import About from './HomePages/About';
+import Contact from './HomePages/Contact';
 
 
 

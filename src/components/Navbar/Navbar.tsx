@@ -1,7 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useAuth } from '../../context/AuthContext';
+
 
 const NavbarContainer = styled.div`
   background-color: #343a40;
@@ -34,12 +34,15 @@ const NavbarButton = styled(Link)`
   text-decoration: none;
 `;
 
+// authContex
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
   };
+
+
 
   return (
     <NavbarContainer>

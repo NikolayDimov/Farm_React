@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button`
   box-sizing: border-box;
   width: 100%;
   padding: 10px;
@@ -21,4 +21,9 @@ const StyledButton = styled.button`
   }
 `;
 
-export default StyledButton;
+
+
+
+
+
+
