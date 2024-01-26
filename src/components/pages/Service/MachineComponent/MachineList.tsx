@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import authHeader from '../../../services/authHeader';
+import authHeader from '../../../../services/authHeader';
 import { Machine } from "./interface";
-import { ListContainer, ListHeader, ListItem, List } from '../../common/ListStyles';
+import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";
 

@@ -58,7 +58,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       localStorage.removeItem('isUserLoggedIn');
       localStorage.removeItem('userData');
       console.error('Logout error:', error);
-      nav('/login');
+      nav('/');
     }
   };
 

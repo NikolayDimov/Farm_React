@@ -1,11 +1,10 @@
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import MapContainer from './MapContainer';  
 import SoilComponent from './SoilComponent/Soil';
-import Layout from '../common/Layout';
+import Layout from '../../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
-import servicePageImage from "../../../public/nivaSand.jpg"; 
+import servicePageImage from "../../../../public/nivaSand.jpg"; 
 import FieldComponent from './FieldComponent/FieldComponent';
 
 const BackgroundImage = styled.div`

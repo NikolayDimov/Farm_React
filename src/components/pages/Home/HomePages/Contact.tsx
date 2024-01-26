@@ -1,6 +1,6 @@
 
 import styled from 'styled-components';
-import Layout from '../../common/Layout';
+import Layout from '../../../common/Layout';
 
 const Container = styled.div`
   background-color: #f8f9fa;

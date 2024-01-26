@@ -1,12 +1,12 @@
 // ProfilePage.tsx
 import React, { useState } from 'react';
-import Layout from '../common/Layout';
+import Layout from '../../common/Layout';
 import MapContainer from './MapContainer';
 import AddFarmForm from './AddFarmForm';
 import FarmList from './FarmList';
 import { Farm } from './profile-types';
 import styled from 'styled-components';
-import authHeader from "../../services/authHeader";
+import authHeader from "../../../services/authHeader";
 import WelcomeUser from './WelcomeUser';
 
 

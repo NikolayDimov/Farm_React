@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import loginImage from "../../../public/nivata.jpg"; 
-import Layout from "../common/Layout";
-import InputField from '../common/InputFieldLoginRegister';
-import {StyledButton} from '../common/StyledButtonComponent';
+import loginImage from "../../../../public/nivata.jpg"; 
+import Layout from "../../common/Layout";
+import InputField from '../../common/InputFieldLoginRegister';
+import {StyledButton} from '../../common/StyledButtonComponent';
 
 
 
@@ -17,7 +17,7 @@ const Container = styled.div`
 `;
 
 const LeftPanel = styled.div`
-  flex: 1.5;
+  flex: 1;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -26,7 +26,7 @@ const LeftPanel = styled.div`
 `;
 
 const RightPanel = styled.div`
-  flex: 2;
+  flex: 1;
   background-image: url(${loginImage});
   background-size: cover;
   background-position: center;

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 
 const NavbarContainer = styled.div`
@@ -49,18 +49,13 @@ const Navbar = () => {
       <ContentWrapper>
         <Logo to="/">Your Farm</Logo>
         <NavbarButtons>
-          <NavbarButton to="/home">Home</NavbarButton>
-          <NavbarButton to="/about">About</NavbarButton>
-          <NavbarButton to="/service">Service</NavbarButton>
-          <NavbarButton to="/contact">Contact</NavbarButton>
-
           {!isLoggedIn ? (
-            <>
-              <NavbarButton to="/login">Login</NavbarButton>
-              <NavbarButton to="/register">Register</NavbarButton>
+            <> 
             </>
           ) : (
             <>
+              <NavbarButton to="/home">Home</NavbarButton>
+              <NavbarButton to="/service">Service</NavbarButton>
               <NavbarButton to="/profile">Profile</NavbarButton>
               <NavbarButton to="/logout" onClick={handleLogout}>
                 Logout

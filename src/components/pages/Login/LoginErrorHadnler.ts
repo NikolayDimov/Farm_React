@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { RegisterFormErrors } from "../../types/types";
+import { LoginFormErrors } from "../../../types/types";
 
-export function useRegsterFormError() {
-    const [formErrors, setFormErrors] = useState<RegisterFormErrors>({
+export function useLoginFormError() {
+    const [formErrors, setFormErrors] = useState<LoginFormErrors>({
         email: "",
         password: "",
-        confirmPassword: "",
     });
 
     function validateEmail(email: string): boolean {
@@ -41,29 +40,9 @@ export function useRegsterFormError() {
         return isPasswordValid;
     }
 
-    function validateConfirmPassword(confirmPassword: string, password: string): boolean {
-        let isConfirmPassword = true;
-
-        if (confirmPassword === "") {
-            setFormErrors((errors) => ({ ...errors, confirmPassword: "Confirm Password is required" }));
-            isConfirmPassword = false;
-            return isConfirmPassword;
-        } else if (confirmPassword != password) {
-            setFormErrors((errors) => ({ ...errors, confirmPassword: "Passwords do not match" }));
-            isConfirmPassword = false;
-            return isConfirmPassword;
-        } else {
-            // Clear the error
-            setFormErrors((errors) => ({ ...errors, confirmPassword: "" }));
-        }
-
-        return isConfirmPassword;
-    }
-
     return {
         formErrors,
         validateEmail,
         validatePassword,
-        validateConfirmPassword,
     };
 }
