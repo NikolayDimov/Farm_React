@@ -54,7 +54,6 @@ const AddMachine: React.FC<AddMachineProps> = ({ onMachineAdded }) => {
         ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
       };
 
-      // Now you can create the machine
       const response = await fetch(`${BASE_URL}/machine`, {
         method: 'POST',
         headers,

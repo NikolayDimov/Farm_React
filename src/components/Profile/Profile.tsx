@@ -1,6 +1,5 @@
 // ProfilePage.tsx
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import Layout from '../common/Layout';
 import MapContainer from './MapContainer';
 import AddFarmForm from './AddFarmForm';
@@ -8,7 +7,7 @@ import FarmList from './FarmList';
 import { Farm } from './profile-types';
 import styled from 'styled-components';
 import authHeader from "../../services/authHeader";
-import WelcomeUser from './Welcomeuser';
+import WelcomeUser from './WelcomeUser';
 
 
 const BASE_URL = "http://localhost:3000";
@@ -21,7 +20,6 @@ const StyledMapContainer = styled(MapContainer)`
 
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth();
   const [selectedLocation, setSelectedLocation] = useState<number[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
 

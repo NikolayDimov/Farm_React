@@ -1,20 +1,11 @@
-// SoilList.tsx
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import authHeader from '../../../services/authHeader';
 import { Soil } from "./interface";
+import { ListContainer, ListHeader, ListItem, List } from '../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";
 
 
-const SoilListContainer = styled.div`
-  /* Add styles for the block list container */
-`;
-
-const SoilItem = styled.div`
-  /* Add styles for individual block items */
-  margin-bottom: 10px;
-`;
 
 interface SoilListProps {
   soils: Soil[];
@@ -53,14 +44,16 @@ const SoilList: React.FC<SoilListProps> = ({ soils, setSoils }) => {
   }, [setSoils]);
 
   return (
-    <SoilListContainer>
-      <h2>Soil List</h2>
+    <ListContainer>
+      <ListHeader>Soil List</ListHeader>
+      <List>
       {soils.map((soil) => (
-        <SoilItem key={soil.id}>
+        <ListItem key={soil.id}>
           <strong>Name:</strong> {soil.name}
-        </SoilItem>
+        </ListItem>
       ))}
-    </SoilListContainer>
+       </List>
+    </ListContainer>
   );
 };
 

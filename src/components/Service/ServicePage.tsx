@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import MapComponent from './FieldComponent/MapComponent';
-import BlockList from './FieldComponent/FieldList';
+import MapContainer from './MapContainer'; 
 import SoilComponent from './SoilComponent/SoilComponent';
 import Layout from '../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
 import servicePageImage from "../../../public/nivaSand.jpg"; 
+import FieldComponent from './FieldComponent/FieldComponent';
 
 
 
@@ -33,15 +33,29 @@ const Window = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);  
 `;
 
+const MapWrapper = styled.div`
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+`;
+
 const ServicePage: React.FC = () => {
+    // State to hold the selected location coordinates
+    const [selectedLocation, setSelectedLocation] = useState<number[][]>([]);
+
+    // Function to handle location selection
+    const handleSelectLocation = (coordinates: number[][]) => {
+      setSelectedLocation(coordinates);
+    };
+    
   return (
     <Layout>
       <BackgroundImage />
+      <MapWrapper>
+          <MapContainer onSelectLocation={handleSelectLocation} />
+        </MapWrapper>
       <Window>
-        <MapComponent />
-      </Window>
-      <Window>
-        <BlockList />
+        <FieldComponent />
       </Window>
       <Window>
         <SoilComponent />

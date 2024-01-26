@@ -22,12 +22,10 @@ export default function AuthGuard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Use an effect to set loading to false once the authentication status is determined
     setLoading(false);
   }, [isAuthenticated]);
 
   if (loading) {
-    // Render a loading indicator or placeholder while authentication status is being determined
     return <div>Loading...</div>;
   }
 

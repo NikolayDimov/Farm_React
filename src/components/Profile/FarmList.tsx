@@ -2,13 +2,10 @@
 import React, { useEffect } from 'react';
 import { Farm } from './profile-types';
 import authHeader from '../../services/authHeader';
+import { ListContainer, ListHeader, ListItem, List } from '../common/ListStyles';
 const BASE_URL = "http://localhost:3000";
 
 
-// interface FarmListProps {
-//   farms: Farm[];  
-//   onFarmLocationClick: (farm: Farm) => void;
-// }
 
 interface FarmListProps {
   farms: Farm[];
@@ -45,20 +42,18 @@ const FarmList: React.FC<FarmListProps> = ({ farms, setFarms }) => {
   }, [setFarms]); 
 
  
-
-  console.log(farms)
   return (
-    <div>
-      <h3>Farm List</h3>
-      <ul>
+    <ListContainer>
+      <ListHeader>Farm List</ListHeader>
+      <List>
         {farms.map((farm) => (
-          <li key={farm.id}>
+          <ListItem key={farm.id}>
             <p>Farm Name: {farm.name}</p>
             <p>Location: {farm.location.coordinates.join(', ')}</p>
-          </li>
+          </ListItem>
         ))}
-      </ul>
-    </div>
+      </List>
+    </ListContainer>
   );
 };
 
