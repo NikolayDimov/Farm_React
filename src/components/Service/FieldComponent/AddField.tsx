@@ -119,7 +119,10 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         const newField: Field = {
           id: 'temporary-id-' + Date.now(),
           name: newFieldName, 
-          boundary: JSON.parse(newBoundary), 
+          boundary: {
+            type: 'Polygon',
+            coordinates: [outlinedCoordinates],
+          }, 
           farmId: newFarmId,
           soilId: newSoilId
         };

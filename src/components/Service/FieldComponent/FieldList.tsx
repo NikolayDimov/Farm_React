@@ -47,7 +47,7 @@ const FieldList: React.FC<FieldsListProps> = ({ fields, setFields }) => {
         {fields.map((field) => (
           <ListItem key={field.id}>
             <strong>Name:</strong> {field.name}
-            <strong>Boundary:</strong> {JSON.stringify(field.boundary)}
+            {/* <strong>Boundary:</strong> {JSON.stringify(field.boundary)} */}
             <strong>Farm:</strong> {field.farm?.name}
             <strong>Soil:</strong> {field.soil?.name}
           </ListItem>

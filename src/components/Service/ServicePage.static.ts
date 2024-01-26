@@ -1,4 +1,3 @@
-// interfaces.ts
 export interface Block {
     name: string;
     boundary: { type: string; coordinates: number[][][] };

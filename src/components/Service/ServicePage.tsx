@@ -1,8 +1,8 @@
-// ServicePage.tsx
+
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import MapContainer from './MapContainer';  
-import SoilComponent from './SoilComponent/SoilComponent';
+import SoilComponent from './SoilComponent/Soil';
 import Layout from '../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
 import servicePageImage from "../../../public/nivaSand.jpg"; 
@@ -22,7 +22,7 @@ const BackgroundImage = styled.div`
   z-index: -1;
 `;
 
-const Window = styled.div`
+const Container = styled.div`
   width: 90%;
   max-width: 1200px;
   margin: 20px auto;
@@ -38,8 +38,7 @@ const MapWrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-// ServicePage.tsx
-// ServicePage.tsx
+
 const ServicePage: React.FC = () => {
   const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
 
@@ -53,15 +52,15 @@ const ServicePage: React.FC = () => {
       {/* <MapWrapper>
         <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
       </MapWrapper> */}
-      <Window>
+      <Container>
         <FieldComponent coordinates={outlinedCoordinates} />
-      </Window>
-      <Window>
+      </Container>
+      <Container>
         <SoilComponent />
-      </Window>
-      <Window>
+      </Container>
+      <Container>
         <MachineComponent />
-      </Window>
+      </Container>
     </Layout>
   );
 };

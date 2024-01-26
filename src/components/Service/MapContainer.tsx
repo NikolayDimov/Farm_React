@@ -1,4 +1,4 @@
-// MapContainer.tsx
+
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -78,10 +78,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, outlinedC
 
     loadGoogleMapsScript();
 
-    return () => {
-      // Cleanup if necessary
-    };
-  }, [onSelectLocation]);
+
+  }, []);
 
   return <StyledMapContainer ref={mapContainerRef} />;
 };

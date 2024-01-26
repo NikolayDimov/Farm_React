@@ -1,17 +1,3 @@
-// import { Navigate, Outlet } from 'react-router-dom';
-// import { useAuth } from "../context/AuthContext";
-
-// export default function AuthGuard() {
-//     const isAuthenticated = useAuth();
-//     const userHaveExpToken = isAuthenticated.isAuthenticated
-//     console.log('IsAuthenticated:', isAuthenticated);
-
-//     if (!userHaveExpToken) {
-//         return <Navigate to="/login" />;
-//     }
-
-//     return <Outlet />;
-// }
 
 import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
@@ -35,3 +21,40 @@ export default function AuthGuard() {
 
   return <Outlet />;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Navigate, Outlet } from 'react-router-dom';
+// import { useAuth } from "../context/AuthContext";
+
+// export default function AuthGuard() {
+//     const isAuthenticated = useAuth();
+//     const userHaveExpToken = isAuthenticated.isAuthenticated
+//     console.log('IsAuthenticated:', isAuthenticated);
+
+//     if (!userHaveExpToken) {
+//         return <Navigate to="/login" />;
+//     }
+
+//     return <Outlet />;
+// }
