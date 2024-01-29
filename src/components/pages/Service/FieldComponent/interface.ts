@@ -3,8 +3,8 @@ export interface Field {
     name: string;
     boundary: { type: string; coordinates: number[][][] };
     farmId: string;
-    soilId: string;
     farm?: Farm;
+    soilId: string;
     soil?: Soil;
 }
 

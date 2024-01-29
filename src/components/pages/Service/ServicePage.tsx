@@ -8,6 +8,7 @@ import servicePageImage from "../../../assets/nivaSand.jpg";
 import FieldComponent from './FieldComponent/FieldComponent';
 import CropComponent from './CropComponent/Crop';
 import ProcessingTypeComponent from './ProcessingTypeComponent/ProcessingType';
+import GrowingCropPeriodComponent from './GrowingCropPeriodComponent/GrowingCropPeriodComponent';
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -65,6 +66,9 @@ const ServicePage: React.FC = () => {
       </Container>
       <Container>
         <ProcessingTypeComponent />
+      </Container>
+      <Container>
+        <GrowingCropPeriodComponent />
       </Container>
       <Container>
         <MachineComponent />

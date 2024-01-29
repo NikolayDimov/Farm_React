@@ -28,7 +28,6 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
   };
 
 
-
   useEffect(() => {
     const fetchFarms = async () => {
       try {
@@ -88,6 +87,8 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
   }, []);
   
   const handleAddField = async () => {
+    console.log('handleAddField is being executed.');
+
     try {
       if (outlinedCoordinates.length === 0) {
         setErrorMessage('Please outline the field boundaries.');
@@ -99,6 +100,14 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         'Content-Type': 'application/json',
         ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
       };
+
+      console.log('newFarmId:', newFarmId);
+      console.log('newSoilId:', newSoilId);
+
+      if (!newFarmId || !newSoilId) {
+        setErrorMessage('Farm and Soil are required.');
+        return;
+      }
 
       const response = await fetch(`${BASE_URL}/field`, {
         method: 'POST',
