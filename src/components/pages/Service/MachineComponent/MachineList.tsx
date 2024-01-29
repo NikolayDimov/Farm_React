@@ -88,7 +88,7 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
     fetchMachines();
   }, [setMachines, farms]);
 
-  // sdsds
+  
 
   if (loading) {
     return <p>Loading machines...</p>;
