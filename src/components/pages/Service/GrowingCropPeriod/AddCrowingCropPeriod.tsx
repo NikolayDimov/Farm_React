@@ -8,6 +8,8 @@ const BASE_URL = "http://localhost:3000";
 
 interface AddGrowingCropPeriodProps {
   onGrowingCropPeriodAdded: (newGrowingCropPeriod: GrowingCropPeriod) => void;
+  fields: Field[];
+  crops: Crop[];
 }
 
 const AddGrowingCropPeriod: React.FC<AddGrowingCropPeriodProps> = ({ onGrowingCropPeriodAdded }) => {

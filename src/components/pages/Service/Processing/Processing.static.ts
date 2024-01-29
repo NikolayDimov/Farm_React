@@ -28,7 +28,7 @@ export interface Field {
 }
 
 export interface Soil {
-    id: string;
+    id?: string;
     name: string;
 }
 

@@ -62,7 +62,6 @@ const ProcessingList: React.FC<ProcessingsListProps> = ({ processings, setProces
         console.error('Failed to fetch processingTypes from the database');
         console.error('Response status:', processingTypesResponse.status);
         console.error('Response text:', await processingTypesResponse.text());
-        console.error('Failed to fetch processingTypes from the database');
       }
     } catch (error) {
       console.error('Error fetching processingTypes:', error);
@@ -99,25 +98,11 @@ const ProcessingList: React.FC<ProcessingsListProps> = ({ processings, setProces
       await fetchProcessingTypes();
       await fetchMachines();
     };
-  
     fetchData();
-  
-    console.log("Initial Growing Crop Periods:", growingCropPeriods);
-    console.log("Initial ProcessingTypes:", processingTypes);
-    console.log("Initial Machines:", machines);
   }, []);
+
   
-  useEffect(() => {
-    console.log("Updated Growing Crop Periods:", growingCropPeriods);
-  }, [growingCropPeriods]);
   
-  useEffect(() => {
-    console.log("Updated ProcessingTypes:", processingTypes);
-  }, [processingTypes]);
-  
-  useEffect(() => {
-    console.log("Updated Machines:", machines);
-  }, [machines]);
   
 
 
@@ -125,6 +110,8 @@ const ProcessingList: React.FC<ProcessingsListProps> = ({ processings, setProces
   useEffect(() => {
     const fetchProcessings = async () => {
       try {
+    
+
         const authHeaders = authHeader();
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
@@ -162,7 +149,8 @@ const ProcessingList: React.FC<ProcessingsListProps> = ({ processings, setProces
     };
 
     fetchProcessings();
-  }, [setProcessings, growingCropPeriods, processingTypes, machines]);
+  }, [setProcessings, growingCropPeriods, machines, processingTypes, ]);
+
 
   return (
     <ListContainer>
@@ -171,18 +159,19 @@ const ProcessingList: React.FC<ProcessingsListProps> = ({ processings, setProces
         {processings.map((processing) => (
           <ListItem key={processing.id}>
             <strong>Date:</strong> {processing.date.toString()} |&nbsp;
-            {/* <strong>Date:</strong> {new Date(processing.date).toLocaleDateString()} |&nbsp; */}
+            <strong>Date:</strong> {new Date(processing.date).toLocaleDateString()} |&nbsp;
 
             <strong>GPid:</strong> {processing.growingCropPeriod?.id} |&nbsp;
             <strong>GPCrop:</strong> {processing.growingCropPeriod?.crop?.name} |&nbsp;
-            {/* <strong>GPFieldname:</strong> {processing.growingCropPeriod?.field?.name} |&nbsp; */}
-            {/* <strong>Processing Type:</strong> {processing.processingType?.name} |&nbsp; */}
-            {/* <strong>mMchine:</strong> {processing.machine?.brand} |&nbsp; */}
-            {/* <strong>mMchine:</strong> {processing.machine?.farm} |&nbsp; */}
+            <strong>GPFieldname:</strong> {processing.growingCropPeriod?.field?.name} |&nbsp;
+            <strong>Processing Type:</strong> {processing.processingType?.name} |&nbsp;
+            <strong>Machine-brand:</strong> {processing.machine?.brand} |&nbsp; 
+            <strong>Machine-farm:</strong> {processing.machine?.farm?.name} |&nbsp;
           </ListItem>
         ))}
       </List>
     </ListContainer>
+    
   );
 };
 
