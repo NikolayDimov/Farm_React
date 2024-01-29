@@ -98,8 +98,8 @@ const AddGrowingCropPeriod: React.FC<AddGrowingCropPeriodProps> = ({ onGrowingCr
       if (response.ok) {
         const newGrowingCropPeriod: GrowingCropPeriod = {
           id: 'temporary-id-' + Date.now(),
-          field_id: newGrowingCropPeriodFieldId,
-          crop_id: newGrowingCropPeriodCropId
+          fieldId: newGrowingCropPeriodFieldId,
+          cropId: newGrowingCropPeriodCropId
         };
 
         onGrowingCropPeriodAdded(newGrowingCropPeriod);

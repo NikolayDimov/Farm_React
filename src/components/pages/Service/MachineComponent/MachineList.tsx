@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import authHeader from '../../../../services/authHeader';
 import { Machine } from "./interface";
 import { Farm } from './interface';
@@ -14,9 +14,9 @@ interface MachinesListProps {
 
 const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => {
   const [farms, setFarms] = useState<Farm[]>([]);
-
-  useEffect(() => {
-    const fetchFarms = async () => {
+  const [loading, setLoading] = useState(true); 
+    
+  const fetchFarms = useCallback(async () => {
       try {
         const authHeaders = authHeader();
         const headers: Record<string, string> = {
@@ -38,11 +38,13 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
       } catch (error) {
         console.error('Error fetching farms:', error);
       }
-    };
+    }, []);
 
-    fetchFarms();
-  }, []);
-
+    useEffect(() => {
+      fetchFarms();
+    }, [fetchFarms]);
+ 
+// Memoize Callbacks
   useEffect(() => {
     const fetchMachines = async () => {
       try {
@@ -59,29 +61,44 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
 
         if (response.ok) {
           const machinesData = await response.json();
+    
+          setMachines((prevMachines: Machine[]) => {
+            const updatedMachines: Machine[] = machinesData.data.map((period: any) => ({
+              ...period,
+              farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
+            }));
+    
+            if (JSON.stringify(prevMachines) !== JSON.stringify(updatedMachines)) {
+              return updatedMachines;
+            }
+    
+            return updatedMachines;
+          });
 
-          const updatedMachines: Machine[] = machinesData.data.map((period: any) => ({
-            ...period,
-            farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
-          }));
-          
-          setMachines(updatedMachines);
         } else {
           console.error('Failed to fetch machines from the database');
         }
       } catch (error) {
         console.error('Error fetching machines:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchMachines();
   }, [setMachines, farms]);
 
+  
+
+  if (loading) {
+    return <p>Loading machines...</p>;
+  }
+
   return (
     <ListContainer>
       <ListHeader>Machine List</ListHeader>
       <List>
-      {machines.map((machine) => (
+      {farms.length > 0 && machines.map((machine) => (
         <ListItem key={machine.id}>
           <strong>Brand:</strong> {machine.brand} |&nbsp;
           <strong>Model:</strong> {machine.model} |&nbsp;
@@ -95,5 +112,6 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
 };
 
 export default MachineList;
+
 
 

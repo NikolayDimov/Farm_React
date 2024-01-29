@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import authHeader from '../../../../services/authHeader';
 import { Field } from './interface';
 import { Farm } from './interface';
 import { Soil } from './interface';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
+
 const BASE_URL = "http://localhost:3000";
 
 interface FieldsListProps {
@@ -11,64 +12,64 @@ interface FieldsListProps {
   setFields: React.Dispatch<React.SetStateAction<Field[]>>;
 }
 
-
 const FieldList: React.FC<FieldsListProps> = ({ fields, setFields }) => {
   const [farms, setFarms] = useState<Farm[]>([]);
   const [soils, setSoils] = useState<Soil[]>([]);
 
-  useEffect(() => {
-    const fetchFarms = async () => {
-      try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
+  const fetchFarms = useCallback(async () => {
+    try {
+      const authHeaders = authHeader();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+      };
 
-        const farmsResponse = await fetch(`${BASE_URL}/farm`, {
-          method: 'GET',
-          headers,
-        });
+      const farmsResponse = await fetch(`${BASE_URL}/farm`, {
+        method: 'GET',
+        headers,
+      });
 
-        if (farmsResponse.ok) {
-          const farmsData: { data: Farm[] } = await farmsResponse.json();
-          setFarms(farmsData.data);
-        } else {
-          console.error('Failed to fetch farms from the database');
-        }
-      } catch (error) {
-        console.error('Error fetching farms:', error);
+      if (farmsResponse.ok) {
+        const farmsData: { data: Farm[] } = await farmsResponse.json();
+        setFarms(farmsData.data);
+      } else {
+        console.error('Failed to fetch farms from the database');
       }
-    };
-
-    const fetchSoils = async () => {
-      try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-        const soilsResponse = await fetch(`${BASE_URL}/soil`, {
-          method: 'GET',
-          headers,
-        });
-
-        if (soilsResponse.ok) {
-          const soilsData: { data: Soil[] } = await soilsResponse.json();
-          setSoils(soilsData.data);
-        } else {
-          console.error('Failed to fetch soils from the database');
-        }
-      } catch (error) {
-        console.error('Error fetching soils:', error);
-      }
-    };
-
-    fetchFarms();
-    fetchSoils();
+    } catch (error) {
+      console.error('Error fetching farms:', error);
+    }
   }, []);
 
+  const fetchSoils = useCallback(async () => {
+    try {
+      const authHeaders = authHeader();
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+      };
+
+      const soilsResponse = await fetch(`${BASE_URL}/soil`, {
+        method: 'GET',
+        headers,
+      });
+
+      if (soilsResponse.ok) {
+        const soilsData: { data: Soil[] } = await soilsResponse.json();
+        setSoils(soilsData.data);
+      } else {
+        console.error('Failed to fetch soils from the database');
+      }
+    } catch (error) {
+      console.error('Error fetching soils:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchFarms();
+    fetchSoils();
+  }, [fetchFarms, fetchSoils]);
+
+  // Memoize Callbacks
   useEffect(() => {
     const fetchFields = async () => {
       try {
@@ -86,13 +87,19 @@ const FieldList: React.FC<FieldsListProps> = ({ fields, setFields }) => {
         if (response.ok) {
           const fieldsData = await response.json();
 
-          const updatedFields: Field[] = fieldsData.data.map((period: any) => ({
-            ...period,
-            farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
-            soil: soils.find((soil) => soil.id === period.soil_id) as Soil,
-          }));
+          setFields((prevFields: Field[]) => {
+            const updatedFields: Field[] = fieldsData.data.map((period: any) => ({
+              ...period,
+              farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
+              soil: soils.find((soil) => soil.id === period.soil_id) as Soil,
+            }));
 
-          setFields(updatedFields); 
+            if (JSON.stringify(prevFields) !== JSON.stringify(updatedFields)) {
+              return updatedFields;
+            }
+
+            return prevFields;
+          });
         } else {
           console.error('Failed to fetch fields from the database');
         }

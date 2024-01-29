@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import authHeader from '../../../../services/authHeader';
 import { GrowingCropPeriod } from "./interface";
 import { Field } from './interface';
@@ -16,8 +16,8 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
   const [fields, setFields] = useState<Field[]>([]);
   const [crops, setCrops] = useState<Crop[]>([]);
 
-  useEffect(() => {
-    const fetchFields = async () => {
+ 
+    const fetchFields = useCallback(async () => {
       try {
         const authHeaders = authHeader();
         const headers: Record<string, string> = {
@@ -39,9 +39,9 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
       } catch (error) {
         console.error('Error fetching fields:', error);
       }
-    };
+    }, []);
 
-    const fetchCrops = async () => {
+    const fetchCrops = useCallback(async () => {
       try {
         const authHeaders = authHeader();
         const headers: Record<string, string> = {
@@ -63,12 +63,15 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
       } catch (error) {
         console.error('Error fetching crops:', error);
       }
-    };
+    }, []);
 
+   
+  useEffect(() => {
     fetchFields();
     fetchCrops();
-  }, []);
+  }, [fetchFields, fetchCrops]);
 
+  // Memoize Callbacks
   useEffect(() => {
     const fetchGrowingCropPeriods = async () => {
       try {
@@ -86,13 +89,19 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
         if (response.ok) {
           const growingCropPeriodsData = await response.json();
 
-          const updatedGrowingCropPeriods: GrowingCropPeriod[] = growingCropPeriodsData.data.map((period: any) => ({
-            ...period,
-            field: fields.find((field) => field.id === period.field_id) as Field,
-            crop: crops.find((crop) => crop.id === period.crop_id) as Crop,
-          }));
+          setGrowingCropPeriods((prevGrowingCropPeriods: GrowingCropPeriod[]) => {
+            const updatedGrowingCropPeriods: GrowingCropPeriod[] = growingCropPeriodsData.data.map((period:any) => ({
+              ...period,
+                field: fields.find((field) => field.id === period.field_id) as Field,
+                crop: crops.find((crop) => crop.id === period.crop_id) as Crop,
+            }));
 
-          setGrowingCropPeriods(updatedGrowingCropPeriods);
+            if (JSON.stringify(prevGrowingCropPeriods) !== JSON.stringify(updatedGrowingCropPeriods)) {
+              return updatedGrowingCropPeriods;
+            }
+
+            return updatedGrowingCropPeriods;
+          });
         } else {
           console.error('Failed to fetch GrowingCropPeriod from the database');
         }

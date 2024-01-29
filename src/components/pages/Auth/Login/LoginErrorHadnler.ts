@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LoginFormErrors } from "./interfaces";
+import { LoginFormErrors } from "./Login.static";
 
 export function useLoginFormError() {
     const [formErrors, setFormErrors] = useState<LoginFormErrors>({

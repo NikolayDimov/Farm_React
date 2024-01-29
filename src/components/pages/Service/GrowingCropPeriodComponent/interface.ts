@@ -1,8 +1,8 @@
 export interface GrowingCropPeriod {
     id?: string;
-    field_id: string;
+    fieldId: string;
     field?: Field;
-    crop_id: string;
+    cropId: string;
     crop?: Crop;
 }
 
