@@ -1,7 +1,7 @@
 
 import styled from 'styled-components';
 import { Link } from 'react-scroll'; 
-import farmImage from '../../../../../public/british-farmland(4).jpg';
+import farmImage from '../../../../assets/british-farmland(4).jpg';
 
 const Container = styled.div`
     position: relative;

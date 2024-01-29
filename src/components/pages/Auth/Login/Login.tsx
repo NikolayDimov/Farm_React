@@ -48,8 +48,8 @@ function Login() {
     setValues((prevValues) => ({ ...prevValues, email: values.email, password: values.password }));
 
       if (!isEmailValid || !isPasswordValid) {
-        // console.log(`email: ${values.email}`);
-        // console.log(`password: ${values.password}`);
+        console.log(`email: ${values.email}`);
+        console.log(`password: ${values.password}`);
       } else {
         await login(values.email, values.password);
         // console.log("Login successful.");
@@ -59,15 +59,15 @@ function Login() {
       console.error("login error message:", error.message);
 
       const errorMessage = "Invalid email or password!";
-    //   console.log("Setting error:", errorMessage);
+      console.log("Setting error:", errorMessage);
       setError(errorMessage);
     }
   };
 
   useEffect(() => {
-    console.log('InputField component mounted');
+    console.log('Login component mounted');
     return () => {
-      console.log('InputField component unmounted');
+      console.log('Login component unmounted');
     };
   }, []);
 

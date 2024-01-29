@@ -1,7 +1,7 @@
-import { SignInDto, User } from "../types/types";
+import { SignInDto, User } from "../context/interfaces";
 import authHeader from "./authHeader";
 import { jwtDecode } from "jwt-decode";
-import { JwtPayload } from "../types/types";
+import { JwtPayload } from "../context/interfaces";
 
 const BASE_URL = "http://localhost:3000";
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import Layout from '../../../common/Layout';
-import aboutPageImage from "../../../../../public/farmLand.jpg"; 
+import aboutPageImage from "../../../../assets/farmLand.jpg"; 
 
 
 const BackgroundImage = styled.div`

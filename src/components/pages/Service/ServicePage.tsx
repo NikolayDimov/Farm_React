@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import SoilComponent from './SoilComponent/Soil';
 import Layout from '../../common/Layout';
 import MachineComponent from './MachineComponent/MachineComponent';
-import servicePageImage from "../../../../public/nivaSand.jpg"; 
+import servicePageImage from "../../../assets/nivaSand.jpg"; 
 import FieldComponent from './FieldComponent/FieldComponent';
 //import { MapContainer } from './ServicePage.style';
 
