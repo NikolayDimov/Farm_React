@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Farm } from './profile-types';
+import { Farm } from './Profile.static';
 
 interface AddFarmFormProps {
   onFarmAdded: (newFarm: Farm) => void;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import authHeader from '../../../../services/authHeader';
-import {Soil} from "./interface";
+import {Soil} from "./Soil.static";
 
 const BASE_URL = "http://localhost:3000";
 

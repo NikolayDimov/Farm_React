@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { GrowingCropPeriod } from "./interface";
-import { Field } from './interface';
-import { Crop } from './interface';
+import { GrowingCropPeriod } from "./GrowingCropPeriod.static";
+import { Field } from './GrowingCropPeriod.static';
+import { Crop } from './GrowingCropPeriod.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";

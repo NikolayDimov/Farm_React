@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { Soil } from "./interface";
+import { Soil } from "./Soil.static";
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";

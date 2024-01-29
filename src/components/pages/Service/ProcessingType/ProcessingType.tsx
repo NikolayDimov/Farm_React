@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ProcessingTypeList from './ProcessingTypeList';
 import AddProcessingType from './AddProcessingType';
-import { ProcessingType } from "./interface";
+import { ProcessingType } from "./ProcessingType.static";
 
 const ProcessingTypeComponent: React.FC = () => {
   const [processingTypes, setProcessingTypes] = useState<ProcessingType[]>([]);

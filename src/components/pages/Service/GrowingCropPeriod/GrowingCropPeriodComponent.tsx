@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { GrowingCropPeriod } from "./interface";
+import { GrowingCropPeriod } from "./GrowingCropPeriod.static";
 import AddGrowingCropPeriod from './AddCrowingCropPeriod';
 import GrowingCropPeriodList from './GrowingCropPeriodList';
 

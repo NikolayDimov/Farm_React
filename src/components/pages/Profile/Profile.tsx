@@ -4,7 +4,7 @@ import Layout from '../../common/Layout';
 import MapContainer from './MapContainer';
 import AddFarmForm from './AddFarmForm';
 import FarmList from './FarmList';
-import { Farm } from './profile-types';
+import { Farm } from './Profile.static';
 import styled from 'styled-components';
 import authHeader from "../../../services/authHeader";
 import WelcomeUser from './WelcomeUser';

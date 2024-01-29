@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RegisterFormErrors } from "./interfaces";
+import { RegisterFormErrors } from "./Register.static";
 
 export function useRegsterFormError() {
     const [formErrors, setFormErrors] = useState<RegisterFormErrors>({

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { Machine } from "./interface";
-import { Farm } from './interface';
+import { Machine } from "./Machine.static";
+import { Farm } from './Machine.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";

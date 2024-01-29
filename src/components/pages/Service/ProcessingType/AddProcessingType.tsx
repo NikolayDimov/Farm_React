@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { ProcessingType } from "./interface";
+import { ProcessingType } from "./ProcessingType.static";
 
 const BASE_URL = "http://localhost:3000";
 

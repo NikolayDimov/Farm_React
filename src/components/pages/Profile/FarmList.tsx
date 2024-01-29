@@ -1,6 +1,6 @@
 // FarmList.tsx
 import React, { useEffect } from 'react';
-import { Farm } from './profile-types';
+import { Farm } from './Profile.static';
 import authHeader from '../../../services/authHeader';
 import { ListContainer, ListHeader, ListItem, List } from '../../common/ListStyles';
 const BASE_URL = "http://localhost:3000";

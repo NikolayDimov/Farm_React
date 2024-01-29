@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { Crop } from "./interface";
+import { Crop } from "./Crop.static";
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";

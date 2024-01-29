@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Machine } from "./interface";
+import { Machine } from "./Machine.static";
 import AddMachine from './AddMachine';
 import MachineList from './MachineList';
 

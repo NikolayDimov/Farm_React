@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { Crop } from "./interface";
+import { Crop } from "./Crop.static";
 
 const BASE_URL = "http://localhost:3000";
 

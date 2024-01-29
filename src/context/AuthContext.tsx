@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { loginUser, registerUser, logoutUser } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
-import { JwtPayload } from './interfaces';
+import { JwtPayload } from './AuthContext.static';
 
 import { useNavigate } from 'react-router-dom';
-import { AuthContextType } from './interfaces';
-import { User } from './interfaces';
-import { AuthProviderProps } from './interfaces';
+import { AuthContextType } from './AuthContext.static';
+import { User } from './AuthContext.static';
+import { AuthProviderProps } from './AuthContext.static';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -40,6 +40,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const register = async (email: string, password: string) => {
     try {
       const userData = await registerUser({ email, password });
+      // login( email, password )
       handleLogin(userData);
       nav('/profile');
     } catch (error) {

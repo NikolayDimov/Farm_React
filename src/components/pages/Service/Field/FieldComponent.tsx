@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Field } from './interface';
+import { Field } from './Field.static';
 // import MapContainer from '../MapContainer';
 import FieldList from './FieldList';
 import AddField from './AddField';

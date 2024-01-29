@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { ProcessingType } from "./interface";
+import { ProcessingType } from "./ProcessingType.static";
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 
 const BASE_URL = "http://localhost:3000";

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { Field } from "./interface";
-import { Farm } from './interface';
-import { Soil } from './interface';
+import { Field } from "./Field.static";
+import { Farm } from './Field.static';
+import { Soil } from './Field.static';
 import MapContainer from '../MapContainer';
 
 
@@ -138,7 +138,6 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         setNewSoilId('');
         setErrorMessage('');
       } else {
-        console.error('Failed to create a new field in the database');
         console.error('Failed to create a new field in the database');
         console.error('Response status:', response.status);
         console.error('Response status text:', response.statusText);

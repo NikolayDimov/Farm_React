@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import authHeader from '../../../../services/authHeader';
-import { GrowingCropPeriod } from "./interface";
-import { Field } from './interface';
-import { Crop } from './interface';
+import { GrowingCropPeriod } from "./GrowingCropPeriod.static";
+import { Field } from './GrowingCropPeriod.static';
+import { Crop } from './GrowingCropPeriod.static';
 
 const BASE_URL = "http://localhost:3000";
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CropList from './CropList';
 import AddCrop from './AddCrop';
-import { Crop } from "./interface";
+import { Crop } from "./Crop.static";
 
 const CropComponent: React.FC = () => {
   const [crops, setCrops] = useState<Crop[]>([]);

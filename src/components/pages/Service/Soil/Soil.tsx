@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SoilList from './SoilList';
 import AddSoil from './AddSoil';
-import { Soil } from "./interface";
+import { Soil } from "./Soil.static";
 
 const SoilComponent: React.FC = () => {
   const [soils, setSoils] = useState<Soil[]>([]);

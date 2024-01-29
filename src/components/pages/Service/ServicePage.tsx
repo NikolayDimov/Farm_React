@@ -1,14 +1,15 @@
 
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import SoilComponent from './SoilComponent/Soil';
+import SoilComponent from './Soil/Soil';
 import Layout from '../../common/Layout';
-import MachineComponent from './MachineComponent/MachineComponent';
+import MachineComponent from './Machine/MachineComponent';
 import servicePageImage from "../../../assets/nivaSand.jpg"; 
-import FieldComponent from './FieldComponent/FieldComponent';
-import CropComponent from './CropComponent/Crop';
-import ProcessingTypeComponent from './ProcessingTypeComponent/ProcessingType';
-import GrowingCropPeriodComponent from './GrowingCropPeriodComponent/GrowingCropPeriodComponent';
+import FieldComponent from './Field/FieldComponent';
+import CropComponent from './Crop/Crop';
+import ProcessingTypeComponent from './ProcessingType/ProcessingType';
+import GrowingCropPeriodComponent from './GrowingCropPeriod/GrowingCropPeriodComponent';
+import ProcessingComponent from './Processing/ProcessingComponent';
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -72,6 +73,9 @@ const ServicePage: React.FC = () => {
       </Container>
       <Container>
         <MachineComponent />
+      </Container>
+      <Container>
+        <ProcessingComponent />
       </Container>
     </Layout>
   );
