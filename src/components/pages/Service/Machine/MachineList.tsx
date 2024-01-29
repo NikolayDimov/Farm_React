@@ -41,8 +41,16 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
     }, []);
 
     useEffect(() => {
-      fetchFarms();
-    }, [fetchFarms]);
+      const fetchData = async () => {
+        await fetchFarms();
+      };
+      fetchData();
+    }, []);
+  
+
+    // useEffect(() => {
+    //   fetchFarms();
+    // }, [fetchFarms]);
  
 // Memoize Callbacks
   useEffect(() => {

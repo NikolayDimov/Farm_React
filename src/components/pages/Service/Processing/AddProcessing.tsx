@@ -16,6 +16,7 @@ interface AddProcessingProps {
   onGrowingCropPeriodAdded: (newGrowingCropPeriod: GrowingCropPeriod) => void;
 }
 
+
 const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded, onGrowingCropPeriodAdded }) => {
   const [newDate, setNewDate] = useState<Date | null>(null);
   const [newProcessingTypeId, setNewProcessingTypeId] = useState('');
