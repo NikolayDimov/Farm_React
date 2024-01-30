@@ -2,11 +2,11 @@ import React, { useState, FormEvent } from 'react';
 import { Crop } from "./Crop.static";
 import { apiCrop } from './apiCrop';
 
-interface AddSoilProps {
+interface AddCropProps {
   onCropAdded: (newSoil: Crop) => void;
 }
 
-const AddSoil: React.FC<AddSoilProps> = ({ onCropAdded }) => {
+const AddSoil: React.FC<AddCropProps> = ({ onCropAdded }) => {
   const [cropName, setCropName] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,12 +24,12 @@ const AddSoil: React.FC<AddSoilProps> = ({ onCropAdded }) => {
       console.log(response)
 
       if (response.ok) {
-        const newSoil: Crop = {
+        const newCrop: Crop = {
           id: 'temporary-id-' + Date.now(),
           name: cropName,
         };
 
-        onCropAdded(newSoil);
+        onCropAdded(newCrop);
         setCropName('');
       } else {
         console.error('Failed to create a new Crop in the database');

@@ -1,55 +1,55 @@
-import React, { useState } from 'react';
-import authHeader from '../../../../services/authHeader';
+import React, { useState, FormEvent } from 'react';
 import { ProcessingType } from "./ProcessingType.static";
-
-const BASE_URL = "http://localhost:3000";
-
+import { apiProcessingType } from './apiProcessingType';
 
 interface AddProcessingTypeProps {
   onProcessingTypeAdded: (newProcessingType: ProcessingType) => void;
 }
 
-
 const AddProcessingType: React.FC<AddProcessingTypeProps> = ({ onProcessingTypeAdded }) => {
-  const [newProcessingTypeName, setNewProcessingTypeName] = useState('');
+  const [processingTypeName, setProcessingTypeName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleAddProcessingType = async () => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProcessingTypeName(e.target.value);
+  };
+
+  async function createProcessingType(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     try {
-      const authHeaders = authHeader();
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-      };
+      setLoading(true);
 
-      const response = await fetch(`${BASE_URL}/processingType`, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ name: newProcessingTypeName }),
-      });
+      const response = await apiProcessingType.createProcessingType(processingTypeName);
+      // console.log(response)
 
       if (response.ok) {
         const newProcessingType: ProcessingType = {
-          id: 'temporary-id-' + Date.now(),
-          name: newProcessingTypeName,
+          name: processingTypeName,
         };
 
         onProcessingTypeAdded(newProcessingType);
-        setNewProcessingTypeName('');
+        setProcessingTypeName('');
       } else {
         console.error('Failed to create a new ProcessingType in the database');
       }
     } catch (error) {
       console.error('Error creating a new ProcessingType:', error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
     <div>
-      <h3>Add a New Processing Type</h3>
-      <label>Processing Type Name:</label>
-      <input type="text" value={newProcessingTypeName} onChange={(e) => setNewProcessingTypeName(e.target.value)} />
-      <button onClick={handleAddProcessingType}>Add Processing Type</button>
+      <h3>Add a New ProcessingType</h3>
+      <form onSubmit={createProcessingType}>
+        <label>ProcessingType Name:</label>
+        <input type="text" value={processingTypeName} onChange={changeHandler} />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding ProcessingType...' : 'Add ProcessingType'}
+        </button>
+      </form>
     </div>
   );
 };
