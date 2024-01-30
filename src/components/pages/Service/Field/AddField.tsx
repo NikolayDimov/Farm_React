@@ -13,7 +13,7 @@ interface AddFieldProps {
 }
 
 const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
-  const [newFieldName, setNewFieldName] = useState('');
+  const [fieldName, setFieldName] = useState('');
   const [newBoundary, setNewBoundary] = useState('');
   const [newFarmId, setNewFarmId] = useState('');
   const [newSoilId, setNewSoilId] = useState('');
@@ -109,7 +109,7 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         headers,
         credentials: 'include',
         body: JSON.stringify({ 
-          name: newFieldName, 
+          name: fieldName, 
           boundary: {
             type: 'Polygon',
             coordinates: outlinedCoordinates,
@@ -122,7 +122,7 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
       if (response.ok) {
         const newField: Field = {
           id: 'temporary-id-' + Date.now(),
-          name: newFieldName, 
+          name: fieldName, 
           boundary: {
             type: 'Polygon',
             coordinates: [outlinedCoordinates],
@@ -132,7 +132,7 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         };
 
         onFieldAdded(newField);
-        setNewFieldName('');
+        setFieldName('');
         setNewBoundary('');
         setNewFarmId('');
         setNewSoilId('');

@@ -1,10 +1,10 @@
 // ProfilePage.tsx
 import React, { useState } from 'react';
 import Layout from '../../common/Layout';
-import MapContainer from './MapContainer';
-import AddFarmForm from './AddFarmForm';
-import FarmList from './FarmList';
-import { Farm } from './Profile.static';
+import MapContainer from './Farm/MapContainer';
+import AddFarmForm from './Farm/AddFarmForm';
+import FarmList from './Farm/FarmList';
+import { Farm } from './Farm/Farm.static';
 import styled from 'styled-components';
 import authHeader from "../../../services/authHeader";
 import WelcomeUser from './WelcomeUser';
@@ -27,37 +27,10 @@ const ProfilePage: React.FC = () => {
     setSelectedLocation(coordinates);
   };
 
-  const handleFarmAdded = async (newFarm: Farm) => {
-    try {
-      const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-            "Content-Type": "application/json",
-            ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-      // Assuming you have an API endpoint for creating farms
-      const response = await fetch(`${BASE_URL}/farm`, {
-        method: "POST",
-        headers,
-        credentials: "include",
-        body: JSON.stringify(newFarm),
-      });
-
-      if (response.ok) {
-        // If the farm is successfully created in the database, update the state
-        setFarms((prevFarms) => [...prevFarms, newFarm]);
-      } else {
-        console.error('Failed to create a new farm in the database');
-      }
-    } catch (error) {
-      console.error('Error creating a new farm:', error);
-    }
+  const handleFarmAdded = (newFarm: Farm) => {
+    setFarms((prevFarms) => [...prevFarms, newFarm]);
   };
 
-  const handleFarmLocationClick = (farm: Farm) => {
-    // Set the selected location when a farm location is clicked
-    setSelectedLocation(farm.location.coordinates);
-  };
 
   return (
     <Layout>

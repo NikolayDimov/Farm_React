@@ -21,7 +21,7 @@ const AddSoil: React.FC<AddSoilProps> = ({ onSoilAdded }) => {
       setLoading(true);
 
       const response = await apiSoil.createSoil(soilName);
-      console.log(response)
+      // console.log(response)
 
       if (response.ok) {
         const newSoil: Soil = {
