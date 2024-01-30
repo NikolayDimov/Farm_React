@@ -1,4 +1,3 @@
-// MachineList.tsx
 import React, { useEffect, useState } from 'react';
 import { Field } from "./Field.static";
 import { Farm } from '../../Profile/Farm/Farm.static';

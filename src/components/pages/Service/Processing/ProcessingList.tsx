@@ -71,7 +71,6 @@ const findMachineName = (machineId: string): string => {
     return machine ? findFarmName(machine.farmId) : 'Unknown farm';
   };
   
-  
 
   const findFarmName = (farmId: string): string => {
     const farm = farms.find((farm) => farm.id === farmId);
@@ -82,6 +81,8 @@ const findMachineName = (machineId: string): string => {
     const soil = soils.find((soil) => soil.id === soilId);
     return soil ? soil.name : 'Unknown Farm';
   };
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,14 +138,12 @@ const findMachineName = (machineId: string): string => {
         {Array.isArray(processings) ? (
           processings.map((processing) => (
             <ListItem key={processing.id}>
-                
               <strong>Date:</strong> {new Date(processing.date).toLocaleDateString()} |&nbsp;
               <strong>ProcessingType:</strong> {findProcessingTypeName(processing.processingTypeId)} |&nbsp;
               <strong>Field:</strong> {findGrowingCropPeriodField(processing.growingCropPeriodId)} |&nbsp;
-            <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)} |&nbsp;
+              <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)} |&nbsp;
               <strong>Machine:</strong> {findMachineName(processing.machineId)} |&nbsp;
               <strong>Farmmachine:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
-
             </ListItem>
           ))
         ) : (

@@ -110,12 +110,11 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
   }, []);
 
 
+  
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setCreatedValues((state) => ({ ...state, [e.target.name]: e.target.value }));
   };
-
-
 
 
   const handleAddProcessing = async (e: FormEvent<HTMLFormElement>) => {
@@ -153,9 +152,6 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
       }
   
       const newGrowingCropPeriodData = await newGrowingCropPeriodResponse.json();
-  
-      // Update createdValues with the new GrowingCropPeriodId
-      setCreatedValues((state) => ({ ...state, growingCropPeriodId: newGrowingCropPeriodData.id }));
   
       // Create a new Processing entry
       const newProcessingData: Processing = {
@@ -204,6 +200,93 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
   };
   
 
+
+  // const handleAddProcessing = async (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  
+  //   try {
+  //     if (
+  //       !createdValues.newProcessingDate ||
+  //       !createdValues.processingTypeId ||
+  //       !createdValues.fieldId ||
+  //       !createdValues.cropId ||
+  //       !createdValues.machineId
+  //     ) {
+  //       setErrorMessage('Fields are required.');
+  //       return;
+  //     }
+  
+  //     setLoading(true);
+  
+  //     // Create a new GrowingCropPeriod entry
+  //     const newGrowingCropPeriodResponse = await apiGrowingCropPeriod.createGrowingCropPeriod({
+  //       fieldId: createdValues.fieldId,
+  //       cropId: createdValues.cropId,
+  //       // Add any other necessary fields for GrowingCropPeriod
+  //     });
+  
+  //     if (!newGrowingCropPeriodResponse.ok) {
+  //       console.error('Failed to create a new growingCropPeriod in the database');
+  //       console.error('Response status:', newGrowingCropPeriodResponse.status);
+  //       console.error('Response status text:', newGrowingCropPeriodResponse.statusText);
+  //       const responseText = await newGrowingCropPeriodResponse.text();
+  //       console.error('Response text:', responseText);
+  //       setErrorMessage('Failed to create a new growingCropPeriod in the database');
+  //       return;
+  //     }
+  
+  //     const newGrowingCropPeriodData = await newGrowingCropPeriodResponse.json();
+  
+  //     // Update createdValues with the new GrowingCropPeriodId
+  //     setCreatedValues((state) => ({ ...state, growingCropPeriodId: newGrowingCropPeriodData.id }));
+  
+  //     // Create a new Processing entry
+  //     const newProcessingData: Processing = {
+  //       date: createdValues.newProcessingDate,
+  //       processingTypeId: createdValues.processingTypeId,
+  //       growingCropPeriodId: newGrowingCropPeriodData.id,
+  //       machineId: createdValues.machineId,
+  //     };
+  
+  //     const response: Response = await apiProcessing.createProcessing(newProcessingData);
+  
+  //     if (response.ok) {
+  //       const newProcessing: Processing = {
+  //         date: createdValues.newProcessingDate,
+  //         processingTypeId: createdValues.processingTypeId,
+  //         growingCropPeriodId: newGrowingCropPeriodData.id,
+  //         machineId: createdValues.machineId,
+  //       };
+  
+  //       onProcessingAdded(newProcessing);
+  
+  //       setCreatedValues({
+  //         newProcessingDate: new Date(),
+  //         processingTypeId: '',
+  //         fieldId: '',
+  //         cropId: '',
+  //         machineId: '',
+  //         growingCropPeriodId: '',
+  //       });
+  
+  //       setErrorMessage('');
+  //     } else {
+  //       console.error('Failed to create a new processing in the database');
+  //       console.error('Response status:', response.status);
+  //       console.error('Response status text:', response.statusText);
+  //       const responseText = await response.text();
+  //       console.error('Response text:', responseText);
+  //       setErrorMessage('Failed to create a new processing in the database');
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to create a new processing in the database:', error);
+  //     setErrorMessage('Failed to create a new processing in the database');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  
+
   return (
     <div>
       <h3>Add a New Processing</h3>
@@ -217,7 +300,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
           value={createdValues.processingTypeId}
           onChange={changeHandler}
         >
-          <option value="">Select Processing Type</option>
+          <option key="" value="">Select Processing Type</option>
           {processingTypes.map((processingType) => (
             <option key={processingType.id} value={processingType.id}>
               {processingType.name}
@@ -231,7 +314,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
           value={createdValues.fieldId}
           onChange={changeHandler}
         >
-          <option value="">Select Field</option>
+          <option key="" value="">Select Field</option>
           {fields.map((field) => (
             <option key={field.id} value={field.id}>
               {field.name}
@@ -245,7 +328,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
           value={createdValues.cropId}
           onChange={changeHandler}
         >
-          <option value="">Select Crop</option>
+          <option key="" value="">Select Crop</option>
           {crops.map((crop) => (
             <option key={crop.id} value={crop.id}>
               {crop.name}
@@ -259,7 +342,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
           value={createdValues.machineId}
           onChange={changeHandler}
         >
-          <option value="">Select Machine</option>
+          <option key="" value="">Select Machine</option>
           {machines.map((machine) => (
             <option key={machine.id} value={machine.id}>
               {machine.brand}, {machine.model}, {machine.registerNumber}
