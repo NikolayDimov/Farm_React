@@ -1,57 +1,58 @@
-import React, { useState } from 'react';
-import authHeader from '../../../../services/authHeader';
+import React, { useState, FormEvent } from 'react';
 import { Crop } from "./Crop.static";
+import { apiCrop } from './apiCrop';
 
-const BASE_URL = "http://localhost:3000";
-
-
-interface AddCropProps {
-  onCropAdded: (newCrop: Crop) => void;
+interface AddSoilProps {
+  onCropAdded: (newSoil: Crop) => void;
 }
 
+const AddSoil: React.FC<AddSoilProps> = ({ onCropAdded }) => {
+  const [cropName, setCropName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-const AddCrop: React.FC<AddCropProps> = ({ onCropAdded }) => {
-  const [newCropName, setNewCropName] = useState('');
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCropName(e.target.value);
+  };
 
-  const handleAddCrop = async () => {
+  async function createCrop(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     try {
-      const authHeaders = authHeader();
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-      };
+      setLoading(true);
 
-      const response = await fetch(`${BASE_URL}/crop`, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ name: newCropName }),
-      });
+      const response = await apiCrop.createCrop(cropName);
+      console.log(response)
 
       if (response.ok) {
-        const newCrop: Crop = {
+        const newSoil: Crop = {
           id: 'temporary-id-' + Date.now(),
-          name: newCropName,
+          name: cropName,
         };
 
-        onCropAdded(newCrop);
-        setNewCropName('');
+        onCropAdded(newSoil);
+        setCropName('');
       } else {
-        console.error('Failed to create a new crop in the database');
+        console.error('Failed to create a new Crop in the database');
       }
     } catch (error) {
-      console.error('Error creating a new crop:', error);
+      console.error('Error creating a new Crop:', error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
     <div>
       <h3>Add a New Crop</h3>
-      <label>Crop Name:</label>
-      <input type="text" value={newCropName} onChange={(e) => setNewCropName(e.target.value)} />
-      <button onClick={handleAddCrop}>Add Crop</button>
+      <form onSubmit={createCrop}>
+        <label>Crop Name:</label>
+        <input type="text" value={cropName} onChange={changeHandler} />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding Crop...' : 'Add Crop'}
+        </button>
+      </form>
     </div>
   );
 };
 
-export default AddCrop;
+export default AddSoil;

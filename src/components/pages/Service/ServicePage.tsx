@@ -74,9 +74,9 @@ const ServicePage: React.FC = () => {
       <Container>
         <MachineComponent />
       </Container>
-      <Container>
+      {/* <Container>
         <ProcessingComponent />
-      </Container>
+      </Container> */}
     </Layout>
   );
 };

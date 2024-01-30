@@ -73,7 +73,7 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
           setMachines((prevMachines: Machine[]) => {
             const updatedMachines: Machine[] = machinesData.data.map((period: any) => ({
               ...period,
-              farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
+              farm: farms.find((farm) => farm.id === period.farmId) as Farm,
             }));
     
             if (JSON.stringify(prevMachines) !== JSON.stringify(updatedMachines)) {

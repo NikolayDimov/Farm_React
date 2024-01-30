@@ -90,8 +90,8 @@ const FieldList: React.FC<FieldsListProps> = ({ fields, setFields }) => {
           setFields((prevFields: Field[]) => {
             const updatedFields: Field[] = fieldsData.data.map((period: any) => ({
               ...period,
-              farm: farms.find((farm) => farm.id === period.farm_id) as Farm,
-              soil: soils.find((soil) => soil.id === period.soil_id) as Soil,
+              farm: farms.find((farm) => farm.id === period.farmId) as Farm,
+              soil: soils.find((soil) => soil.id === period.soilId) as Soil,
             }));
 
             if (JSON.stringify(prevFields) !== JSON.stringify(updatedFields)) {

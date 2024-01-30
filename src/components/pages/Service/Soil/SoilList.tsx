@@ -1,42 +1,21 @@
 import React, { useEffect } from 'react';
-import authHeader from '../../../../services/authHeader';
 import { Soil } from "./Soil.static";
-import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
-
-const BASE_URL = "http://localhost:3000";
-
-
+import { apiSoil } from './apiSoil';
+import { ListContainer, ListHeader, List, ListItem } from '../../../common/ListStyles';
 
 interface SoilListProps {
-  soils: Soil[];
+  soils: Soil[]; // Make soils optional
   setSoils: React.Dispatch<React.SetStateAction<Soil[]>>;
 }
 
 const SoilList: React.FC<SoilListProps> = ({ soils, setSoils }) => {
-
   useEffect(() => {
     const fetchSoils = async () => {
       try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-        const response = await fetch(`${BASE_URL}/soil`, {
-          method: 'GET',
-          headers,
-        });
-
-        if (response.ok) {
-          const soilsData = await response.json();
-          
-          setSoils(soilsData.data);
-        } else {
-          console.error('Failed to fetch soils from the database');
-        }
+        const soilData = await apiSoil.fetchSoils();
+        setSoils(soilData.data); 
       } catch (error) {
-        console.error('Error fetching soils:', error);
+        console.error('Error in fetching soils', error);
       }
     };
 
@@ -47,12 +26,14 @@ const SoilList: React.FC<SoilListProps> = ({ soils, setSoils }) => {
     <ListContainer>
       <ListHeader>Soil List</ListHeader>
       <List>
-      {soils.map((soil) => (
-        <ListItem key={soil.id}>
-          <strong>Name:</strong> {soil.name}
-        </ListItem>
-      ))}
-       </List>
+        {Array.isArray(soils) && soils.length > 0 ? (
+          soils.map((soil) => (
+            <ListItem key={soil.id}>{soil.name}</ListItem>
+          ))
+        ) : (
+          <ListItem>No soils available</ListItem>
+        )}
+      </List>
     </ListContainer>
   );
 };

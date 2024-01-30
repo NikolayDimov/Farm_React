@@ -92,8 +92,8 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
           setGrowingCropPeriods((prevGrowingCropPeriods: GrowingCropPeriod[]) => {
             const updatedGrowingCropPeriods: GrowingCropPeriod[] = growingCropPeriodsData.data.map((period:any) => ({
               ...period,
-                field: fields.find((field) => field.id === period.field_id) as Field,
-                crop: crops.find((crop) => crop.id === period.crop_id) as Crop,
+                field: fields.find((field) => field.id === period.fieldId) as Field,
+                crop: crops.find((crop) => crop.id === period.cropId) as Crop,
             }));
 
             if (JSON.stringify(prevGrowingCropPeriods) !== JSON.stringify(updatedGrowingCropPeriods)) {

@@ -1,42 +1,21 @@
 import React, { useEffect } from 'react';
-import authHeader from '../../../../services/authHeader';
 import { Crop } from "./Crop.static";
-import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
-
-const BASE_URL = "http://localhost:3000";
-
-
+import { apiCrop } from './apiCrop';
+import { ListContainer, ListHeader, List, ListItem } from '../../../common/ListStyles';
 
 interface CropListProps {
-  crops: Crop[];
+  crops: Crop[]; // Make soils optional
   setCrops: React.Dispatch<React.SetStateAction<Crop[]>>;
 }
 
 const CropList: React.FC<CropListProps> = ({ crops, setCrops }) => {
-
   useEffect(() => {
     const fetchCrops = async () => {
       try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-        const response = await fetch(`${BASE_URL}/crop`, {
-          method: 'GET',
-          headers,
-        });
-
-        if (response.ok) {
-          const cropsData = await response.json();
-          
-          setCrops(cropsData.data);
-        } else {
-          console.error('Failed to fetch crops from the database');
-        }
+        const cropData = await apiCrop.fetchCrops();
+        setCrops(cropData.data); 
       } catch (error) {
-        console.error('Error fetching crops:', error);
+        console.error('Error in fetching crops', error);
       }
     };
 
@@ -47,12 +26,14 @@ const CropList: React.FC<CropListProps> = ({ crops, setCrops }) => {
     <ListContainer>
       <ListHeader>Crop List</ListHeader>
       <List>
-      {crops.map((crop) => (
-        <ListItem key={crop.id}>
-          <strong>Name:</strong> {crop.name}
-        </ListItem>
-      ))}
-       </List>
+        {Array.isArray(crops) && crops.length > 0 ? (
+          crops.map((crop) => (
+            <ListItem key={crop.id}>{crop.name}</ListItem>
+          ))
+        ) : (
+          <ListItem>No crops available</ListItem>
+        )}
+      </List>
     </ListContainer>
   );
 };

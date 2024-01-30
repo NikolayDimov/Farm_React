@@ -1,55 +1,56 @@
-import React, { useState } from 'react';
-import authHeader from '../../../../services/authHeader';
-import {Soil} from "./Soil.static";
-
-const BASE_URL = "http://localhost:3000";
-
+import React, { useState, FormEvent } from 'react';
+import { Soil } from "./Soil.static";
+import { apiSoil } from './apiSoil';
 
 interface AddSoilProps {
   onSoilAdded: (newSoil: Soil) => void;
 }
 
-
 const AddSoil: React.FC<AddSoilProps> = ({ onSoilAdded }) => {
-  const [newSoilName, setNewSoilName] = useState('');
+  const [soilName, setSoilName] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleAddSoil = async () => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSoilName(e.target.value);
+  };
+
+  async function createSoil(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     try {
-      const authHeaders = authHeader();
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-      };
+      setLoading(true);
 
-      const response = await fetch(`${BASE_URL}/soil`, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ name: newSoilName }),
-      });
+      const response = await apiSoil.createSoil(soilName);
+      console.log(response)
 
       if (response.ok) {
         const newSoil: Soil = {
           id: 'temporary-id-' + Date.now(),
-          name: newSoilName,
+          name: soilName,
         };
 
         onSoilAdded(newSoil);
-        setNewSoilName('');
+        setSoilName('');
       } else {
         console.error('Failed to create a new soil in the database');
       }
     } catch (error) {
       console.error('Error creating a new soil:', error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
     <div>
       <h3>Add a New Soil</h3>
-      <label>Soil Name:</label>
-      <input type="text" value={newSoilName} onChange={(e) => setNewSoilName(e.target.value)} />
-      <button onClick={handleAddSoil}>Add Soil</button>
+      <form onSubmit={createSoil}>
+        <label>Soil Name:</label>
+        <input type="text" value={soilName} onChange={changeHandler} />
+        <button type="submit" disabled={loading}>
+          {loading ? 'Adding Soil...' : 'Add Soil'}
+        </button>
+      </form>
     </div>
   );
 };
