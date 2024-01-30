@@ -1,141 +1,114 @@
-import React, { useState, useEffect } from 'react';
-import authHeader from '../../../../services/authHeader';
+import React, { useState, useEffect, FormEvent } from 'react';
+import { apiField } from './apiField';
 import { Field } from "./Field.static";
 import { Farm } from './Field.static';
 import { Soil } from './Field.static';
 import MapContainer from '../MapContainer';
+import { apiFarm } from '../../Profile/Farm/apiFarm';
+import { apiSoil } from '../Soil/apiSoil';
 
-
-const BASE_URL = "http://localhost:3000";
 
 interface AddFieldProps {
   onFieldAdded: (newField: Field) => void;
 }
 
+
 const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
-  const [fieldName, setFieldName] = useState('');
-  const [newBoundary, setNewBoundary] = useState('');
-  const [newFarmId, setNewFarmId] = useState('');
-  const [newSoilId, setNewSoilId] = useState('');
+  const [createdValues, setCreatedValues] = useState({
+    newFieldName: '',
+    newFarmId: '',
+    newSoilId: '',
+  });
+
   const [farms, setFarms] = useState<Farm[]>([]);
   const [soils, setSoils] = useState<Soil[]>([]);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
-  const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
-  const handleSelectLocation = (coordinates: number[][]) => {
+  const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][][]>([[]]);
+
+  const handleSelectLocation = (coordinates: number[][][]) => {
     console.log('Newly outlined coordinates:', coordinates);
     setOutlinedCoordinates(coordinates);
   };
 
-
   useEffect(() => {
     const fetchFarms = async () => {
       try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-        const farmsResponse = await fetch(`${BASE_URL}/farm`, {
-          method: 'GET',
-          headers,
-        });
-
-        if (farmsResponse.ok) {
-          const farmsData: { data: Farm[] } = await farmsResponse.json();
-          setFarms(farmsData.data);
-          
-        } else {
-          console.error('Failed to fetch farms from the database');
-        }
+        const farmsData = await apiFarm.fetchFarms(); 
+        setFarms(farmsData.data);
       } catch (error) {
         console.error('Error fetching farms:', error);
       }
     };
-    
     fetchFarms();
   }, []);
 
   useEffect(() => {
     const fetchSoils = async () => {
       try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-          ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
-        const soilsResponse = await fetch(`${BASE_URL}/soil`, {
-          method: 'GET',
-          headers,
-        });
-
-        if (soilsResponse.ok) {
-          const soilsData: { data: Soil[] } = await soilsResponse.json();
-          setSoils(soilsData.data);
-          
-        } else {
-          console.error('Failed to fetch farms from the database');
-        }
+        const soilsData = await apiSoil.fetchSoils(); 
+        setSoils(soilsData.data);
       } catch (error) {
         console.error('Error fetching farms:', error);
       }
     };
-    
     fetchSoils();
   }, []);
+
   
-  const handleAddField = async () => {
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setCreatedValues((state) => ({ ...state, [e.target.name]: e.target.value }));
+  };
+
+  const handleAddField = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
       if (outlinedCoordinates.length === 0) {
         setErrorMessage('Please outline the field boundaries.');
         return;
       }
 
-      const authHeaders = authHeader();
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-      };
-
-      if (!newFarmId || !newSoilId) {
+      if (!createdValues.newFarmId || !createdValues.newSoilId) {
         setErrorMessage('Farm and Soil are required.');
         return;
       }
 
-      const response = await fetch(`${BASE_URL}/field`, {
-        method: 'POST',
-        headers,
-        credentials: 'include',
-        body: JSON.stringify({ 
-          name: fieldName, 
+      setLoading(true);
+
+      const newFieldData = {
+        name: createdValues.newFieldName,
+        boundary: {
+          type: 'Polygon',
+          coordinates: outlinedCoordinates,
+        },
+        farmId: createdValues.newFarmId,
+        soilId: createdValues.newSoilId,
+      };
+
+      const response = await apiField.createField(newFieldData);
+
+      if (response.ok) {
+        const newField: Field = {
+          name: createdValues.newFieldName,
           boundary: {
             type: 'Polygon',
             coordinates: outlinedCoordinates,
           },
-          farmId: newFarmId,
-          soilId: newSoilId
-        }),
-      });
-
-      if (response.ok) {
-        const newField: Field = {
-          id: 'temporary-id-' + Date.now(),
-          name: fieldName, 
-          boundary: {
-            type: 'Polygon',
-            coordinates: [outlinedCoordinates],
-          }, 
-          farmId: newFarmId,
-          soilId: newSoilId
+          farmId: createdValues.newFarmId,
+          soilId: createdValues.newSoilId,
         };
 
+
         onFieldAdded(newField);
-        setFieldName('');
-        setNewBoundary('');
-        setNewFarmId('');
-        setNewSoilId('');
+        
+        setCreatedValues({
+          newFieldName: '',
+          newFarmId: '',
+          newSoilId: '',
+        });
+        setOutlinedCoordinates([[]]);
         setErrorMessage('');
       } else {
         console.error('Failed to create a new field in the database');
@@ -143,47 +116,58 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
         console.error('Response status text:', response.statusText);
         const responseText = await response.text();
         console.error('Response text:', responseText);
+        setErrorMessage('Failed to create a new field in the database');
       }
     } catch (error) {
-      console.error('Failed to create a new field in the database');
-    
+      console.error('Failed to create a new field in the database:', error);
+      setErrorMessage('Failed to create a new field in the database');
+    } finally {
+      setLoading(false);
     }
   };
-
 
   return (
     <div>
       <h3>Add a New Field</h3>
-      <label>Field name:</label>
-      <input type="text" value={newFieldName} onChange={(e) => setNewFieldName(e.target.value)} />
-      {/* <label>Field Boubdary:</label>
-      <input type="text" value={newBoundary} onChange={(e) => setNewBoundary(e.target.value)} /> */}
-      <label>Farm:</label>
-      <select
-        value={newFarmId}
-        onChange={(e) => setNewFarmId(e.target.value)}
-      >
-        <option value="">Select Farm</option>
-        {farms.map((farm) => (
-          <option key={farm.id} value={farm.id}>
-            {farm.name}
-          </option>
-        ))}
-      </select>
-      <label>Soil:</label>
-      <select
-        value={newSoilId}
-        onChange={(e) => setNewSoilId(e.target.value)}
-      >
-        <option value="">Select Soil</option>
-        {soils.map((soil) => (
-          <option key={soil.id} value={soil.id}>
-            {soil.name}
-          </option>
-        ))}
-      </select>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <button onClick={handleAddField}>Create Field</button>
+      <form onSubmit={handleAddField}>
+        <label>Field name:</label>
+        <input
+          type="text"
+          name="newFieldName"
+          value={createdValues.newFieldName}
+          onChange={changeHandler}
+        />
+        <label>Farm:</label>
+        <select
+          name="newFarmId"
+          value={createdValues.newFarmId}
+          onChange={changeHandler}
+        >
+          <option value="">Select Farm</option>
+          {farms.map((farm) => (
+            <option key={farm.id} value={farm.id}>
+              {farm.name}
+            </option>
+          ))}
+        </select>
+        <label>Soil:</label>
+        <select
+          name="newSoilId"
+          value={createdValues.newSoilId}
+          onChange={changeHandler}
+        >
+          <option value="">Select Soil</option>
+          {soils.map((soil) => (
+            <option key={soil.id} value={soil.id}>
+              {soil.name}
+            </option>
+          ))}
+        </select>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        <button type="submit" disabled={loading}>
+          {loading ? 'Creating Field...' : 'Create Field'}
+        </button>
+      </form>
 
       <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
     </div>

@@ -56,9 +56,9 @@ const ServicePage: React.FC = () => {
       {/* <MapWrapper>
         <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
       </MapWrapper> */}
-      {/* <Container>
+      <Container>
         <FieldComponent coordinates={outlinedCoordinates} />
-      </Container> */}
+      </Container>
       <Container>
         <SoilComponent />
       </Container>

@@ -9,8 +9,10 @@ const FieldComponent: React.FC<{ coordinates: number[][] }> = ({ coordinates }) 
   const [fields, setFields] = useState<Field[]>([]);
 
   const handleFieldAdded = (newField: Field) => {
+    console.log('New field added:', newField);
     setFields((prevFields) => [...prevFields, newField]);
   };
+  
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -18,11 +20,12 @@ const FieldComponent: React.FC<{ coordinates: number[][] }> = ({ coordinates }) 
     }
   }, [coordinates]);
 
+ 
   return (
     <>
       {/* <MapContainer onSelectLocation={() => {}} outlinedCoordinates={coordinates} /> */}
       <AddField onFieldAdded={handleFieldAdded} />
-      <FieldList fields={fields} setFields={setFields} />
+      <FieldList fields={fields} setFields={setFields} /> 
     </>
   );
 };

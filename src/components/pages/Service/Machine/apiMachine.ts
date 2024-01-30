@@ -1,10 +1,10 @@
 import authHeader from "../../../../services/authHeader";
-import { Field } from "./Field.static";
+import { Machine } from "./Machine.static";
 
 const BASE_URL = "http://localhost:3000";
 
-export const apiField = {
-    fetchFields: async () => {
+export const apiMachine = {
+    fetchMachines: async () => {
         try {
             const authHeaders = authHeader();
             const headers: Record<string, string> = {
@@ -12,24 +12,24 @@ export const apiField = {
                 ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
             };
 
-            const response = await fetch(`${BASE_URL}/field`, {
+            const response = await fetch(`${BASE_URL}/machine`, {
                 method: "GET",
                 headers,
             });
 
             if (!response.ok) {
-                console.error(`Failed to fetch fields. Status: ${response.status}`);
-                throw new Error(`Failed to fetch fields. Status: ${response.status}`);
+                console.error(`Failed to fetch machines. Status: ${response.status}`);
+                throw new Error(`Failed to fetch machines. Status: ${response.status}`);
             }
-            const fieldData = await response.json();
-            return fieldData;
+            const machineData = await response.json();
+            return machineData;
         } catch (error) {
             console.error("Error in fetching fields", error);
             throw error;
         }
     },
 
-    createField: async (newField: Field) => {
+    createMachine: async (newMachine: Machine) => {
         try {
             const authHeaders = authHeader();
             const headers: Record<string, string> = {
@@ -37,11 +37,11 @@ export const apiField = {
                 ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
             };
 
-            const response = await fetch(`${BASE_URL}/field`, {
+            const response = await fetch(`${BASE_URL}/machine`, {
                 method: "POST",
                 headers,
                 credentials: "include",
-                body: JSON.stringify(newField),
+                body: JSON.stringify(newMachine),
             });
 
             return response;

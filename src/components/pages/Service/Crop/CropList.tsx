@@ -4,11 +4,12 @@ import { apiCrop } from './apiCrop';
 import { ListContainer, ListHeader, List, ListItem } from '../../../common/ListStyles';
 
 interface CropListProps {
-  crops: Crop[]; // Make soils optional
+  crops: Crop[]; 
   setCrops: React.Dispatch<React.SetStateAction<Crop[]>>;
 }
 
 const CropList: React.FC<CropListProps> = ({ crops, setCrops }) => {
+  
   useEffect(() => {
     const fetchCrops = async () => {
       try {

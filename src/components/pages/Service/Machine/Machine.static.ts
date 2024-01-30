@@ -8,6 +8,10 @@ export interface Machine {
 }
 
 export interface Farm {
-    id: string;
+    id?: string;
     name: string;
+    location: {
+        type: string;
+        coordinates: number[];
+    };
 }

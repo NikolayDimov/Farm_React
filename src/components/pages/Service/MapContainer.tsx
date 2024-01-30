@@ -3,8 +3,8 @@ import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface MapContainerProps {
-  onSelectLocation: (coordinates: number[][]) => void;
-  outlinedCoordinates: number[][];
+  onSelectLocation: (coordinates: number[][][]) => void;
+  outlinedCoordinates: number[][][];
 }
 
 const StyledMapContainer = styled.div`
@@ -67,7 +67,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, outlinedC
 
       window.google.maps.event.addListener(drawingManager, 'overlaycomplete', (event) => {
         if (event.type === 'polygon' && event.overlay.getPath) {
-          const coordinates: number[][] = event.overlay
+          const coordinates: number[][][] = event.overlay
             .getPath()
             .getArray()
             .map((latLng: google.maps.LatLng) => [latLng.lat(), latLng.lng()]);

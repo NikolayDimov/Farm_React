@@ -14,6 +14,10 @@ export interface Soil {
 }
 
 export interface Farm {
-    id: string;
+    id?: string;
     name: string;
+    location: {
+        type: string;
+        coordinates: number[];
+    };
 }
