@@ -11,11 +11,11 @@ const ProcessingComponent: React.FC = () => {
     setProcessings((prevProcessings) => [...prevProcessings, newProcessing]);
   };
 
-
+ 
   return (
     <>
-      <AddProcessing onProcessingAdded={handleProcessingAdded} onGrowingCropPeriodAdded={() => {}} />
-      <ProcessingList processings={processings} setProcessings={setProcessings} />
+      <AddProcessing onProcessingAdded={handleProcessingAdded} />
+      <ProcessingList processings={processings} setProcessings={setProcessings} /> 
     </>
   );
 };

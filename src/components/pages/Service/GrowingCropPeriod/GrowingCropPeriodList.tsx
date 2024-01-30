@@ -1,6 +1,8 @@
 // MachineList.tsx
 import React, { useEffect, useState } from 'react';
-import { Crop, Field, GrowingCropPeriod } from "./GrowingCropPeriod.static";
+import { GrowingCropPeriod } from "./GrowingCropPeriod.static";
+import { Field } from "../Field/Field.static";
+import { Crop } from "../Crop/Crop.static";
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 import { apiGrowingCropPeriod } from './apiGrowingCropPeriod';
 import { apiField } from '../Field/apiField';
@@ -30,7 +32,7 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const gcpData = await apiGrowingCropPeriod.fetchCrops();
+        const gcpData = await apiGrowingCropPeriod.fetchGCP();
         const fieldsData = await apiField.fetchFields();
         const cropsData = await apiCrop.fetchCrops();
 

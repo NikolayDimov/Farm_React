@@ -1,3 +1,6 @@
+import { Farm } from "../../Profile/Farm/Farm.static";
+import { Soil } from "../Soil/Soil.static";
+
 export interface Field {
     id?: string;
     name: string;
@@ -6,18 +9,4 @@ export interface Field {
     farm?: Farm;
     soilId: string;
     soil?: Soil;
-}
-
-export interface Soil {
-    id: string;
-    name: string;
-}
-
-export interface Farm {
-    id?: string;
-    name: string;
-    location: {
-        type: string;
-        coordinates: number[];
-    };
 }

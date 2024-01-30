@@ -37,6 +37,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+
   const register = async (email: string, password: string) => {
     try {
       const userData = await registerUser({ email, password });

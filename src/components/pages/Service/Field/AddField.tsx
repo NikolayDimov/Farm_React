@@ -1,8 +1,8 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { apiField } from './apiField';
 import { Field } from "./Field.static";
-import { Farm } from './Field.static';
-import { Soil } from './Field.static';
+import { Farm } from '../../Profile/Farm/Farm.static';
+import { Soil } from '../Soil/Soil.static';
 import MapContainer from '../MapContainer';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
 import { apiSoil } from '../Soil/apiSoil';

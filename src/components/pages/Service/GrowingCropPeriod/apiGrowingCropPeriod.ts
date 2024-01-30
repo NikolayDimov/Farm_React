@@ -4,7 +4,7 @@ import { GrowingCropPeriod } from "./GrowingCropPeriod.static";
 const BASE_URL = "http://localhost:3000";
 
 export const apiGrowingCropPeriod = {
-    fetchCrops: async () => {
+    fetchGCP: async () => {
         try {
             const authHeaders = authHeader();
             const headers: Record<string, string> = {
@@ -39,10 +39,32 @@ export const apiGrowingCropPeriod = {
                 body: JSON.stringify(newGrowingCropPeriodData),
             });
 
-            return response;
+            return response; // This should now return a Promise<Response>
         } catch (error) {
             console.error("Error creating a new growingCropPeriod:", error);
             throw error;
         }
     },
 };
+
+// Assuming your apiGrowingCropPeriod type looks like this:
+type ApiGrowingCropPeriod = {
+    fetchGCP: () => Promise<any>;
+    createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;
+    // ... other methods or properties
+};
+
+// Extend the type definition to include createGrowingCropPeriod
+type ExtendedApiGrowingCropPeriod = ApiGrowingCropPeriod & {
+    createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;
+    // ... other methods or properties
+};
+
+// Declaration of apiGrowingCropPeriodExtended
+const apiGrowingCropPeriodExtended: ExtendedApiGrowingCropPeriod = {
+    fetchGCP: apiGrowingCropPeriod.fetchGCP,
+    createGrowingCropPeriod: apiGrowingCropPeriod.createGrowingCropPeriod,
+    // ... other methods or properties
+};
+
+export { apiGrowingCropPeriodExtended };

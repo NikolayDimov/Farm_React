@@ -1,8 +1,8 @@
 // MachineList.tsx
 import React, { useEffect, useState } from 'react';
 import { Field } from "./Field.static";
-import { Farm } from './Field.static';
-import { Soil } from './Field.static';
+import { Farm } from '../../Profile/Farm/Farm.static';
+import { Soil } from '../Soil/Soil.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 import { apiField } from './apiField';
 import { apiFarm } from '../../Profile/Farm/apiFarm';

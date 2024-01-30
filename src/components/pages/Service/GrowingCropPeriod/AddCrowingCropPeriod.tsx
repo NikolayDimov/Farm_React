@@ -1,6 +1,8 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { apiGrowingCropPeriod } from './apiGrowingCropPeriod';
-import { Crop, GrowingCropPeriod, Field } from "./GrowingCropPeriod.static";
+import { GrowingCropPeriod, } from "./GrowingCropPeriod.static";
+import { Field, } from "../Field/Field.static";
+import { Crop, } from "../Crop/Crop.static";
 import { apiField } from '../Field/apiField';
 import { apiCrop } from '../Crop/apiCrop';
 

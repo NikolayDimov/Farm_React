@@ -66,6 +66,7 @@ export const registerUser = async (signInDto: SignInDto): Promise<User> => {
         }
 
         const { access_token } = await response.json();
+        console.log("Received access_token:", access_token);
         const decodedToken: JwtPayload = jwtDecode(access_token);
 
         const userFromToken: User = {
