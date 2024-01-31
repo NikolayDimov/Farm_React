@@ -48,7 +48,6 @@ const CropComponent: React.FC = () => {
     }
   }, [modalVisible]);
 
-
   const handleDeleteCrop = async (cropId: string) => {
     try {
       setLoading(true);
@@ -61,7 +60,7 @@ const CropComponent: React.FC = () => {
         setCrops((prevCrops) => prevCrops.filter((crop) => crop.id !== cropId));
       } else {
         const responseBody = await response.json();
-        console.error(`Failed to delete soil with ID: ${cropId}`, responseBody);
+        console.error(`Failed to delete crop with ID: ${cropId}`, responseBody);
 
         if (response.status === 400 && responseBody.error?.message) {
           showModal(responseBody.error.message);
@@ -79,11 +78,32 @@ const CropComponent: React.FC = () => {
     }
   };
 
+  const handleEditCrop = async (cropId: string, newCropName: string) => {
+    try {
+      setLoading(true);
+      const response = await apiCrop.editCrop(cropId, newCropName);
+      console.log(response);
+
+      if (response.ok) {
+        const updatedCropData = await apiCrop.fetchCrops();
+        setCrops(updatedCropData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit crop with ID: ${cropId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing crop:', error);
+      showModal('Failed to edit crop');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <>
       <AddCrop fetchCrops={fetchCrops} />
-      <CropList crops={crops} onDeleteCrop={handleDeleteCrop} />
+      <CropList crops={crops} onDeleteCrop={handleDeleteCrop} onEditCrop={handleEditCrop}/>
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>

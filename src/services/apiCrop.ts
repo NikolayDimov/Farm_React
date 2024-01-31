@@ -45,6 +45,34 @@ export const apiCrop = {
         }
     },
 
+    editCrop: async (cropId: string, newCropName: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/crop/${cropId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ name: newCropName }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit crop with ID: ${cropId}`, errorResponse);
+                throw new Error("Failed to edit crop");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing crop:", error);
+            throw error;
+        }
+    },
+
     deleteCrop: async (cropId: string) => {
         try {
             const authHeaders = authHeader();

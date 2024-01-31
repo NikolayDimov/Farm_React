@@ -1,52 +1,115 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Crop } from "./Crop.static";
 import { ListContainer, ListHeader, List, ListItem } from '../../BaseLayout/common/ListStyles';
-import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
+import EditIcon from '../../BaseLayout/common/icons/EditIcon'; 
+import DeleteIcon from '../../BaseLayout/common/icons/DeleteIcon'; 
+import { ButtonContainer } from '../../BaseLayout/common/icons/ButtonContainer';
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
 
 interface CropListProps {
   crops: Crop[]; 
   onDeleteCrop: (cropId: string) => void;
+  onEditCrop: (cropId: string, currentCropName: string) => void; 
 }
 
-const CropList: React.FC<CropListProps> = ({ crops, onDeleteCrop }) => {
-  const [selectedCropId, setSelectedCropId] = useState<string | null>(null);
+const CropList: React.FC<CropListProps> = ({ crops, onDeleteCrop, onEditCrop }) => {
+  const [selectedCropIdForDelete, setSelectedCropIdForDelete] = useState<string | null>(null);
+  const [selectedCropIdForEdit, setSelectedCropIdForEdit] = useState<string | null>(null);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [currentCropName, setCurrentCropName] = useState<string>('');
+  const [originalCropName, setOriginalCropName] = useState<string>('');
+
 
   const handleDeleteClick = (cropId: string | undefined) => {
     if (cropId) {
-      setSelectedCropId(cropId);
+      setSelectedCropIdForDelete(cropId);
+      setDeleteModalVisible(true);
+    }
+  };
+
+  const handleEditClick = (cropId: string | undefined, cropName: string) => {
+    if (cropId) {
+      setSelectedCropIdForEdit(cropId);
+      setCurrentCropName(cropName);
+      setOriginalCropName(cropName); 
+      setEditModalVisible(true);
     }
   };
 
   const handleDeleteConfirm = async () => {
-    if (selectedCropId) {
-      await onDeleteCrop(selectedCropId);
-      setSelectedCropId(null);
+    if (selectedCropIdForDelete) {
+      await onDeleteCrop(selectedCropIdForDelete);
+      setSelectedCropIdForDelete(null);
+      setDeleteModalVisible(false);
     }
   };
 
   const handleDeleteCancel = () => {
-    setSelectedCropId(null);
+    setSelectedCropIdForDelete(null);
+    setDeleteModalVisible(false);
   };
-  
+
+  const handleEditConfirm = async () => {
+    try {
+      if (selectedCropIdForEdit) {
+        await onEditCrop(selectedCropIdForEdit, currentCropName);
+      }
+
+      setSelectedCropIdForEdit(null);
+      setEditModalVisible(false);
+      setCurrentCropName(''); 
+    } catch (error) {
+      console.error('Error handling edit confirmation:', error);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setSelectedCropIdForEdit(null);
+    setEditModalVisible(false);
+    setCurrentCropName(''); // Reset current crop name
+  };
 
   return (
     <ListContainer>
       <ListHeader>Crop List</ListHeader>
       <List>
-        {Array.isArray(crops) && crops.length > 0 ? (
-          crops.map((crop) => (
-            <ListItem key={crop.id}>
-              {crop.name}
-              <DeleteIcon onClick={() => handleDeleteClick(crop.id)}>X</DeleteIcon>
-              </ListItem>
-          ))
-        ) : (
-          <ListItem>No crops available</ListItem>
-        )}
-      </List>
+      {Array.isArray(crops) && crops.length > 0 ? (
+        crops.map((crop) => (
+          <ListItem key={crop.id}>
+            {crop.name}
+            <ButtonContainer>
+              <EditIcon onClick={() => handleEditClick(crop.id, crop.name)} />
+              <DeleteIcon onClick={() => handleDeleteClick(crop.id)} />
+            </ButtonContainer>
+          </ListItem>
+        ))
+      ) : (
+        <ListItem>No crops available</ListItem>
+      )}
+    </List>
 
-      <ModalOverlay show={!!selectedCropId} confirmation={false}>
-        {/* Use StyledModalContainer here instead of ModalContainer */}
+      {/* Edit Modal */}
+      <ModalOverlay show={isEditModalVisible} confirmation={false}>
+        <StyledModalContainer confirmation={false}>
+          <ModalContent>
+            <p>Current Crop Name: {originalCropName}</p>
+            <input
+              type="text"
+              placeholder="Enter new crop name"
+              value={currentCropName}
+              onChange={(e) => setCurrentCropName(e.target.value)}
+            />
+          </ModalContent>
+          <ModalActions>
+            <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
+            <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
+          </ModalActions>
+        </StyledModalContainer>
+      </ModalOverlay>
+
+      {/* Delete Modal */}
+      <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
         <StyledModalContainer confirmation={false}>
           <ModalContent>
             <p>Are you sure you want to delete this crop?</p>
@@ -57,7 +120,6 @@ const CropList: React.FC<CropListProps> = ({ crops, onDeleteCrop }) => {
           </ModalActions>
         </StyledModalContainer>
       </ModalOverlay>
-
     </ListContainer>
   );
 };

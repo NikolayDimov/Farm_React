@@ -1,4 +1,3 @@
-
 // Drop pin google maps
 
 import React, { useEffect, useRef } from 'react';
@@ -73,6 +72,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
 };
 
 export default MapContainer;
+
 
 
 
