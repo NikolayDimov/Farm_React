@@ -5,7 +5,7 @@ import SoilComponent from './Soil/Soil';
 import Layout from '../../common/Layout';
 import MachineComponent from './Machine/Machine';
 import servicePageImage from "../../../assets/nivaSand.jpg"; 
-import FieldComponent from './Field/FieldComponent';
+import FieldComponent from './Field/Field';
 import CropComponent from './Crop/Crop';
 import ProcessingTypeComponent from './ProcessingType/ProcessingType';
 // import GrowingCropPeriodComponent from './GrowingCropPeriod/GrowingCropPeriodComponent';

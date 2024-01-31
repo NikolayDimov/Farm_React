@@ -15,7 +15,7 @@ import { apiMachine } from '../Machine/apiMachine';
 import { apiCrop } from '../Crop/apiCrop';
 
 interface AddProcessingProps {
-  onProcessingAdded: (newProcessing: Processing) => void;
+  fetchProcessings: () => void;
 }
 
 // Assuming your apiGrowingCropPeriod type looks like this:
@@ -30,7 +30,7 @@ type ExtendedApiGrowingCropPeriod = ApiGrowingCropPeriod & {
   createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;
 };
 
-const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
+const AddProcessing: React.FC<AddProcessingProps> = ({ fetchProcessings }) => {
   const [createdValues, setCreatedValues] = useState({
     newProcessingDate: new Date(),
     processingTypeId: '',
@@ -117,7 +117,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
   };
 
 
-  const handleAddProcessing = async (e: FormEvent<HTMLFormElement>) => {
+ async function createProcessing (e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
   
     try {
@@ -138,7 +138,6 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
       const newGrowingCropPeriodResponse = await apiGrowingCropPeriod.createGrowingCropPeriod({
         fieldId: createdValues.fieldId,
         cropId: createdValues.cropId,
-        // Add any other necessary fields for GrowingCropPeriod
       });
   
       if (!newGrowingCropPeriodResponse.ok) {
@@ -164,15 +163,6 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
       const response: Response = await apiProcessing.createProcessing(newProcessingData);
   
       if (response.ok) {
-        const newProcessing: Processing = {
-          date: createdValues.newProcessingDate,
-          processingTypeId: createdValues.processingTypeId,
-          growingCropPeriodId: newGrowingCropPeriodData.id,
-          machineId: createdValues.machineId,
-        };
-  
-        onProcessingAdded(newProcessing);
-  
         setCreatedValues({
           newProcessingDate: new Date(),
           processingTypeId: '',
@@ -181,14 +171,10 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
           machineId: '',
           growingCropPeriodId: '',
         });
-  
-        setErrorMessage('');
+        fetchProcessings();
       } else {
-        console.error('Failed to create a new processing in the database');
-        console.error('Response status:', response.status);
-        console.error('Response status text:', response.statusText);
-        const responseText = await response.text();
-        console.error('Response text:', responseText);
+        const responseBody = await response.json();
+        console.error('Failed to create a new processing in the database:', responseBody);
         setErrorMessage('Failed to create a new processing in the database');
       }
     } catch (error) {
@@ -290,7 +276,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ onProcessingAdded }) => {
   return (
     <div>
       <h3>Add a New Processing</h3>
-      <form onSubmit={handleAddProcessing}>
+      <form onSubmit={createProcessing}>
         <label>Processing date:</label>
         <DatePicker selected={createdValues.newProcessingDate} onChange={(date: Date) => setCreatedValues((state) => ({ ...state, newProcessingDate: date }))} />
 

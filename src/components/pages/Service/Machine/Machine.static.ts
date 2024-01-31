@@ -1,3 +1,5 @@
+import { Farm } from "../../Profile/Farm/Farm.static";
+
 export interface Machine {
     id?: string;
     brand: string;
@@ -5,13 +7,4 @@ export interface Machine {
     registerNumber: string;
     farmId: string;
     farm?: Farm;
-}
-
-export interface Farm {
-    id?: string;
-    name: string;
-    location: {
-        type: string;
-        coordinates: number[];
-    };
 }

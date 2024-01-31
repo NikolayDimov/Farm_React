@@ -6,11 +6,8 @@ import AddFarmForm from './Farm/AddFarmForm';
 import FarmList from './Farm/FarmList';
 import { Farm } from './Farm/Farm.static';
 import styled from 'styled-components';
-import authHeader from "../../../services/authHeader";
 import WelcomeUser from './WelcomeUser';
 
-
-const BASE_URL = "http://localhost:3000";
 
 
 // Style the MapContainer component

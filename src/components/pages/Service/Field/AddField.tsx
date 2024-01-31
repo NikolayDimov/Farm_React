@@ -1,19 +1,16 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { apiField } from './apiField';
-import { Field } from "./Field.static";
 import { Farm } from '../../Profile/Farm/Farm.static';
 import { Soil } from '../Soil/Soil.static';
 import MapContainer from '../MapContainer';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
 import { apiSoil } from '../Soil/apiSoil';
 
-
 interface AddFieldProps {
-  onFieldAdded: (newField: Field) => void;
+  fetchFields: () => void;
 }
 
-
-const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
+const AddField: React.FC<AddFieldProps> = ({ fetchFields }) => {
   const [createdValues, setCreatedValues] = useState({
     newFieldName: '',
     newFarmId: '',
@@ -61,7 +58,7 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
     setCreatedValues((state) => ({ ...state, [e.target.name]: e.target.value }));
   };
 
-  const handleAddField = async (e: FormEvent<HTMLFormElement>) => {
+  async function createField (e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -90,32 +87,15 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
       const response = await apiField.createField(newFieldData);
 
       if (response.ok) {
-        const newField: Field = {
-          name: createdValues.newFieldName,
-          boundary: {
-            type: 'Polygon',
-            coordinates: outlinedCoordinates,
-          },
-          farmId: createdValues.newFarmId,
-          soilId: createdValues.newSoilId,
-        };
-
-
-        onFieldAdded(newField);
-        
         setCreatedValues({
           newFieldName: '',
           newFarmId: '',
           newSoilId: '',
         });
-        setOutlinedCoordinates([[]]);
-        setErrorMessage('');
+        fetchFields();
       } else {
-        console.error('Failed to create a new field in the database');
-        console.error('Response status:', response.status);
-        console.error('Response status text:', response.statusText);
-        const responseText = await response.text();
-        console.error('Response text:', responseText);
+        const responseBody = await response.json();
+        console.error('Failed to create a new field in the database:', responseBody);
         setErrorMessage('Failed to create a new field in the database');
       }
     } catch (error) {
@@ -129,7 +109,7 @@ const AddField: React.FC<AddFieldProps> = ({ onFieldAdded }) => {
   return (
     <div>
       <h3>Add a New Field</h3>
-      <form onSubmit={handleAddField}>
+      <form onSubmit={createField}>
         <label>Field name:</label>
         <input
           type="text"

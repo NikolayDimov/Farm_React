@@ -52,4 +52,30 @@ export const apiProcessing = {
             throw error;
         }
     },
+
+    deleteProcessing: async (processingId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/processing/${processingId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete processing with ID: ${processingId}`, errorResponse);
+                throw new Error("Failed to delete processing");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting processing:", error);
+            throw new Error("Failed to delete processing");
+        }
+    },
 };

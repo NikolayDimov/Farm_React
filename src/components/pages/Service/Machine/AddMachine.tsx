@@ -1,8 +1,7 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { apiMachine } from './apiMachine';
-import { Farm } from './Machine.static';
+import { Farm } from '../../Profile/Farm/Farm.static';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
-
 
 interface AddMachineProps {
   fetchMachines: () => void;

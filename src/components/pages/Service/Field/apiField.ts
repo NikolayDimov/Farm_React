@@ -50,4 +50,30 @@ export const apiField = {
             throw error;
         }
     },
+
+    deleteField: async (fieldId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/field/${fieldId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete field with ID: ${fieldId}`, errorResponse);
+                throw new Error("Failed to delete field");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting field:", error);
+            throw new Error("Failed to delete field");
+        }
+    },
 };

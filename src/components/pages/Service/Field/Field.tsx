@@ -1,40 +1,45 @@
-
-import React, { useEffect, useState } from 'react';
-import { Machine } from "./Machine.static";
-import { Farm } from "../../Profile/Farm/Farm.static";
-import AddMachine from './AddMachine';
-import MachineList from './MachineList';
+import React, { useState, useEffect } from 'react';
+import { Field } from './Field.static';
+import { Farm } from '../../Profile/Farm/Farm.static';
+import { Soil } from '../Soil/Soil.static';
+import FieldList from './FieldList';
+import AddField from './AddField';
 import {
   ModalOverlay,
   StyledModalContainer,
   modalContentStyles,
   closeButtonStyles,
 } from '../ServicePage.style';
-import { apiMachine } from './apiMachine';
+import { apiField } from './apiField';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
+import { apiSoil } from '../Soil/apiSoil';
 
-const MachineComponent: React.FC = () => {
-  const [machines, setMachines] = useState<Machine[]>([]);
+
+const FieldComponent: React.FC<{ coordinates: number[][] }> = ({ coordinates }) => {
+  const [fields, setFields] = useState<Field[]>([]);
   const [farms, setFarms] = useState<Farm[]>([]);
+  const [soils, setSoils] = useState<Soil[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [confirmation, setConfirmation] = useState(false); 
 
-  const fetchMachines = async () => {
+  const fetchFields = async () => {
     try {
-      const machinesData = await apiMachine.fetchMachines();
+      const fieldsData = await apiField.fetchFields();
       const farmsData = await apiFarm.fetchFarms();
+      const soilsData = await apiSoil.fetchSoils();
 
-      setMachines(machinesData.data); 
-      setFarms(farmsData.data);
+      setFields(fieldsData.data); 
+      setFarms(farmsData.data); 
+      setSoils(soilsData.data); 
     } catch (error) {
-      console.error('Error in fetching machine', error);
+      console.error('Error in fetching Field', error);
     }
   };
 
   useEffect(() => {
-    fetchMachines(); 
+    fetchFields(); 
   }, []);
 
 
@@ -56,44 +61,44 @@ const MachineComponent: React.FC = () => {
   }, [modalVisible]);
 
 
-  const handleDeleteMachine = async (machineId: string) => {
+  const handleDeleteField = async (fieldId: string) => {
     try {
       setLoading(true);
 
       // Make API call to delete soil by ID
-      const response = await apiMachine.deleteMachine(machineId);
+      const response = await apiField.deleteField(fieldId);
 
       if (response.ok) {
         // Handle successful deletion
-        setMachines((prevMachines) => prevMachines.filter((machine) => machine.id !== machineId));
+        setFields((prevFields) => prevFields.filter((field) => field.id !== fieldId));
       } else {
         const responseBody = await response.json();
-        console.error(`Failed to delete soil with ID: ${machineId}`, responseBody);
+        console.error(`Failed to delete soil with ID: ${fieldId}`, responseBody);
 
         if (response.status === 400 && responseBody.error?.message) {
           showModal(responseBody.error.message);
           setConfirmation(true); 
         } else {
-          showModal('Failed to delete Machine');
+          showModal('Failed to delete Field');
         }
       }
     } catch (error) {
-      console.error('Error deleting Machine:', error);
+      console.error('Error deleting Field:', error);
 
-      showModal('Failed to delete Machine');
+      showModal('Failed to delete Field');
     } finally {
       setLoading(false);
     }
   };
-
-
-
   
 
+
+
+ 
   return (
     <>
-      <AddMachine fetchMachines={fetchMachines} />
-      <MachineList machines={machines} farms={farms} onDeleteMachine={handleDeleteMachine} />
+      <AddField fetchFields={fetchFields} />
+      <FieldList fields={fields} farms={farms} soils={soils} onDeleteField={handleDeleteField} /> 
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>
@@ -108,6 +113,6 @@ const MachineComponent: React.FC = () => {
   );
 };
 
-export default MachineComponent;
 
 
+export default FieldComponent;

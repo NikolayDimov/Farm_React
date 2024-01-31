@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Field } from "./Field.static";
 import { Farm } from '../../Profile/Farm/Farm.static';
 import { Soil } from '../Soil/Soil.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
-import { apiField } from './apiField';
-import { apiFarm } from '../../Profile/Farm/apiFarm';
-import { apiSoil } from '../Soil/apiSoil';
+import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../ServicePage.style';
+
 
 interface FieldListProps {
   fields: Field[];
-  setFields: React.Dispatch<React.SetStateAction<Field[]>>;
+  farms: Farm[];
+  soils: Soil[];
+  onDeleteField: (fieldId: string) => void;
 }
 
-const FieldList: React.FC<FieldListProps> = ({ fields, setFields }) => {
-  const [farms, setFarms] = useState<Farm[]>([]);
-  const [soils, setSoils] = useState<Soil[]>([]);
-  const [loading, setLoading] = useState(true);
-
-
+const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteField }) => {
+  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+ 
   const findFarmName = (farmId: string): string => {
     const farm = farms.find((farm) => farm.id === farmId);
     return farm ? farm.name : 'Unknown Farm';
@@ -28,30 +26,23 @@ const FieldList: React.FC<FieldListProps> = ({ fields, setFields }) => {
     return soil ? soil.name : 'Unknown Farm';
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fieldsData = await apiField.fetchFields();
-        const farmsData = await apiFarm.fetchFarms();
-        const soilsData = await apiSoil.fetchSoils();
+  const handleDeleteClick = (fieldId: string | undefined) => {
+    if (fieldId) {
+      setSelectedFieldId(fieldId);
+    }
+  };
 
-        setFields(fieldsData.data);
-        setFarms(farmsData.data);
-        setSoils(soilsData.data);
+  const handleDeleteConfirm = async () => {
+    if (selectedFieldId) {
+      await onDeleteField(selectedFieldId);
+      setSelectedFieldId(null);
+    }
+  };
 
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+  const handleDeleteCancel = () => {
+    setSelectedFieldId(null);
+  };
 
-    fetchData();
-  }, [setFields]);
-
-
-  if (loading) {
-    return <p>Loading machines...</p>;
-  }
 
   return (
     <ListContainer>
@@ -63,12 +54,27 @@ const FieldList: React.FC<FieldListProps> = ({ fields, setFields }) => {
               <strong>Name:</strong> {field.name} |&nbsp;
               <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
               <strong>Soil:</strong> {findSoilName(field.soilId)}
+              <DeleteIcon onClick={() => handleDeleteClick(field.id)}>X</DeleteIcon>
+
             </ListItem>
           ))
         ) : (
-          <p>No machines available</p>
+          <p>No fields available</p>
         )}
       </List>
+
+      <ModalOverlay show={!!selectedFieldId} confirmation={false}>
+        {/* Use StyledModalContainer here instead of ModalContainer */}
+        <StyledModalContainer confirmation={false}>
+          <ModalContent>
+            <p>Are you sure you want to delete this field?</p>
+          </ModalContent>
+          <ModalActions>
+            <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
+            <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
+          </ModalActions>
+        </StyledModalContainer>
+      </ModalOverlay>
     </ListContainer>
   );
 };

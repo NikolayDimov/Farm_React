@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Machine } from "./Machine.static";
-import { Farm } from './Machine.static';
+import { Farm } from '../../Profile/Farm/Farm.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
-import { apiMachine } from './apiMachine';
-import { apiFarm } from '../../Profile/Farm/apiFarm';
 import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../ServicePage.style';
 
 
 interface MachinesListProps {
   machines: Machine[];
+  farms: Farm[];
   onDeleteMachine: (machineId: string) => void;
 }
 
-const MachineList: React.FC<MachinesListProps> = ({ machines, onDeleteMachine }) => {
+const MachineList: React.FC<MachinesListProps> = ({ machines, farms, onDeleteMachine }) => {
   const [selectedMachineId, setSelectedMachineId] = useState<string | null>(null);
-  const [farms, setFarms] = useState<Farm[]>([]);
-  const [loading, setLoading] = useState(true);
 
 
   const findFarmName = (farmId: string): string => {
