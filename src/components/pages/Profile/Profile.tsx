@@ -1,16 +1,13 @@
-// ProfilePage.tsx
 import React, { useState } from 'react';
-import Layout from '../../common/Layout';
-import MapContainer from './Farm/MapContainer';
-import AddFarmForm from './Farm/AddFarmForm';
-import FarmList from './Farm/FarmList';
-import { Farm } from './Farm/Farm.static';
+import Layout from '../../BaseLayout/common/Layout';
+import MapContainer from '../Farm/MapContainer';
+import AddFarmForm from '../Farm/AddFarmForm';
+import FarmList from '../Farm/FarmList';
+import { Farm } from '../Farm/Farm.static';
 import styled from 'styled-components';
 import WelcomeUser from './WelcomeUser';
 
 
-
-// Style the MapContainer component
 const StyledMapContainer = styled(MapContainer)`
   height: 600px;
 `;

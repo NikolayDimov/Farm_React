@@ -5,7 +5,7 @@ import Login from './components/pages/Auth/Login/Login';
 import Register from './components/pages/Auth/Register/Register';
 import Home from './components/pages/Home/Home';
 import ProfilePage from './components/pages/Profile/Profile';
-import Service from './components/pages/Service/ServicePage';
+import Service from './components/BaseLayout/BaseLayout';
 import WithNavbar from './components/pages/Navbar/ToggleWithNavbar';
 import WithoutNavbar from './components/pages/Navbar/ToggleWithoutNavbar';
 import { routes } from './static/routes';

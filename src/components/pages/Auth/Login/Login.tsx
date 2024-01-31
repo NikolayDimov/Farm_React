@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
-import Layout from "../../../common/Layout";
+import Layout from "../../../BaseLayout/common/Layout";
 import InputField from '../AuthForm';
 import {Container, ErrorStyles, FormBlock, FormGroup, LeftPanel, Logo, RightPanel, StyledButton, Title} from '../StyledComponents';
 import { AuthLink } from "../StyledComponents";

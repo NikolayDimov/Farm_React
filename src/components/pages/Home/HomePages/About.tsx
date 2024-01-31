@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import Layout from '../../../common/Layout';
+import Layout from '../../../BaseLayout/common/Layout';
 import aboutPageImage from "../../../../assets/farmLand.jpg"; 
 
 
