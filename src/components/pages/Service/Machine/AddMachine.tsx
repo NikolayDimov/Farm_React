@@ -1,15 +1,14 @@
 import React, { useState, useEffect, FormEvent } from 'react';
 import { apiMachine } from './apiMachine';
-import { Machine } from './Machine.static';
 import { Farm } from './Machine.static';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
 
 
 interface AddMachineProps {
-  onMachineAdded: (newMachine: Machine) => void;
+  fetchMachines: () => void;
 }
 
-const AddMachine: React.FC<AddMachineProps> = ({ onMachineAdded }) => {
+const AddMachine: React.FC<AddMachineProps> = ({ fetchMachines }) => {
   const [createdValues, setCreatedValues] = useState({
     newMachineBrand: '',
     newMachineModel: '',
@@ -38,7 +37,7 @@ const AddMachine: React.FC<AddMachineProps> = ({ onMachineAdded }) => {
     setCreatedValues((state) => ({ ...state, [e.target.name]: e.target.value }));
   };
 
-  const handleAddMachine = async (e: FormEvent<HTMLFormElement>) => {
+  async function createMachine (e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     try {
@@ -59,28 +58,16 @@ const AddMachine: React.FC<AddMachineProps> = ({ onMachineAdded }) => {
       const response = await apiMachine.createMachine(newMachineData);
 
       if (response.ok) {
-        const newMachine: Machine = {
-          brand: createdValues.newMachineBrand,
-          model: createdValues.newMachineModel,
-          registerNumber: createdValues.newMachineRegNumber,
-          farmId: createdValues.newMachineFarmId,
-        };
-
-        onMachineAdded(newMachine);
-
         setCreatedValues({
           newMachineBrand: '',
           newMachineModel: '',
           newMachineRegNumber: '',
           newMachineFarmId: '',
         });
-        setErrorMessage('');
+        fetchMachines();
       } else {
-        console.error('Failed to create a new machine in the database');
-        console.error('Response status:', response.status);
-        console.error('Response status text:', response.statusText);
-        const responseText = await response.text();
-        console.error('Response text:', responseText);
+        const responseBody = await response.json();
+        console.error('Failed to create a new machine in the database:', responseBody);
         setErrorMessage('Failed to create a new machine in the database');
       }
     } catch (error) {
@@ -94,7 +81,7 @@ const AddMachine: React.FC<AddMachineProps> = ({ onMachineAdded }) => {
   return (
     <div>
       <h3>Add a New Machine</h3>
-      <form onSubmit={handleAddMachine}>
+      <form onSubmit={createMachine}>
         <label>Machine Brand:</label>
         <input
           type="text"

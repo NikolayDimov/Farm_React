@@ -1,33 +1,34 @@
+
 import React, { useEffect, useState } from 'react';
-import CropList from './CropList';
-import AddCrop from './AddCrop';
-import { Crop } from "./Crop.static";
-import { apiCrop } from './apiCrop';
+import { Machine } from "./Machine.static";
+import AddMachine from './AddMachine';
+import MachineList from './MachineList';
 import {
   ModalOverlay,
   StyledModalContainer,
   modalContentStyles,
   closeButtonStyles,
 } from '../ServicePage.style';
+import { apiMachine } from './apiMachine';
 
-const CropComponent: React.FC = () => {
-  const [crops, setCrops] = useState<Crop[]>([]);
+const MachineComponent: React.FC = () => {
+  const [machines, setMachines] = useState<Machine[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [confirmation, setConfirmation] = useState(false); 
 
-  const fetchCrops = async () => {
+  const fetchMachines = async () => {
     try {
-      const cropData = await apiCrop.fetchCrops();
-      setCrops(cropData.data); 
+      const machineData = await apiMachine.fetchMachines();
+      setMachines(machineData.data); 
     } catch (error) {
-      console.error('Error in fetching crops', error);
+      console.error('Error in fetching machine', error);
     }
   };
 
   useEffect(() => {
-    fetchCrops(); 
+    fetchMachines(); 
   }, []);
 
 
@@ -49,45 +50,48 @@ const CropComponent: React.FC = () => {
   }, [modalVisible]);
 
 
-  const handleDeleteCrop = async (cropId: string) => {
+  const handleDeleteMachine = async (machineId: string) => {
     try {
       setLoading(true);
 
       // Make API call to delete soil by ID
-      const response = await apiCrop.deleteCrop(cropId);
+      const response = await apiMachine.deleteMachine(machineId);
 
       if (response.ok) {
         // Handle successful deletion
-        setCrops((prevCrops) => prevCrops.filter((crop) => crop.id !== cropId));
+        setMachines((prevMachines) => prevMachines.filter((machine) => machine.id !== machineId));
       } else {
         const responseBody = await response.json();
-        console.error(`Failed to delete soil with ID: ${cropId}`, responseBody);
+        console.error(`Failed to delete soil with ID: ${machineId}`, responseBody);
 
         if (response.status === 400 && responseBody.error?.message) {
           showModal(responseBody.error.message);
           setConfirmation(true); 
         } else {
-          showModal('Failed to delete crop');
+          showModal('Failed to delete Machine');
         }
       }
     } catch (error) {
-      console.error('Error deleting crop:', error);
+      console.error('Error deleting Machine:', error);
 
-      showModal('Failed to delete crop');
+      showModal('Failed to delete Machine');
     } finally {
       setLoading(false);
     }
   };
 
 
+
+  
+
   return (
     <>
-      <AddCrop fetchCrops={fetchCrops} />
-      <CropList crops={crops} onDeleteCrop={handleDeleteCrop} />
+      <AddMachine fetchMachines={fetchMachines} />
+      <MachineList machines={machines} onDeleteMachine={handleDeleteMachine} />
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>
-            {confirmation ? 'Soil cannot be deleted' : modalMessage}
+            {confirmation ? 'Machine cannot be deleted' : modalMessage}
           </div>
           <div style={closeButtonStyles}>
             <button onClick={() => setModalVisible(false)}>Close</button>
@@ -98,4 +102,6 @@ const CropComponent: React.FC = () => {
   );
 };
 
-export default CropComponent;
+export default MachineComponent;
+
+

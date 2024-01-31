@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import SoilComponent from './Soil/Soil';
 import Layout from '../../common/Layout';
-import MachineComponent from './Machine/MachineComponent';
+import MachineComponent from './Machine/Machine';
 import servicePageImage from "../../../assets/nivaSand.jpg"; 
 import FieldComponent from './Field/FieldComponent';
 import CropComponent from './Crop/Crop';
 import ProcessingTypeComponent from './ProcessingType/ProcessingType';
-import GrowingCropPeriodComponent from './GrowingCropPeriod/GrowingCropPeriodComponent';
-import ProcessingComponent from './Processing/ProcessingComponent';
+// import GrowingCropPeriodComponent from './GrowingCropPeriod/GrowingCropPeriodComponent';
+import ProcessingComponent from './Processing/Processing';
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -68,9 +68,9 @@ const ServicePage: React.FC = () => {
       <Container>
         <ProcessingTypeComponent />
       </Container>
-      <Container>
+      {/* <Container>
         <GrowingCropPeriodComponent />
-      </Container>
+      </Container> */}
       <Container>
         <MachineComponent />
       </Container>

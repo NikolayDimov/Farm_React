@@ -50,4 +50,30 @@ export const apiMachine = {
             throw error;
         }
     },
+
+    deleteMachine: async (machineId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/machine/${machineId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete machine with ID: ${machineId}`, errorResponse);
+                throw new Error("Failed to delete machine");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting machine:", error);
+            throw new Error("Failed to delete machine");
+        }
+    },
 };

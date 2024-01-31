@@ -1,17 +1,19 @@
-// MachineList.tsx
 import React, { useEffect, useState } from 'react';
 import { Machine } from "./Machine.static";
 import { Farm } from './Machine.static';
 import { ListContainer, ListHeader, ListItem, List } from '../../../common/ListStyles';
 import { apiMachine } from './apiMachine';
 import { apiFarm } from '../../Profile/Farm/apiFarm';
+import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../ServicePage.style';
+
 
 interface MachinesListProps {
   machines: Machine[];
-  setMachines: React.Dispatch<React.SetStateAction<Machine[]>>;
+  onDeleteMachine: (machineId: string) => void;
 }
 
-const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => {
+const MachineList: React.FC<MachinesListProps> = ({ machines, onDeleteMachine }) => {
+  const [selectedMachineId, setSelectedMachineId] = useState<string | null>(null);
   const [farms, setFarms] = useState<Farm[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,28 +23,22 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
     return farm ? farm.name : 'Unknown Farm';
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const machinesData = await apiMachine.fetchMachines();
-        const farmsData = await apiFarm.fetchFarms();
+  const handleDeleteClick = (machineId: string | undefined) => {
+    if (machineId) {
+      setSelectedMachineId(machineId);
+    }
+  };
 
-        setMachines(machinesData.data);
-        setFarms(farmsData.data);
+  const handleDeleteConfirm = async () => {
+    if (selectedMachineId) {
+      await onDeleteMachine(selectedMachineId);
+      setSelectedMachineId(null);
+    }
+  };
 
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, [setMachines]);
-
-
-  if (loading) {
-    return <p>Loading machines...</p>;
-  }
+  const handleDeleteCancel = () => {
+    setSelectedMachineId(null);
+  };
 
   return (
     <ListContainer>
@@ -55,12 +51,26 @@ const MachineList: React.FC<MachinesListProps> = ({ machines, setMachines }) => 
               <strong>Model:</strong> {machine.model} |&nbsp;
               <strong>Register Number:</strong> {machine.registerNumber} |&nbsp;
               <strong>Farm:</strong> {findFarmName(machine.farmId)}
+              <DeleteIcon onClick={() => handleDeleteClick(machine.id)}>X</DeleteIcon>
             </ListItem>
           ))
         ) : (
           <p>No machines available</p>
         )}
       </List>
+
+      <ModalOverlay show={!!selectedMachineId} confirmation={false}>
+        {/* Use StyledModalContainer here instead of ModalContainer */}
+        <StyledModalContainer confirmation={false}>
+          <ModalContent>
+            <p>Are you sure you want to delete this machine?</p>
+          </ModalContent>
+          <ModalActions>
+            <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
+            <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
+          </ModalActions>
+        </StyledModalContainer>
+      </ModalOverlay>
     </ListContainer>
   );
 };
