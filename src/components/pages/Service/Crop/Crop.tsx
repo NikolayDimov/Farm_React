@@ -8,7 +8,7 @@ import {
   StyledModalContainer,
   modalContentStyles,
   closeButtonStyles,
-} from './Crop.static';
+} from '../ServicePage.style';
 
 const SoilComponent: React.FC = () => {
   const [crops, setCrops] = useState<Crop[]>([]);
@@ -83,7 +83,7 @@ const SoilComponent: React.FC = () => {
   return (
     <>
       <AddCrop fetchCrops={fetchCrops} />
-      <CropList crops={crops} setCrops={setCrops} onDeleteCrop={handleDeleteCrop} />
+      <CropList crops={crops} onDeleteCrop={handleDeleteCrop} />
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>

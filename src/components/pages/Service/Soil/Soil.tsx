@@ -8,7 +8,7 @@ import {
   StyledModalContainer,
   modalContentStyles,
   closeButtonStyles,
-} from './Soil.static';
+} from '../ServicePage.style';
 
 
 
@@ -90,7 +90,7 @@ const fetchSoils = async () => {
   return (
     <>
       <AddSoil fetchSoils={fetchSoils} />
-      <SoilList soils={soils} setSoils={setSoils} onDeleteSoil={handleDeleteSoil}/>
+      <SoilList soils={soils} onDeleteSoil={handleDeleteSoil}/>
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>

@@ -1,5 +1,4 @@
 import React, { useState, FormEvent } from 'react';
-import { Crop } from "./Crop.static";
 import { apiCrop } from './apiCrop';
 
 interface AddCropProps {

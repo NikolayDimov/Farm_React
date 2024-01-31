@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Soil } from "./Soil.static";
 import { ListContainer, ListHeader, List, ListItem } from '../../../common/ListStyles';
-import { DeleteIcon } from './Soil.static';
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from './Soil.static';
+import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../ServicePage.style';
 
 
 interface SoilListProps {
   soils: Soil[]; // Make soils optional
-  setSoils: React.Dispatch<React.SetStateAction<Soil[]>>;
   onDeleteSoil: (soilId: string) => void;
 }
 

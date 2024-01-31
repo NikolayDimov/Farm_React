@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Crop } from "./Crop.static";
 import { ListContainer, ListHeader, List, ListItem } from '../../../common/ListStyles';
-import { DeleteIcon } from './Crop.static';
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from './Crop.static';
+import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../ServicePage.style';
 
 interface CropListProps {
   crops: Crop[]; 
-  setCrops: React.Dispatch<React.SetStateAction<Crop[]>>;
   onDeleteCrop: (cropId: string) => void;
 }
 
@@ -51,7 +49,7 @@ const CropList: React.FC<CropListProps> = ({ crops, onDeleteCrop }) => {
         {/* Use StyledModalContainer here instead of ModalContainer */}
         <StyledModalContainer confirmation={false}>
           <ModalContent>
-            <p>Are you sure you want to delete this soil?</p>
+            <p>Are you sure you want to delete this crop?</p>
           </ModalContent>
           <ModalActions>
             <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>

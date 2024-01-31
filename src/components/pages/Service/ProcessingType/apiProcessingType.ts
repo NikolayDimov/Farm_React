@@ -44,4 +44,30 @@ export const apiProcessingType = {
             throw error;
         }
     },
+
+    deleteProcessingType: async (processingTypeId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/processingType/${processingTypeId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete ProcessingType with ID: ${processingTypeId}`, errorResponse);
+                throw new Error("Failed to delete ProcessingType");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting ProcessingType:", error);
+            throw new Error("Failed to delete ProcessingType");
+        }
+    },
 };
