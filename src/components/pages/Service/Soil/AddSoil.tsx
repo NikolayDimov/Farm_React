@@ -1,12 +1,13 @@
 import React, { useState, FormEvent } from 'react';
-import { Soil } from "./Soil.static";
+import { Soil } from './Soil.static';
 import { apiSoil } from './apiSoil';
 
 interface AddSoilProps {
-  onSoilAdded: (newSoil: Soil) => void;
+  fetchSoils: () => void;
 }
 
-const AddSoil: React.FC<AddSoilProps> = ({ onSoilAdded }) => {
+
+const AddSoil: React.FC<AddSoilProps> = ({ fetchSoils }) => {
   const [soilName, setSoilName] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,13 +25,10 @@ const AddSoil: React.FC<AddSoilProps> = ({ onSoilAdded }) => {
       // console.log(response)
 
       if (response.ok) {
-        const newSoil: Soil = {
-          id: 'temporary-id-' + Date.now(),
-          name: soilName,
-        };
-
-        onSoilAdded(newSoil);
         setSoilName('');
+        fetchSoils(); 
+   
+
       } else {
         console.error('Failed to create a new soil in the database');
       }

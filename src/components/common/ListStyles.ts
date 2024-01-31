@@ -14,6 +14,7 @@ export const List = styled.ul`
 `;
 
 export const ListItem = styled.li`
+    display: flex;
     background-color: rgba(240, 240, 240, 0.8);
     border: 1px solid #ccc;
     padding: 10px;

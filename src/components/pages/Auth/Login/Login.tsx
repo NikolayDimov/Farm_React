@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../context/AuthContext";
 import { useLoginFormError } from "./LoginErrorHadnler";
 import { Link } from "react-router-dom";
@@ -61,12 +61,12 @@ function Login() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log('Login component mounted');
-  //   return () => {
-  //     console.log('Login component unmounted');
-  //   };
-  // }, []);
+  useEffect(() => {
+    console.log('Login component mounted');
+    return () => {
+      console.log('Login component unmounted');
+    };
+  }, []);
 
   
 

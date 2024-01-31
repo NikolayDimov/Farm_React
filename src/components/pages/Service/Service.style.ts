@@ -1,10 +1,5 @@
 import styled from "styled-components";
 
-export interface Soil {
-    id?: string;
-    name: string;
-}
-
 export const DeleteIcon = styled.span`
     cursor: pointer;
     color: red;

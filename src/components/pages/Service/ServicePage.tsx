@@ -7,7 +7,7 @@ import MachineComponent from './Machine/MachineComponent';
 import servicePageImage from "../../../assets/nivaSand.jpg"; 
 import FieldComponent from './Field/FieldComponent';
 import CropComponent from './Crop/Crop';
-import ProcessingTypeComponent from './ProcessingType/ProcessingTypeComponent';
+import ProcessingTypeComponent from './ProcessingType/ProcessingType';
 import GrowingCropPeriodComponent from './GrowingCropPeriod/GrowingCropPeriodComponent';
 import ProcessingComponent from './Processing/ProcessingComponent';
 //import { MapContainer } from './ServicePage.style';

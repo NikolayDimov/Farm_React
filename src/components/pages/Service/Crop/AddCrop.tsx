@@ -3,10 +3,10 @@ import { Crop } from "./Crop.static";
 import { apiCrop } from './apiCrop';
 
 interface AddCropProps {
-  onCropAdded: (newSoil: Crop) => void;
+  fetchCrops: () => void;
 }
 
-const AddSoil: React.FC<AddCropProps> = ({ onCropAdded }) => {
+const AddCrop: React.FC<AddCropProps> = ({ fetchCrops }) => {
   const [cropName, setCropName] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -22,15 +22,11 @@ const AddSoil: React.FC<AddCropProps> = ({ onCropAdded }) => {
 
       const response = await apiCrop.createCrop(cropName);
       console.log(response)
-
+      
       if (response.ok) {
-        const newCrop: Crop = {
-          id: 'temporary-id-' + Date.now(),
-          name: cropName,
-        };
-
-        onCropAdded(newCrop);
         setCropName('');
+        fetchCrops(); 
+   
       } else {
         console.error('Failed to create a new Crop in the database');
       }
@@ -55,4 +51,4 @@ const AddSoil: React.FC<AddCropProps> = ({ onCropAdded }) => {
   );
 };
 
-export default AddSoil;
+export default AddCrop;

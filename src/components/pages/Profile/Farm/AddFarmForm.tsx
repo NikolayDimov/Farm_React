@@ -23,7 +23,6 @@ const AddFarmForm: React.FC<AddFarmFormProps> = ({ onFarmAdded }) => {
       const newFarmCoordinates = [42.6977, 23.3219];
 
       const newFarm: Farm = {
-        id: 'temporary-id-' + Date.now(),
         name: newFarmName,
         location: {
           type: 'Point',

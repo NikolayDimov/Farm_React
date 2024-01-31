@@ -44,4 +44,30 @@ export const apiSoil = {
             throw error;
         }
     },
+
+    deleteSoil: async (soilId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/soil/${soilId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete soil with ID: ${soilId}`, errorResponse);
+                throw new Error("Failed to delete soil");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting soil:", error);
+            throw new Error("Failed to delete soil");
+        }
+    },
 };
