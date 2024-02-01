@@ -84,13 +84,36 @@ const fetchSoils = async () => {
       setLoading(false);
     }
   };
+
+  const handleEditSoil = async (soilId: string, newSoilName: string) => {
+    try {
+      setLoading(true);
+      const originalOrder: Soil[] = [...soils];
+      const response = await apiSoil.editSoil(soilId, newSoilName);
+      // console.log(response);
+
+      if (response.ok) {
+        const updatedSoilData = await apiSoil.fetchSoils();
+        setSoils(originalOrder.map((originalSoil: Soil) => updatedSoilData.data.find((updatedSoil: Soil) => updatedSoil.id === originalSoil.id) as Soil));
+        // setSoils(updatedSoilData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit soil with ID: ${soilId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing soil:', error);
+      showModal('Failed to edit soil');
+    } finally {
+      setLoading(false);
+    }
+  };
   
 
 
   return (
     <>
       <AddSoil fetchSoils={fetchSoils} />
-      <SoilList soils={soils} onDeleteSoil={handleDeleteSoil}/>
+      <SoilList soils={soils} onDeleteSoil={handleDeleteSoil} onEditSoil={handleEditSoil}/>
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>

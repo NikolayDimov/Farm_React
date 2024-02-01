@@ -45,6 +45,34 @@ export const apiProcessingType = {
         }
     },
 
+    editProcessingType: async (processingTypeId: string, newProcessingTypeName: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/processingType/${processingTypeId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ name: newProcessingTypeName }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit processingType with ID: ${processingTypeId}`, errorResponse);
+                throw new Error("Failed to edit processingType");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing processingType:", error);
+            throw error;
+        }
+    },
+
     deleteProcessingType: async (processingTypeId: string) => {
         try {
             const authHeaders = authHeader();

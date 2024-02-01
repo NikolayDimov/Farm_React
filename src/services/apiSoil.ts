@@ -45,6 +45,34 @@ export const apiSoil = {
         }
     },
 
+    editSoil: async (soilId: string, newSoilName: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/soil/${soilId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ name: newSoilName }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit soil with ID: ${soilId}`, errorResponse);
+                throw new Error("Failed to edit soil");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing soil:", error);
+            throw error;
+        }
+    },
+
     deleteSoil: async (soilId: string) => {
         try {
             const authHeaders = authHeader();

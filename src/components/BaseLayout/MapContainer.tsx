@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 interface MapContainerProps {
   onSelectLocation: (coordinates: number[][][]) => void;
-  outlinedCoordinates: number[][][];
+  // outlinedCoordinates: number[][][];
 }
 
 const StyledMapContainer = styled.div`
@@ -12,7 +12,7 @@ const StyledMapContainer = styled.div`
   width: 100%;
 `;
 
-const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, outlinedCoordinates }) => {
+const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

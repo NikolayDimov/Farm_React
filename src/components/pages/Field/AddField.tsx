@@ -149,7 +149,7 @@ const AddField: React.FC<AddFieldProps> = ({ fetchFields }) => {
         </button>
       </form>
 
-      <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
+      <MapContainer onSelectLocation={handleSelectLocation}  />
     </div>
   );
 };

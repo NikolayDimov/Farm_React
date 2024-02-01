@@ -67,7 +67,7 @@ const CropList: React.FC<CropListProps> = ({ crops, onDeleteCrop, onEditCrop }) 
   const handleEditCancel = () => {
     setSelectedCropIdForEdit(null);
     setEditModalVisible(false);
-    setCurrentCropName(''); // Reset current crop name
+    setCurrentCropName(''); 
   };
 
   return (

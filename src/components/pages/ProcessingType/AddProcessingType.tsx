@@ -38,9 +38,9 @@ const AddProcessingType: React.FC<AddProcessingTypeProps> = ({ fetchProcessingTy
 
   return (
     <div>
-      <h3>Add a New ProcessingType</h3>
+      <h3>Add a New Processing Type</h3>
       <form onSubmit={createProcessingType}>
-        <label>ProcessingType Name:</label>
+        <label>Processing Type Name:</label>
         <input type="text" value={processingTypeName} onChange={changeHandler} />
         <button type="submit" disabled={loading}>
           {loading ? 'Adding ProcessingType...' : 'Add ProcessingType'}

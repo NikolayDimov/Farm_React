@@ -20,6 +20,13 @@ const CropComponent: React.FC = () => {
   const fetchCrops = async () => {
     try {
       const cropData = await apiCrop.fetchCrops();
+      // order new crop goes last in list
+      // setCrops(prevCrops => {
+      //   const newCrops = cropData.data.filter((newCrop: Crop) =>
+      //     !prevCrops.some((prevCrop: Crop) => prevCrop.id === newCrop.id)
+      //   );
+      //   return [...prevCrops, ...newCrops];
+      // });
       setCrops(cropData.data); 
     } catch (error) {
       console.error('Error in fetching crops', error);
@@ -81,12 +88,14 @@ const CropComponent: React.FC = () => {
   const handleEditCrop = async (cropId: string, newCropName: string) => {
     try {
       setLoading(true);
+      const originalOrder: Crop[] = [...crops];
       const response = await apiCrop.editCrop(cropId, newCropName);
-      console.log(response);
+      // console.log(response);
 
       if (response.ok) {
         const updatedCropData = await apiCrop.fetchCrops();
-        setCrops(updatedCropData.data);
+        setCrops(originalOrder.map((originalCrop: Crop) => updatedCropData.data.find((updatedCrop: Crop) => updatedCrop.id === originalCrop.id) as Crop));
+        // setCrops(updatedCropData.data);
       } else {
         const responseBody = await response.json();
         console.error(`Failed to edit crop with ID: ${cropId}`, responseBody);

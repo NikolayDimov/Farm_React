@@ -21,10 +21,11 @@ const AddCrop: React.FC<AddCropProps> = ({ fetchCrops }) => {
       setLoading(true);
 
       const response = await apiCrop.createCrop(cropName);
-      console.log(response)
+      // console.log(response)
       
       if (response.ok) {
         setCropName('');
+        
         fetchCrops(); 
    
       } else {

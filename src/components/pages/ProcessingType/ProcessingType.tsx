@@ -80,10 +80,33 @@ const ProcessingTypeComponent: React.FC = () => {
     }
   };
 
+  const handleEditProcessingType = async (processingTypeId: string, newProcessingTypeName: string) => {
+    try {
+      setLoading(true);
+      const originalOrder: ProcessingType[] = [...processingTypes];
+      const response = await apiProcessingType.editProcessingType(processingTypeId, newProcessingTypeName);
+      // console.log(response);
+
+      if (response.ok) {
+        const updatedProcessingTypeData = await apiProcessingType.fetchProcessingTypes();
+        setProcessingTypes(originalOrder.map((originalProcessingType: ProcessingType) => updatedProcessingTypeData.data.find((updatedProcessingType: ProcessingType) => updatedProcessingType.id === originalProcessingType.id) as ProcessingType));
+        // setSoils(updatedSoilData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit ProcessingType with ID: ${processingTypeId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing ProcessingType:', error);
+      showModal('Failed to edit ProcessingType');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <AddProcessingType fetchProcessingTypes={fetchProcessingTypes} />
-      <ProcessingTypeList processingTypes={processingTypes} onDeleteProcessingType={handleDeleteProcessingType}/>
+      <ProcessingTypeList processingTypes={processingTypes} onDeleteProcessingType={handleDeleteProcessingType} onEditProcessingType={handleEditProcessingType}/>
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>
