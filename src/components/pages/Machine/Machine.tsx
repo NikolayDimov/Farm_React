@@ -12,6 +12,8 @@ import {
 } from '../../BaseLayout/BaseLayout.style';
 import { apiMachine } from '../../../services/apiMachine';
 import { apiFarm } from '../../../services/apiFarm';
+import TransferMachine from './TransferMachine';
+
 
 const MachineComponent: React.FC = () => {
   const [machines, setMachines] = useState<Machine[]>([]);
@@ -20,6 +22,8 @@ const MachineComponent: React.FC = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [confirmation, setConfirmation] = useState(false); 
+  const [transferMode, setTransferMode] = useState<boolean>(false);
+  
 
   const fetchMachines = async () => {
     try {
@@ -86,14 +90,39 @@ const MachineComponent: React.FC = () => {
     }
   };
 
+  const handleEditMachine = async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string, newFarmId: string) => {
+    try {
+      setLoading(true);
+      const originalOrder: Machine[] = [...machines];
+      const response = await apiMachine.editMachine(machineId, newMachineBrand, newMachineModel, MachineRegisterNumber, newFarmId);
+      // console.log(response);
 
+      if (response.ok) {
+        const updatedMachineData = await apiMachine.fetchMachines();
+        setMachines(originalOrder.map((originalMachine: Machine) => updatedMachineData.data.find((updatedMachine: Machine) => updatedMachine.id === originalMachine.id) as Machine));
+        // setSoils(updatedSoilData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit machine with ID: ${machineId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing machine:', error);
+      showModal('Failed to edit machine');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  const handleTransferSuccess = () => {
+    setTransferMode(false);
+    fetchMachines();
+  };
   
 
   return (
     <>
       <AddMachine fetchMachines={fetchMachines} />
-      <MachineList machines={machines} farms={farms} onDeleteMachine={handleDeleteMachine} />
+      <MachineList machines={machines} farms={farms} onDeleteMachine={handleDeleteMachine} onEditMachine={handleEditMachine}/>
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>
@@ -104,6 +133,18 @@ const MachineComponent: React.FC = () => {
           </div>
         </StyledModalContainer>
       </ModalOverlay>
+      <div>
+        <h2>Transfer Machine</h2>
+        {transferMode ? (
+          <TransferMachine
+            machines={machines}
+            farms={farms}
+            onTransferSuccess={handleTransferSuccess}
+          />
+        ) : (
+          <button onClick={() => setTransferMode(true)}>Transfer Machine</button>
+        )}
+      </div>
     </>
   );
 };

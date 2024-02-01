@@ -113,7 +113,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
      <ModalOverlay show={isEditModalVisible} confirmation={false}>
         <StyledModalContainer confirmation={false}>
           <ModalContent>
-            <p>Current Crop Name: {originalFieldName}</p>
+            <p>Current Field Name: {originalFieldName}</p>
             <input
               type="text"
               placeholder="Enter new field name"

@@ -116,10 +116,6 @@ const FieldComponent: React.FC<FieldProps> = ({ coordinates }) => {
       setLoading(false);
     }
   };
-  
-
-
-
  
   return (
     <>
