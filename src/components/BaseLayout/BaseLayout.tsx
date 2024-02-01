@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import SoilComponent from "../pages/Soil/Soil";
 import Layout from "./common/Layout";
 import MachineComponent from "../pages/Machine/Machine";
 import servicePageImage from "../../assets/nivaSand.jpg";
@@ -8,6 +7,7 @@ import FieldComponent from "../pages/Field/Field";
 import ProcessingTypeComponent from "../pages/ProcessingType/ProcessingType";
 import ProcessingComponent from "../pages/Processing/Processing";
 import CropLogic from "../pages/Crop/CropLogic";
+import SoilLogic from "../pages/Soil/SoilLogic";
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -57,7 +57,7 @@ const ServicePage: React.FC = () => {
                 <FieldComponent coordinates={outlinedCoordinates} />
             </Container>
             <Container>
-                <SoilComponent />
+                <SoilLogic />
             </Container>
             <Container>
                 <CropLogic />
