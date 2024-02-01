@@ -1,72 +1,35 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from "../../../context/AuthContext";
+import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, NavbarButton } from "./Navbar.static";
 
-
-const NavbarContainer = styled.div`
-  background-color: #343a40;
-`;
-
-const ContentWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 15px;
-  padding-right: 30px;
-  padding-left: 30px;
-`;
-
-const Logo = styled(Link)`
-  color: #fff;
-  text-decoration: none;
-  font-size: 26px;
-`;
-
-const NavbarButtons = styled.div`
-  display: flex;
-  gap: 20px;
-`;
-
-const NavbarButton = styled(Link)`
-  color: #fff;
-  text-decoration: none;
-`;
-
-// authContex
 const Navbar = () => {
-  const { isLoggedIn, logout } = useAuth();
+    const { isLoggedIn, logout } = useAuth();
 
-  const handleLogout = async () => {
-    await logout();
-  };
+    const handleLogout = async () => {
+        await logout();
+    };
 
-
-
-  return (
-    <NavbarContainer>
-      <ContentWrapper>
-        <Logo to="/">Your Farm</Logo>
-        <NavbarButtons>
-          {!isLoggedIn ? (
-            <> 
-            </>
-          ) : (
-            <>
-              <NavbarButton to="/home">Home</NavbarButton>
-              <NavbarButton to="/service">Service</NavbarButton>
-              <NavbarButton to="/report">Report</NavbarButton>
-              <NavbarButton to="/profile">Profile</NavbarButton>
-              <NavbarButton to="/" onClick={handleLogout}>
-                Logout
-              </NavbarButton>
-            </>
-          )}
-        </NavbarButtons>
-      </ContentWrapper>
-    </NavbarContainer>
-  );
+    return (
+        <NavbarContainer>
+            <ContentWrapper>
+                <Logo to="/">Your Farm</Logo>
+                <NavbarButtons>
+                    {!isLoggedIn ? (
+                        <></>
+                    ) : (
+                        <>
+                            <NavbarButton to="/home">Home</NavbarButton>
+                            <NavbarButton to="/service">Service</NavbarButton>
+                            <NavbarButton to="/report">Report</NavbarButton>
+                            <NavbarButton to="/profile">Profile</NavbarButton>
+                            <NavbarButton to="/" onClick={handleLogout}>
+                                Logout
+                            </NavbarButton>
+                        </>
+                    )}
+                </NavbarButtons>
+            </ContentWrapper>
+        </NavbarContainer>
+    );
 };
 
 export default Navbar;
