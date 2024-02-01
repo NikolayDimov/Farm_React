@@ -51,7 +51,7 @@ export const apiField = {
         }
     },
 
-    editField: async (fieldId: string, newFieldName: string) => {
+    editField: async (fieldId: string, newFieldName: string, newSoilId: string) => {
         try {
             const authHeaders = authHeader();
             const headers: Record<string, string> = {
@@ -63,7 +63,7 @@ export const apiField = {
                 method: "PATCH",
                 headers,
                 credentials: "include",
-                body: JSON.stringify({ name: newFieldName }),
+                body: JSON.stringify({ name: newFieldName, soilId: newSoilId }),
             });
 
             if (!response.ok) {

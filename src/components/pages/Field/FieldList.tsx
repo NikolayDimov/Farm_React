@@ -13,7 +13,7 @@ interface FieldListProps {
   farms: Farm[];
   soils: Soil[];
   onDeleteField: (fieldId: string) => void;
-  onEditField: (fieldId: string, currentFieldName: string) => void; 
+  onEditField: (fieldId: string, currentFieldName: string, newSoilId: string) => void; 
 }
 
 const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteField, onEditField }) => {
@@ -23,6 +23,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
   const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [currentFieldName, setCurrentFieldName] = useState<string>('');
   const [originalFieldName, setOriginalFieldName] = useState<string>('');
+  const [selectedSoilId, setSelectedSoilId] = useState<string>(''); 
  
   const findFarmName = (farmId: string): string => {
     const farm = farms.find((farm) => farm.id === farmId);
@@ -41,11 +42,12 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
     }
   };
 
-  const handleEditClick = (fieldId: string | undefined, fieldName: string) => {
+  const handleEditClick = (fieldId: string | undefined, fieldName: string, soilId: string) => {
     if (fieldId) {
       setSelectedFieldIdForEdit(fieldId);
       setCurrentFieldName(fieldName);
       setOriginalFieldName(fieldName); 
+      setSelectedSoilId(soilId);
       setEditModalVisible(true);
     }
   };
@@ -66,12 +68,13 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
   const handleEditConfirm = async () => {
     try {
       if (selectedFieldIdForEdit) {
-        await onEditField(selectedFieldIdForEdit, currentFieldName);
+        await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId);
       }
 
       setSelectedFieldIdForEdit(null);
       setEditModalVisible(false);
       setCurrentFieldName(''); 
+      setSelectedSoilId('');
     } catch (error) {
       console.error('Error handling edit confirmation:', error);
     }
@@ -81,6 +84,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
     setSelectedFieldIdForEdit(null);
     setEditModalVisible(false);
     setCurrentFieldName(''); 
+    setSelectedSoilId('');
   };
 
 
@@ -95,7 +99,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
               <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
               <strong>Soil:</strong> {findSoilName(field.soilId)}
               <ButtonContainer>
-                <EditIcon onClick={() => handleEditClick(field.id, field.name)} />
+                <EditIcon onClick={() => handleEditClick(field.id, field.name, field.soilId)} />
                 <DeleteIcon onClick={() => handleDeleteClick(field.id)} />
               </ButtonContainer>
             </ListItem>
@@ -116,6 +120,22 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
               value={currentFieldName}
               onChange={(e) => setCurrentFieldName(e.target.value)}
             />
+            <div>
+              <label>Select Soil:</label>
+              <select
+                value={selectedSoilId}
+                onChange={(e) => setSelectedSoilId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Soil
+                </option>
+                {soils.map((soil) => (
+                  <option key={soil.id} value={soil.id}>
+                    {soil.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </ModalContent>
           <ModalActions>
             <ModalButton onClick={handleEditConfirm}>Save</ModalButton>

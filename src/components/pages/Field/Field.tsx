@@ -94,11 +94,11 @@ const FieldComponent: React.FC<FieldProps> = ({ coordinates }) => {
     }
   };
 
-  const handleEditField = async (fieldId: string, newFieldName: string) => {
+  const handleEditField = async (fieldId: string, newFieldName: string, newSoilId: string) => {
     try {
       setLoading(true);
       const originalOrder: Field[] = [...fields];
-      const response = await apiField.editField(fieldId, newFieldName);
+      const response = await apiField.editField(fieldId, newFieldName, newSoilId);
       // console.log(response);
 
       if (response.ok) {
