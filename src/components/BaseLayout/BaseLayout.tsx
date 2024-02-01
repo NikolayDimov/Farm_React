@@ -4,10 +4,10 @@ import Layout from "./common/Layout";
 import MachineComponent from "../pages/Machine/Machine";
 import servicePageImage from "../../assets/nivaSand.jpg";
 import FieldComponent from "../pages/Field/Field";
-import ProcessingTypeComponent from "../pages/ProcessingType/ProcessingType";
 import ProcessingComponent from "../pages/Processing/Processing";
 import CropLogic from "../pages/Crop/CropLogic";
 import SoilLogic from "../pages/Soil/SoilLogic";
+import ProcessingTypeLogic from "../pages/ProcessingType/ProcessingTypeLogic";
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -63,7 +63,7 @@ const ServicePage: React.FC = () => {
                 <CropLogic />
             </Container>
             <Container>
-                <ProcessingTypeComponent />
+                <ProcessingTypeLogic />
             </Container>
             <Container>
                 <MachineComponent />
