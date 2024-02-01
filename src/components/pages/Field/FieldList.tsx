@@ -2,19 +2,27 @@ import React, { useState } from 'react';
 import { Field } from "./Field.static";
 import { Farm } from '../Farm/Farm.static';
 import { Soil } from '../Soil/Soil.static';
-import { ListContainer, ListHeader, ListItem, List } from '../../BaseLayout/common/ListStyles';
-import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
-
+import { ListContainer, ListHeader, List, ListItem } from '../../BaseLayout/common/ListStyles';
+import EditIcon from '../../BaseLayout/common/icons/EditIcon'; 
+import DeleteIcon from '../../BaseLayout/common/icons/DeleteIcon'; 
+import { ButtonContainer } from '../../BaseLayout/common/icons/ButtonContainer';
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
 
 interface FieldListProps {
   fields: Field[];
   farms: Farm[];
   soils: Soil[];
   onDeleteField: (fieldId: string) => void;
+  onEditField: (fieldId: string, currentFieldName: string) => void; 
 }
 
-const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteField }) => {
-  const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteField, onEditField }) => {
+  const [selectedFieldIdForDelete, setSelectedFieldIdForDelete] = useState<string | null>(null);
+  const [selectedFieldIdForEdit, setSelectedFieldIdForEdit] = useState<string | null>(null);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [currentFieldName, setCurrentFieldName] = useState<string>('');
+  const [originalFieldName, setOriginalFieldName] = useState<string>('');
  
   const findFarmName = (farmId: string): string => {
     const farm = farms.find((farm) => farm.id === farmId);
@@ -28,19 +36,51 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
 
   const handleDeleteClick = (fieldId: string | undefined) => {
     if (fieldId) {
-      setSelectedFieldId(fieldId);
+      setSelectedFieldIdForDelete(fieldId);
+      setDeleteModalVisible(true);
+    }
+  };
+
+  const handleEditClick = (fieldId: string | undefined, fieldName: string) => {
+    if (fieldId) {
+      setSelectedFieldIdForEdit(fieldId);
+      setCurrentFieldName(fieldName);
+      setOriginalFieldName(fieldName); 
+      setEditModalVisible(true);
     }
   };
 
   const handleDeleteConfirm = async () => {
-    if (selectedFieldId) {
-      await onDeleteField(selectedFieldId);
-      setSelectedFieldId(null);
+    if (selectedFieldIdForDelete) {
+      await onDeleteField(selectedFieldIdForDelete);
+      setSelectedFieldIdForDelete(null);
+      setDeleteModalVisible(false);
     }
   };
 
   const handleDeleteCancel = () => {
-    setSelectedFieldId(null);
+    setSelectedFieldIdForDelete(null);
+    setDeleteModalVisible(false);
+  };
+
+  const handleEditConfirm = async () => {
+    try {
+      if (selectedFieldIdForEdit) {
+        await onEditField(selectedFieldIdForEdit, currentFieldName);
+      }
+
+      setSelectedFieldIdForEdit(null);
+      setEditModalVisible(false);
+      setCurrentFieldName(''); 
+    } catch (error) {
+      console.error('Error handling edit confirmation:', error);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setSelectedFieldIdForEdit(null);
+    setEditModalVisible(false);
+    setCurrentFieldName(''); 
   };
 
 
@@ -54,8 +94,10 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
               <strong>Name:</strong> {field.name} |&nbsp;
               <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
               <strong>Soil:</strong> {findSoilName(field.soilId)}
-              <DeleteIcon onClick={() => handleDeleteClick(field.id)}>X</DeleteIcon>
-
+              <ButtonContainer>
+                <EditIcon onClick={() => handleEditClick(field.id, field.name)} />
+                <DeleteIcon onClick={() => handleDeleteClick(field.id)} />
+              </ButtonContainer>
             </ListItem>
           ))
         ) : (
@@ -63,8 +105,27 @@ const FieldList: React.FC<FieldListProps> = ({ fields, farms, soils, onDeleteFie
         )}
       </List>
 
-      <ModalOverlay show={!!selectedFieldId} confirmation={false}>
-        {/* Use StyledModalContainer here instead of ModalContainer */}
+     {/* Edit Modal */}
+     <ModalOverlay show={isEditModalVisible} confirmation={false}>
+        <StyledModalContainer confirmation={false}>
+          <ModalContent>
+            <p>Current Crop Name: {originalFieldName}</p>
+            <input
+              type="text"
+              placeholder="Enter new field name"
+              value={currentFieldName}
+              onChange={(e) => setCurrentFieldName(e.target.value)}
+            />
+          </ModalContent>
+          <ModalActions>
+            <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
+            <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
+          </ModalActions>
+        </StyledModalContainer>
+      </ModalOverlay>
+
+      {/* Delete Modal */}
+      <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
         <StyledModalContainer confirmation={false}>
           <ModalContent>
             <p>Are you sure you want to delete this field?</p>

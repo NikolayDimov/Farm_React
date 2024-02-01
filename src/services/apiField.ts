@@ -51,6 +51,34 @@ export const apiField = {
         }
     },
 
+    editField: async (fieldId: string, newFieldName: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/field/${fieldId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ name: newFieldName }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit field with ID: ${fieldId}`, errorResponse);
+                throw new Error("Failed to edit field");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing field:", error);
+            throw error;
+        }
+    },
+
     deleteField: async (fieldId: string) => {
         try {
             const authHeaders = authHeader();

@@ -93,6 +93,29 @@ const FieldComponent: React.FC<FieldProps> = ({ coordinates }) => {
       setLoading(false);
     }
   };
+
+  const handleEditField = async (fieldId: string, newFieldName: string) => {
+    try {
+      setLoading(true);
+      const originalOrder: Field[] = [...fields];
+      const response = await apiField.editField(fieldId, newFieldName);
+      // console.log(response);
+
+      if (response.ok) {
+        const updatedFieldData = await apiField.fetchFields();
+        setFields(originalOrder.map((originalField: Field) => updatedFieldData.data.find((updatedField: Field) => updatedField.id === originalField.id) as Field));
+        // setSoils(updatedSoilData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit field with ID: ${fieldId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing field:', error);
+      showModal('Failed to edit field');
+    } finally {
+      setLoading(false);
+    }
+  };
   
 
 
@@ -101,7 +124,7 @@ const FieldComponent: React.FC<FieldProps> = ({ coordinates }) => {
   return (
     <>
       <AddField fetchFields={fetchFields} />
-      <FieldList fields={fields} farms={farms} soils={soils} onDeleteField={handleDeleteField} /> 
+      <FieldList fields={fields} farms={farms} soils={soils} onDeleteField={handleDeleteField} onEditField={handleEditField} /> 
       <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>
           <div style={modalContentStyles}>
