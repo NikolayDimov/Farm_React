@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import Layout from "./common/Layout";
 import servicePageImage from "../../assets/nivaSand.jpg";
-import FieldComponent from "../pages/Field/Field";
 import CropLogic from "../pages/Crop/CropLogic";
 import SoilLogic from "../pages/Soil/SoilLogic";
 import ProcessingTypeLogic from "../pages/ProcessingType/ProcessingTypeLogic";
 import MachineLogic from "../pages/Machine/MachineLogic";
 import ProcessingLogic from "../pages/Processing/ProcessingLogic";
+import FieldLogic from "../pages/Field/FieldLogic";
 //import { MapContainer } from './ServicePage.style';
 
 const BackgroundImage = styled.div`
@@ -54,7 +54,7 @@ const ServicePage: React.FC = () => {
         <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
       </MapWrapper> */}
             <Container>
-                <FieldComponent coordinates={outlinedCoordinates} />
+                <FieldLogic coordinates={outlinedCoordinates} />
             </Container>
             <Container>
                 <SoilLogic />

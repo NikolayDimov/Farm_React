@@ -25,7 +25,6 @@ const AddCropLogic: React.FC<AddCropLogicProps> = ({ fetchCrops }) => {
 
             if (response.ok) {
                 setCropName("");
-
                 fetchCrops();
             } else {
                 console.error("Failed to create a new Crop in the database");

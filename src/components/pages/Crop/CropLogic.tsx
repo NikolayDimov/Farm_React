@@ -14,13 +14,11 @@ const CropLogic: React.FC = () => {
         try {
             const cropData = await apiCrop.fetchCrops();
             // order new crop goes last in list
-            // setCrops(prevCrops => {
-            //   const newCrops = cropData.data.filter((newCrop: Crop) =>
-            //     !prevCrops.some((prevCrop: Crop) => prevCrop.id === newCrop.id)
-            //   );
-            //   return [...prevCrops, ...newCrops];
-            // });
-            setCrops(cropData.data);
+            setCrops((prevCrops) => {
+                const newCrops = cropData.data.filter((newCrop: Crop) => !prevCrops.some((prevCrop: Crop) => prevCrop.id === newCrop.id));
+                return [...prevCrops, ...newCrops];
+            });
+            //setCrops(cropData.data);
         } catch (error) {
             console.error("Error in fetching crops", error);
         }
