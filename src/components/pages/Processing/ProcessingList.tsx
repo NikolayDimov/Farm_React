@@ -229,7 +229,7 @@ const findMachineName = (machineId: string): string => {
       <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
         <StyledModalContainer confirmation={false}>
           <ModalContent>
-            <p>Are you sure you want to delete this machine?</p>
+            <p>Are you sure you want to delete this processing?</p>
           </ModalContent>
           <ModalActions>
             <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>

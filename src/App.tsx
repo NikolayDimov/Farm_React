@@ -5,6 +5,7 @@ import Login from './components/pages/Auth/Login/Login';
 import Register from './components/pages/Auth/Register/Register';
 import Home from './components/pages/Home/Home';
 import ProfilePage from './components/pages/Profile/Profile';
+import Report from './components/pages/Reports/Report';
 import Service from './components/BaseLayout/BaseLayout';
 import WithNavbar from './components/pages/Navbar/ToggleWithNavbar';
 import WithoutNavbar from './components/pages/Navbar/ToggleWithoutNavbar';
@@ -26,6 +27,7 @@ function App() {
 						<Route path={routes.home} element={<Home />} />
 						<Route path={routes.profile} element={<ProfilePage />} />
 						<Route path={routes.service} element={<Service />} />
+						<Route path={routes.report} element={<Report />} />
 					</Route>
 				</Route>
 			</Routes>
