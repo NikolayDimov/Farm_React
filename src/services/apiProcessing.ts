@@ -44,11 +44,38 @@ export const apiProcessing = {
                 body: JSON.stringify(newProcessing),
             });
 
-            console.log("Processing Creation Response:", response);
-
+            // console.log("Processing Creation Response:", response);
             return response;
         } catch (error) {
             console.error("Error creating a new processing:", error);
+            throw error;
+        }
+    },
+
+    editProcessing: async (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/processing/${processingId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ id: processingId, date: newProcessingDate, processingTypeId: newProcessingTypeId, machineId: newMachineId }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit processing with ID: ${processingId}`, errorResponse);
+                throw new Error("Failed to edit processing");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing processing:", error);
             throw error;
         }
     },

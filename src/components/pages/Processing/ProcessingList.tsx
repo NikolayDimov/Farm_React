@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Processing } from "./Processing.static";
-import { ListContainer, ListHeader, ListItem, List } from '../../BaseLayout/common/ListStyles';
 import { Field } from '../Field/Field.static';
 import { Farm } from '../Farm/Farm.static';
 import { Soil } from '../Soil/Soil.static';
@@ -8,7 +7,13 @@ import { Crop } from '../Crop/Crop.static';
 import { ProcessingType } from '../ProcessingType/ProcessingType.static';
 import { Machine } from '../Machine/Machine.static';
 import { GrowingCropPeriod } from '../GrowingCropPeriod/GrowingCropPeriod.static';
-import { DeleteIcon, StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
+import { ListContainer, ListHeader, List, ListItem } from '../../BaseLayout/common/ListStyles';
+import EditIcon from '../../BaseLayout/common/icons/EditIcon'; 
+import DeleteIcon from '../../BaseLayout/common/icons/DeleteIcon'; 
+import { ButtonContainer } from '../../BaseLayout/common/icons/ButtonContainer';
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from '../../BaseLayout/BaseLayout.style';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 
 interface ProcessingListProps {
@@ -21,10 +26,18 @@ interface ProcessingListProps {
     farms: Farm[];
     soils: Soil[];
     onDeleteProcessing: (processingId: string) => void;
+    onEditProcessing: (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => void; 
 }
 
-const ProcessingList: React.FC<ProcessingListProps> = ({ processings, processingTypes, growingCropPeriods, fields, crops, machines, farms, soils, onDeleteProcessing }) => {
-  const [selectedProcessingId, setSelectedProcessingId] = useState<string | null>(null);
+const ProcessingList: React.FC<ProcessingListProps> = ({ processings, processingTypes, growingCropPeriods, fields, crops, machines, farms, soils, onDeleteProcessing, onEditProcessing }) => {
+  const [selectedProcessingIdForDelete, setSelectedProcessingIdForDelete] = useState<string | null>(null);
+  const [selectedProcessingIdForEdit, setSelectedProcessingIdForEdit] = useState<string | null>(null);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+  const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
+  const [currentProcessingDate, setCurrentProcessingDate] = useState<Date | undefined>();
+  const [originalProcessingDate, setOriginalProcessingDate] = useState<string>('');
+  const [selectedProcessingTypeId, setSelectedProcessingTypeId] = useState<string>(''); 
+  const [selectedMachinedId, setSelectedMachineId] = useState<string>(''); 
 
   const findProcessingTypeName = (processingTypeId: string): string => {
     const processingType = processingTypes.find((processingType) => processingType.id === processingTypeId);
@@ -83,22 +96,60 @@ const findMachineName = (machineId: string): string => {
 
   const handleDeleteClick = (processingId: string | undefined) => {
     if (processingId) {
-      setSelectedProcessingId(processingId);
+      setSelectedProcessingIdForDelete(processingId);
+      setDeleteModalVisible(true);
+    }
+  };
+
+  const handleEditClick = (processingId: string | undefined, processingDate: Date, processingTypeId: string, machineId: string) => {
+    if (processingId && processingDate) {
+      setSelectedProcessingIdForEdit(processingId);
+      setCurrentProcessingDate(processingDate);
+      setSelectedProcessingTypeId(processingTypeId);
+      setSelectedMachineId(machineId);
+      setEditModalVisible(true);
     }
   };
 
   const handleDeleteConfirm = async () => {
-    if (selectedProcessingId) {
-      await onDeleteProcessing(selectedProcessingId);
-      setSelectedProcessingId(null);
+    if (selectedProcessingIdForDelete) {
+      await onDeleteProcessing(selectedProcessingIdForDelete);
+      setSelectedProcessingIdForDelete(null);
+      setDeleteModalVisible(false);
     }
   };
 
   const handleDeleteCancel = () => {
-    setSelectedProcessingId(null);
+    setSelectedProcessingIdForDelete(null);
+    setDeleteModalVisible(false);
+  };
+
+  const handleEditConfirm = async () => {
+    try {
+      if (selectedProcessingIdForEdit && currentProcessingDate) {
+        await onEditProcessing(selectedProcessingIdForEdit, currentProcessingDate, selectedProcessingTypeId, selectedMachinedId);
+      }
+
+      setSelectedProcessingIdForEdit(null);
+      setEditModalVisible(false);
+      setOriginalProcessingDate('');
+      setSelectedProcessingTypeId('');
+      setSelectedMachineId('');
+    } catch (error) {
+      console.error('Error handling edit confirmation:', error);
+    }
+  };
+
+  const handleEditCancel = () => {
+    setSelectedProcessingIdForEdit(null);
+    setEditModalVisible(false);
+    setCurrentProcessingDate(undefined); 
+    setSelectedProcessingTypeId('');
+    setSelectedMachineId('');
   };
 
 
+  
 
   return (
     <ListContainer>
@@ -113,13 +164,10 @@ const findMachineName = (machineId: string): string => {
               <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)} |&nbsp;
               <strong>Machine:</strong> {findMachineName(processing.machineId)} |&nbsp;
               <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
-              
-
-              {/* <strong>FieldSoil:</strong> {findSoilNameByFieldId(processing.growingCropPeriodId)} |&nbsp;
-              <strong>Soil:</strong> {findSoilNameByFieldId(processing.growingCropPeriodId)} |&nbsp;  */}
-              
-
-              <DeleteIcon onClick={() => handleDeleteClick(processing.id)}>X</DeleteIcon>
+              <ButtonContainer>
+                <EditIcon onClick={() => handleEditClick(processing.id, new Date(processing.date), processing.processingTypeId, processing.machineId)} />
+                <DeleteIcon onClick={() => handleDeleteClick(processing.id)} />
+              </ButtonContainer>
             </ListItem>
           ))
         ) : (
@@ -127,11 +175,61 @@ const findMachineName = (machineId: string): string => {
         )}
       </List>
 
-      <ModalOverlay show={!!selectedProcessingId} confirmation={false}>
-        {/* Use StyledModalContainer here instead of ModalContainer */}
+      {/* Edit Modal */}
+      <ModalOverlay show={isEditModalVisible} confirmation={false}>
         <StyledModalContainer confirmation={false}>
           <ModalContent>
-            <p>Are you sure you want to delete this processing?</p>
+            <p>Processing date: {originalProcessingDate}</p>
+            <DatePicker
+              selected={currentProcessingDate ? new Date(currentProcessingDate) : null}
+              onChange={(date) => setCurrentProcessingDate(date as Date)}
+            />
+
+            <div>
+              <label>Select Processing Type:</label>
+              <select
+                value={selectedProcessingTypeId}
+                onChange={(e) => setSelectedProcessingTypeId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Processing Type
+                </option>
+                {processingTypes.map((processingType) => (
+                  <option key={processingType.id} value={processingType.id}>
+                    {processingType.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label>Select Machine:</label>
+              <select
+                value={selectedMachinedId}
+                onChange={(e) => setSelectedMachineId(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select Machine
+                </option>
+                {machines.map((machine) => (
+                  <option key={machine.id} value={machine.id}>
+                    {machine.brand}  {machine.model}  {machine.registerNumber}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </ModalContent>
+          <ModalActions>
+            <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
+            <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
+          </ModalActions>
+        </StyledModalContainer>
+      </ModalOverlay>
+
+      {/* Delete Modal */}
+      <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
+        <StyledModalContainer confirmation={false}>
+          <ModalContent>
+            <p>Are you sure you want to delete this machine?</p>
           </ModalContent>
           <ModalActions>
             <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
@@ -141,8 +239,6 @@ const findMachineName = (machineId: string): string => {
       </ModalOverlay>
     </ListContainer>
   );
-  
-  
   
 };
 

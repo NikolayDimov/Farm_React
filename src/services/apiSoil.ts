@@ -92,6 +92,7 @@ export const apiSoil = {
                 console.error(`Failed to delete soil with ID: ${soilId}`, errorResponse);
                 throw new Error("Failed to delete soil");
             }
+
             return response;
         } catch (error) {
             console.error("Error deleting soil:", error);

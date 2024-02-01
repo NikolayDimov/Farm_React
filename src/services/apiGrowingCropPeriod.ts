@@ -47,24 +47,18 @@ export const apiGrowingCropPeriod = {
     },
 };
 
-// Assuming your apiGrowingCropPeriod type looks like this:
 type ApiGrowingCropPeriod = {
     fetchGCP: () => Promise<any>;
     createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;
-    // ... other methods or properties
 };
 
-// Extend the type definition to include createGrowingCropPeriod
 type ExtendedApiGrowingCropPeriod = ApiGrowingCropPeriod & {
     createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;
-    // ... other methods or properties
 };
 
-// Declaration of apiGrowingCropPeriodExtended
 const apiGrowingCropPeriodExtended: ExtendedApiGrowingCropPeriod = {
     fetchGCP: apiGrowingCropPeriod.fetchGCP,
     createGrowingCropPeriod: apiGrowingCropPeriod.createGrowingCropPeriod,
-    // ... other methods or properties
 };
 
 export { apiGrowingCropPeriodExtended };

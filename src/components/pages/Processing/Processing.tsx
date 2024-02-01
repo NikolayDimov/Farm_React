@@ -117,6 +117,31 @@ const ProcessingComponent: React.FC = () => {
     }
   };
   
+  const handleEditProcessing = async (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => {
+    try {
+      setLoading(true);
+      const originalOrder: Processing[] = [...processings];
+      const response = await apiProcessing.editProcessing(processingId, newProcessingDate, newProcessingTypeId, newMachineId);
+      // console.log(response);
+
+      if (response.ok) {
+        const updatedProcessingData = await apiProcessing.fetchProcessings();
+
+        setProcessings(originalOrder.map((originalProcessing: Processing) => updatedProcessingData.data.find((updatedProcessing: Processing) => updatedProcessing.id === originalProcessing.id) as Processing));
+        // setSoils(updatedSoilData.data);
+      } else {
+        const responseBody = await response.json();
+        console.error(`Failed to edit processing with ID: ${processingId}`, responseBody);
+      }
+    } catch (error) {
+      console.error('Error editing processing:', error);
+      showModal('Failed to edit processing');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
  
   return (
@@ -131,6 +156,7 @@ const ProcessingComponent: React.FC = () => {
                       farms={farms}
                       soils={soils} 
                       onDeleteProcessing={handleDeleteProcessing}
+                      onEditProcessing={handleEditProcessing}
        /> 
           <ModalOverlay show={modalVisible} confirmation={false}>
         <StyledModalContainer confirmation={confirmation}>

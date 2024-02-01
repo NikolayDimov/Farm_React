@@ -13,3 +13,10 @@ export interface Processing {
     machine?: Machine;
     cropName?: string;
 }
+
+export interface EditProcessingProps {
+    processingId: string;
+    currentProcessingDate: string;
+    onEditProcessing: (processingId: string, newProcessingDate: string, newProcessingTypeId: string, newMachineId: string) => void;
+    onCloseModal: () => void;
+}
