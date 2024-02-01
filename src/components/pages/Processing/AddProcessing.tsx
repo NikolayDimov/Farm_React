@@ -39,6 +39,7 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ fetchProcessings }) => {
     machineId: '',
     growingCropPeriodId: '',
   });
+  const [currentGrowingCropPeriod, setCurrentGrowingCropPeriod] = useState<GrowingCropPeriod | undefined>();
 
   const [processingTypes, setProcessingTypes] = useState<ProcessingType[]>([]);
   const [growingCropPeriods, setGrowingCropPeriods] = useState<GrowingCropPeriod[]>([]);
@@ -133,30 +134,40 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ fetchProcessings }) => {
       }
   
       setLoading(true);
-  
-      // Create a new GrowingCropPeriod entry
-      const newGrowingCropPeriodResponse = await apiGrowingCropPeriod.createGrowingCropPeriod({
-        fieldId: createdValues.fieldId,
-        cropId: createdValues.cropId,
-      });
-  
-      if (!newGrowingCropPeriodResponse.ok) {
-        console.error('Failed to create a new growingCropPeriod in the database');
-        console.error('Response status:', newGrowingCropPeriodResponse.status);
-        console.error('Response status text:', newGrowingCropPeriodResponse.statusText);
-        const responseText = await newGrowingCropPeriodResponse.text();
-        console.error('Response text:', responseText);
-        setErrorMessage('Failed to create a new growingCropPeriod in the database');
-        return;
+
+      let growingCropPeriodId: string | undefined;
+      // Check if there is a current GrowingCropPeriod and it matches the selected field and crop
+      if (
+        currentGrowingCropPeriod &&
+        currentGrowingCropPeriod.fieldId === createdValues.fieldId &&
+        currentGrowingCropPeriod.cropId === createdValues.cropId
+      ) {
+        growingCropPeriodId = currentGrowingCropPeriod.id;
+      } else {
+        // Create a new GrowingCropPeriod entry
+        const newGrowingCropPeriodResponse = await apiGrowingCropPeriod.createGrowingCropPeriod({
+          fieldId: createdValues.fieldId,
+          cropId: createdValues.cropId,
+        });
+
+        if (!newGrowingCropPeriodResponse.ok) {
+          console.error('Failed to create a new growingCropPeriod in the database');
+          return;
+        }
+
+        const newGrowingCropPeriodData = await newGrowingCropPeriodResponse.json();
+        growingCropPeriodId = newGrowingCropPeriodData.id;
+
+        // Update the currentGrowingCropPeriod state with the newly created one
+        setCurrentGrowingCropPeriod(newGrowingCropPeriodData);
       }
-  
-      const newGrowingCropPeriodData = await newGrowingCropPeriodResponse.json();
+      
   
       // Create a new Processing entry
       const newProcessingData: Processing = {
         date: createdValues.newProcessingDate,
         processingTypeId: createdValues.processingTypeId,
-        growingCropPeriodId: newGrowingCropPeriodData.id,
+        growingCropPeriodId: growingCropPeriodId || '',
         machineId: createdValues.machineId,
       };
   
