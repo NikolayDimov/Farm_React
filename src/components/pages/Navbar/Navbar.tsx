@@ -58,7 +58,7 @@ const Navbar = () => {
               <NavbarButton to="/service">Service</NavbarButton>
               <NavbarButton to="/report">Report</NavbarButton>
               <NavbarButton to="/profile">Profile</NavbarButton>
-              <NavbarButton to="/logout" onClick={handleLogout}>
+              <NavbarButton to="/" onClick={handleLogout}>
                 Logout
               </NavbarButton>
             </>

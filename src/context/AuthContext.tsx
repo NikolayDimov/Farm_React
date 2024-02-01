@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { loginUser, registerUser, logoutUser } from '../services/apiService';
+import { loginUser, registerUser } from '../services/apiService';
 import { jwtDecode } from 'jwt-decode';
 import { JwtPayload } from './AuthContext.static';
 
@@ -13,7 +13,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const userData = await loginUser({ email, password });
       handleLogin(userData);
-      nav('/profile');
+      navigate('/profile');
     } catch (error) {
       console.error('Login error:', error);
       return Promise.reject(error);
@@ -43,7 +43,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const userData = await registerUser({ email, password });
       // login( email, password )
       handleLogin(userData);
-      nav('/profile');
+      navigate('/profile');
     } catch (error) {
       console.error('Registration error:', error);
     }
@@ -51,18 +51,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = async () => {
     try {
-      await logoutUser();
       handleLogout();
-      nav('/');
     } catch (error) {
-      setUser(null);
-      setIsLoggedIn(false);
-      localStorage.removeItem('isUserLoggedIn');
-      localStorage.removeItem('userData');
       console.error('Logout error:', error);
-      nav('/');
+      navigate('/');
     }
   };
+  
 
   const handleLogin = (userData: User) => {
     const decodedToken: JwtPayload = jwtDecode(userData.access_token);
@@ -80,7 +75,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const handleLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('isUserLoggedIn'); 
-    localStorage.removeItem('userData'); 
     setUser(null);
     setIsLoggedIn(false);
   };

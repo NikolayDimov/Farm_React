@@ -84,22 +84,6 @@ export const registerUser = async (signInDto: SignInDto): Promise<User> => {
     }
 };
 
-export const logoutUser = async () => {
-    const response = await fetch(`${BASE_URL}/auth/logout`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Logout failed");
-    }
-
-    return response.json();
-};
-
 export const checkUser = async () => {
     const response = await fetch(`${BASE_URL}/auth/profile`, {
         method: "GET",
