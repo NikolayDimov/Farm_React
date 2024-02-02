@@ -1,8 +1,8 @@
 import React from "react";
 import Layout from "../../BaseLayout/common/Layout";
 import WelcomeUser from "./WelcomeUser/WelcomeUser";
-import FarmLogic from "../Farm/FarmLogic";
 import { BackgroundImage, Container } from "../../BaseLayout/BaseLayout.style";
+import Farm from "../Farm/Farm";
 
 const ProfilePage: React.FC = () => {
     return (
@@ -12,7 +12,7 @@ const ProfilePage: React.FC = () => {
                 <WelcomeUser />
             </Container>
             <Container>
-                <FarmLogic />
+                <Farm />
             </Container>
         </Layout>
     );
