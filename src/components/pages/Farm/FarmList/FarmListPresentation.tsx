@@ -6,6 +6,7 @@ import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/c
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import UserRoleHOC from "../../UserRoleHOC";
+import FarmCard from "./FarmCard/FarmCard";
 
 interface FarmListPresentationProps {
     farms: Farm[];
@@ -39,7 +40,16 @@ const FarmListPresentation: React.FC<FarmListPresentationProps> = ({
     return (
         <ListContainer>
             <ListHeader>Farm List</ListHeader>
+
             <List>
+                {Array.isArray(farms) && farms.length > 0 ? (
+                    farms.map((farm) => <FarmCard key={farm.id} farm={farm} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />)
+                ) : (
+                    <ListItem>No farms available</ListItem>
+                )}
+            </List>
+
+            {/* <List>
                 {Array.isArray(farms) && farms.length > 0 ? (
                     farms.map((farm) => (
                         <ListItem key={farm.id}>
@@ -55,7 +65,7 @@ const FarmListPresentation: React.FC<FarmListPresentationProps> = ({
                 ) : (
                     <ListItem>No farms available</ListItem>
                 )}
-            </List>
+            </List> */}
 
             {/* Edit Modal */}
             <ModalOverlay show={isEditModalVisible} confirmation={false}>

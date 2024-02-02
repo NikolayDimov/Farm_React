@@ -8,7 +8,7 @@ const WelcomeUser: React.FC = () => {
     return (
         <WelcomeUserContainer>
             <WelcomeTitle>Welcome, {user?.email}!</WelcomeTitle>
-            <UserRoleText>Your role: {user?.role}</UserRoleText>
+            <UserRoleText>User role: {user?.role}</UserRoleText>
         </WelcomeUserContainer>
     );
 };
