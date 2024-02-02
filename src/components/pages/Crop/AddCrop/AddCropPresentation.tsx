@@ -1,5 +1,5 @@
 import React, { FormEvent } from "react";
-import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface AddCropPresentationProps {
     cropName: string;
@@ -9,16 +9,8 @@ interface AddCropPresentationProps {
 }
 
 const AddCropPresentation: React.FC<AddCropPresentationProps> = ({ cropName, loading, changeHandler, createCrop }) => {
-    const { user } = useAuth();
-
-    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
-
-    if (!canUserViewForm) {
-        return null;
-    }
-
     return (
-        <div>
+        <UserRoleHOC>
             <h3>Add a New Crop</h3>
             <form onSubmit={createCrop}>
                 <label>Crop Name:</label>
@@ -27,7 +19,7 @@ const AddCropPresentation: React.FC<AddCropPresentationProps> = ({ cropName, loa
                     {loading ? "Adding Crop..." : "Add Crop"}
                 </button>
             </form>
-        </div>
+        </UserRoleHOC>
     );
 };
 

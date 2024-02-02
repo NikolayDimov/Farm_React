@@ -5,7 +5,7 @@ import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
-import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface ProcessingTypeListPresentationProps {
     processingTypes: ProcessingType[];
@@ -36,9 +36,6 @@ const ProcessingTypeListPresentation: React.FC<ProcessingTypeListPresentationPro
     handleEditConfirm,
     handleEditCancel,
 }) => {
-    const { user } = useAuth();
-    const canUserEdit = user?.role === "OPERATOR" || user?.role === "OWNER";
-
     return (
         <ListContainer>
             <ListHeader>ProcessingType List</ListHeader>
@@ -47,12 +44,12 @@ const ProcessingTypeListPresentation: React.FC<ProcessingTypeListPresentationPro
                     processingTypes.map((processingType) => (
                         <ListItem key={processingType.id}>
                             {processingType.name}
-                            {canUserEdit && (
+                            <UserRoleHOC>
                                 <ButtonContainer>
                                     <EditIcon onClick={() => onEditClick(processingType.id, processingType.name)} />
                                     <DeleteIcon onClick={() => onDeleteClick(processingType.id)} />
                                 </ButtonContainer>
-                            )}
+                            </UserRoleHOC>
                         </ListItem>
                     ))
                 ) : (

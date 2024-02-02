@@ -2,6 +2,7 @@ import React, { FormEvent, useState } from "react";
 import { Farm } from "./Farm.static";
 import { apiFarm } from "../../../services/apiFarm";
 import { useAuth } from "../../../context/AuthContext";
+import UserRoleHOC from "../UserRoleHOC";
 
 interface AddFarmFormProps {
     onFarmAdded: (newFarm: Farm) => void;
@@ -48,22 +49,17 @@ const AddFarmForm: React.FC<AddFarmFormProps> = ({ onFarmAdded }) => {
     }
 
     return (
-        <div>
-            {user?.role !== "VIEWER" && <h3>Add a New Farm</h3>}
-            {user?.role === "VIEWER" ? null : (
-                <form onSubmit={createFarm}>
-                    <label>Farm Name:</label>
-                    <input type="text" value={newFarmName} onChange={changeHandler} />
+        <UserRoleHOC>
+            <h3>Add a New Farm</h3>
+            <form onSubmit={createFarm}>
+                <label>Farm Name:</label>
+                <input type="text" value={newFarmName} onChange={changeHandler} />
 
-                    {/* Conditionally render the button based on user role */}
-                    {user?.role === "OPERATOR" || user?.role === "OWNER" ? (
-                        <button type="submit" disabled={loading}>
-                            {loading ? "Adding Farm..." : "Add Farm"}
-                        </button>
-                    ) : null}
-                </form>
-            )}
-        </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? "Adding Farm..." : "Add Farm"}
+                </button>
+            </form>
+        </UserRoleHOC>
     );
 };
 

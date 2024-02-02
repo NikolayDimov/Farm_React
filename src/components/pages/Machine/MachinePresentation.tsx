@@ -5,6 +5,7 @@ import { ModalOverlay, StyledModalContainer, modalContentStyles, closeButtonStyl
 import AddMachineLogic from "./AddMachine/AddMachineLogic";
 import MachineListLogic from "./MachineList/MachineListLogic";
 import TransferMachineLogic from "./TransferMachine/TransferMachineLogic";
+import UserRoleHOC from "../UserRoleHOC";
 
 interface MachinePresentationProps {
     machines: Machine[];
@@ -47,14 +48,14 @@ const MachinePresentation: React.FC<MachinePresentationProps> = ({
                     </div>
                 </StyledModalContainer>
             </ModalOverlay>
-            <div>
+            <UserRoleHOC>
                 <h2>Transfer Machine</h2>
                 {transferMode ? (
                     <TransferMachineLogic machines={machines} farms={farms} onTransferSuccess={handleTransferSuccess} />
                 ) : (
                     <button onClick={() => setTransferMode(true)}>Transfer Machine</button>
                 )}
-            </div>
+            </UserRoleHOC>
         </>
     );
 };

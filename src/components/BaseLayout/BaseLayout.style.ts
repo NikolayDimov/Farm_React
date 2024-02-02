@@ -1,5 +1,5 @@
-import React from "react";
 import styled from "styled-components";
+import servicePageImage from "../../assets/nivaSand.jpg";
 
 export const EditIcon = styled.span`
     cursor: pointer;
@@ -33,19 +33,13 @@ export const EditIcon = styled.span`
     }
 `;
 
-// export const DeleteIcon = styled.span`
-//     cursor: pointer;
-//     color: red;
-//     margin-left: auto;
-// `;
-
 export const DeleteIcon = styled.span`
     cursor: pointer;
-    margin-left: 5px; // Adjust the spacing as needed
+    margin-left: 5px;
     display: inline-block;
     width: 16px;
     height: 16px;
-    background-color: #ff5722; // Change the color as needed
+    background-color: #ff5722;
     border-radius: 50%;
     position: relative;
 
@@ -53,7 +47,7 @@ export const DeleteIcon = styled.span`
     &::after {
         content: "";
         position: absolute;
-        background-color: #fff; // Change the color as needed
+        background-color: #fff;
     }
 
     &::before {
@@ -125,3 +119,33 @@ export const closeButtonStyles = {
     display: "flex",
     justifyContent: "flex-end",
 };
+
+export const BackgroundImage = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(${servicePageImage});
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+`;
+
+export const Container = styled.div`
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+`;
+
+export const MapWrapper = styled.div`
+    width: 100%;
+    height: 400px;
+    margin-bottom: 20px;
+`;

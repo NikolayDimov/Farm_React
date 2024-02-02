@@ -5,7 +5,7 @@ import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
-import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface SoilListPresentationProps {
     soils: Soil[];
@@ -36,9 +36,6 @@ const SoilListPresentation: React.FC<SoilListPresentationProps> = ({
     handleEditConfirm,
     handleEditCancel,
 }) => {
-    const { user } = useAuth();
-    const canUserEdit = user?.role === "OPERATOR" || user?.role === "OWNER";
-
     return (
         <ListContainer>
             <ListHeader>Soil List</ListHeader>
@@ -47,12 +44,12 @@ const SoilListPresentation: React.FC<SoilListPresentationProps> = ({
                     soils.map((soil) => (
                         <ListItem key={soil.id}>
                             {soil.name}
-                            {canUserEdit && (
+                            <UserRoleHOC>
                                 <ButtonContainer>
                                     <EditIcon onClick={() => onEditClick(soil.id, soil.name)} />
                                     <DeleteIcon onClick={() => onDeleteClick(soil.id)} />
                                 </ButtonContainer>
-                            )}
+                            </UserRoleHOC>
                         </ListItem>
                     ))
                 ) : (

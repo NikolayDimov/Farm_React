@@ -14,6 +14,7 @@ import { apiGrowingCropPeriod } from "../../../../services/apiGrowingCropPeriod"
 import { apiMachine } from "../../../../services/apiMachine";
 import { apiCrop } from "../../../../services/apiCrop";
 import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface AddProcessingProps {
     fetchProcessings: () => void;
@@ -188,66 +189,68 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ fetchProcessings }) => {
     }
 
     return (
-        <div>
-            <h3>Add a New Processing</h3>
-            <form onSubmit={createProcessing}>
-                <label>Processing date:</label>
-                <DatePicker selected={createdValues.newProcessingDate} onChange={(date: Date) => setCreatedValues((state) => ({ ...state, newProcessingDate: date }))} />
+        <UserRoleHOC>
+            <div>
+                <h3>Add a New Processing</h3>
+                <form onSubmit={createProcessing}>
+                    <label>Processing date:</label>
+                    <DatePicker selected={createdValues.newProcessingDate} onChange={(date: Date) => setCreatedValues((state) => ({ ...state, newProcessingDate: date }))} />
 
-                <label>Processing Type:</label>
-                <select name="processingTypeId" value={createdValues.processingTypeId} onChange={changeHandler}>
-                    <option key="" value="">
-                        Select Processing Type
-                    </option>
-                    {processingTypes.map((processingType) => (
-                        <option key={processingType.id} value={processingType.id}>
-                            {processingType.name}
+                    <label>Processing Type:</label>
+                    <select name="processingTypeId" value={createdValues.processingTypeId} onChange={changeHandler}>
+                        <option key="" value="">
+                            Select Processing Type
                         </option>
-                    ))}
-                </select>
+                        {processingTypes.map((processingType) => (
+                            <option key={processingType.id} value={processingType.id}>
+                                {processingType.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <label>Field:</label>
-                <select name="fieldId" value={createdValues.fieldId} onChange={changeHandler}>
-                    <option key="" value="">
-                        Select Field
-                    </option>
-                    {fields.map((field) => (
-                        <option key={field.id} value={field.id}>
-                            {field.name}
+                    <label>Field:</label>
+                    <select name="fieldId" value={createdValues.fieldId} onChange={changeHandler}>
+                        <option key="" value="">
+                            Select Field
                         </option>
-                    ))}
-                </select>
+                        {fields.map((field) => (
+                            <option key={field.id} value={field.id}>
+                                {field.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <label>Crop:</label>
-                <select name="cropId" value={createdValues.cropId} onChange={changeHandler}>
-                    <option key="" value="">
-                        Select Crop
-                    </option>
-                    {crops.map((crop) => (
-                        <option key={crop.id} value={crop.id}>
-                            {crop.name}
+                    <label>Crop:</label>
+                    <select name="cropId" value={createdValues.cropId} onChange={changeHandler}>
+                        <option key="" value="">
+                            Select Crop
                         </option>
-                    ))}
-                </select>
+                        {crops.map((crop) => (
+                            <option key={crop.id} value={crop.id}>
+                                {crop.name}
+                            </option>
+                        ))}
+                    </select>
 
-                <label>Machine:</label>
-                <select name="machineId" value={createdValues.machineId} onChange={changeHandler}>
-                    <option key="" value="">
-                        Select Machine
-                    </option>
-                    {machines.map((machine) => (
-                        <option key={machine.id} value={machine.id}>
-                            {machine.brand}, {machine.model}, {machine.registerNumber}
+                    <label>Machine:</label>
+                    <select name="machineId" value={createdValues.machineId} onChange={changeHandler}>
+                        <option key="" value="">
+                            Select Machine
                         </option>
-                    ))}
-                </select>
+                        {machines.map((machine) => (
+                            <option key={machine.id} value={machine.id}>
+                                {machine.brand}, {machine.model}, {machine.registerNumber}
+                            </option>
+                        ))}
+                    </select>
 
-                {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                <button type="submit" disabled={loading}>
-                    {loading ? "Creating Processing..." : "Create processing"}
-                </button>
-            </form>
-        </div>
+                    {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Creating Processing..." : "Create processing"}
+                    </button>
+                </form>
+            </div>
+        </UserRoleHOC>
     );
 };
 

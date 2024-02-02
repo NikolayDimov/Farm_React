@@ -14,7 +14,7 @@ import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContaine
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface ProcessingListProps {
     processings: Processing[];
@@ -49,9 +49,6 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
     const [originalProcessingDate, setOriginalProcessingDate] = useState<string>("");
     const [selectedProcessingTypeId, setSelectedProcessingTypeId] = useState<string>("");
     const [selectedMachinedId, setSelectedMachineId] = useState<string>("");
-
-    const { user } = useAuth();
-    const canUserEdit = user?.role === "OPERATOR" || user?.role === "OWNER";
 
     const findProcessingTypeName = (processingTypeId: string): string => {
         const processingType = processingTypes.find((processingType) => processingType.id === processingTypeId);
@@ -170,12 +167,12 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                             <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)} |&nbsp;
                             <strong>Machine:</strong> {findMachineName(processing.machineId)} |&nbsp;
                             <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
-                            {canUserEdit && (
+                            <UserRoleHOC>
                                 <ButtonContainer>
                                     <EditIcon onClick={() => handleEditClick(processing.id, new Date(processing.date), processing.processingTypeId, processing.machineId)} />
                                     <DeleteIcon onClick={() => handleDeleteClick(processing.id)} />
                                 </ButtonContainer>
-                            )}
+                            </UserRoleHOC>
                         </ListItem>
                     ))
                 ) : (

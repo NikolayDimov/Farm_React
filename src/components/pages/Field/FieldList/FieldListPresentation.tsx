@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuth } from "../../../../context/AuthContext";
 import { Field } from "../Field.static";
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
@@ -7,6 +6,7 @@ import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/c
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import { Soil } from "../../Soil/Soil.static";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface FieldListPresentationProps {
     fields: Field[];
@@ -47,8 +47,6 @@ const FieldListPresentation: React.FC<FieldListPresentationProps> = ({
     handleEditConfirm,
     handleEditCancel,
 }) => {
-    const { user } = useAuth();
-
     return (
         <ListContainer>
             <ListHeader>Field List</ListHeader>
@@ -59,14 +57,12 @@ const FieldListPresentation: React.FC<FieldListPresentationProps> = ({
                             <strong>Name:</strong> {field.name} |&nbsp;
                             <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
-                            <ButtonContainer>
-                                {(user?.role === "OPERATOR" || user?.role === "OWNER") && (
-                                    <>
-                                        <EditIcon onClick={() => onEditClick(field.id, field.name, field.soilId)} />
-                                        <DeleteIcon onClick={() => onDeleteClick(field.id)} />
-                                    </>
-                                )}
-                            </ButtonContainer>
+                            <UserRoleHOC>
+                                <ButtonContainer>
+                                    <EditIcon onClick={() => onEditClick(field.id, field.name, field.soilId)} />
+                                    <DeleteIcon onClick={() => onDeleteClick(field.id)} />
+                                </ButtonContainer>
+                            </UserRoleHOC>
                         </ListItem>
                     ))
                 ) : (

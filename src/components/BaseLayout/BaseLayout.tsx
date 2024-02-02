@@ -1,48 +1,18 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import Layout from "./common/Layout";
-import servicePageImage from "../../assets/nivaSand.jpg";
 import CropLogic from "../pages/Crop/CropLogic";
 import SoilLogic from "../pages/Soil/SoilLogic";
 import ProcessingTypeLogic from "../pages/ProcessingType/ProcessingTypeLogic";
 import MachineLogic from "../pages/Machine/MachineLogic";
 import ProcessingLogic from "../pages/Processing/ProcessingLogic";
 import FieldLogic from "../pages/Field/FieldLogic";
+import { BackgroundImage, Container } from "./BaseLayout.style";
 //import { MapContainer } from './ServicePage.style';
-
-const BackgroundImage = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url(${servicePageImage});
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-    z-index: -1;
-`;
-
-const Container = styled.div`
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-`;
-
-const MapWrapper = styled.div`
-    width: 100%;
-    height: 400px;
-    margin-bottom: 20px;
-`;
 
 const ServicePage: React.FC = () => {
     const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
 
+    // TODO - will need for the design latar
     const handleSelectLocation = (coordinates: number[][]) => {
         setOutlinedCoordinates(coordinates);
     };
@@ -50,6 +20,7 @@ const ServicePage: React.FC = () => {
     return (
         <Layout>
             <BackgroundImage />
+            {/* Keep Map here, because later I will change the design */}
             {/* <MapWrapper>
         <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
       </MapWrapper> */}

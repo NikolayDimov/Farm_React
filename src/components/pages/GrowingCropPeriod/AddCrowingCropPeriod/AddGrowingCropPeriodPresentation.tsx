@@ -1,6 +1,7 @@
 import React from "react";
 import { Field } from "../../Field/Field.static";
 import { Crop } from "../../Crop/Crop.static";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface AddGrowingCropPeriodPresentationProps {
     createdValues: {
@@ -25,7 +26,7 @@ const AddGrowingCropPeriodPresentation: React.FC<AddGrowingCropPeriodPresentatio
     handleAddGrowingCropPeriod,
 }) => {
     return (
-        <div>
+        <UserRoleHOC>
             <h3>Add a New GrowingCropPeriod</h3>
             <form onSubmit={handleAddGrowingCropPeriod}>
                 <label>Field:</label>
@@ -51,7 +52,7 @@ const AddGrowingCropPeriodPresentation: React.FC<AddGrowingCropPeriodPresentatio
                     {loading ? "Creating GrowingCropPeriod..." : "Create GrowingCropPeriod"}
                 </button>
             </form>
-        </div>
+        </UserRoleHOC>
     );
 };
 

@@ -1,5 +1,5 @@
 import React, { FormEvent } from "react";
-import { useAuth } from "../../../../context/AuthContext";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface AddProcessingTypePresentationProps {
     processingTypeName: string;
@@ -9,16 +9,8 @@ interface AddProcessingTypePresentationProps {
 }
 
 const AddProcessingTypePresentation: React.FC<AddProcessingTypePresentationProps> = ({ processingTypeName, loading, changeHandler, createProcessingType }) => {
-    const { user } = useAuth();
-
-    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
-
-    if (!canUserViewForm) {
-        return null;
-    }
-
     return (
-        <div>
+        <UserRoleHOC>
             <h3>Add a New Processing Type</h3>
             <form onSubmit={createProcessingType}>
                 <label>Processing Type Name:</label>
@@ -27,7 +19,7 @@ const AddProcessingTypePresentation: React.FC<AddProcessingTypePresentationProps
                     {loading ? "Adding ProcessingType..." : "Add ProcessingType"}
                 </button>
             </form>
-        </div>
+        </UserRoleHOC>
     );
 };
 
