@@ -4,6 +4,7 @@ import { ModalOverlay, StyledModalContainer, modalContentStyles, closeButtonStyl
 import FarmListLogic from "./FarmList/FarmListLogic";
 import MapContainer from "../Farm/MapContainer";
 import { Farm } from "./Farm.static";
+import Layout from "../../BaseLayout/common/Layout";
 
 interface FarmPresentationProps {
     farms: Farm[];
@@ -31,7 +32,7 @@ const FarmPresentation: React.FC<FarmPresentationProps> = ({
     onSelectLocation,
 }) => {
     return (
-        <>
+        <Layout>
             <MapContainer onSelectLocation={onSelectLocation} />
             {selectedLocation.length > 0 && <p>Selected Location: {JSON.stringify({ type: "Point", coordinates: selectedLocation })}</p>}
             <AddFarmForm fetchFarms={fetchFarms} />
@@ -45,7 +46,7 @@ const FarmPresentation: React.FC<FarmPresentationProps> = ({
                     </div>
                 </StyledModalContainer>
             </ModalOverlay>
-        </>
+        </Layout>
     );
 };
 
