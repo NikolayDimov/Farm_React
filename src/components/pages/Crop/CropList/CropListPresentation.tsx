@@ -5,6 +5,7 @@ import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface CropListPresentationProps {
     crops: Crop[];
@@ -35,6 +36,9 @@ const CropListPresentation: React.FC<CropListPresentationProps> = ({
     handleEditConfirm,
     handleEditCancel,
 }) => {
+    const { user } = useAuth();
+    const canUserEdit = user?.role === "OPERATOR" || user?.role === "OWNER";
+
     return (
         <ListContainer>
             <ListHeader>Crop List</ListHeader>
@@ -43,10 +47,12 @@ const CropListPresentation: React.FC<CropListPresentationProps> = ({
                     crops.map((crop) => (
                         <ListItem key={crop.id}>
                             {crop.name}
-                            <ButtonContainer>
-                                <EditIcon onClick={() => onEditClick(crop.id, crop.name)} />
-                                <DeleteIcon onClick={() => onDeleteClick(crop.id)} />
-                            </ButtonContainer>
+                            {canUserEdit && (
+                                <ButtonContainer>
+                                    <EditIcon onClick={() => onEditClick(crop.id, crop.name)} />
+                                    <DeleteIcon onClick={() => onDeleteClick(crop.id)} />
+                                </ButtonContainer>
+                            )}
                         </ListItem>
                     ))
                 ) : (

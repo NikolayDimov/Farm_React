@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface AddCropPresentationProps {
     cropName: string;
@@ -8,6 +9,14 @@ interface AddCropPresentationProps {
 }
 
 const AddCropPresentation: React.FC<AddCropPresentationProps> = ({ cropName, loading, changeHandler, createCrop }) => {
+    const { user } = useAuth();
+
+    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
+
+    if (!canUserViewForm) {
+        return null;
+    }
+
     return (
         <div>
             <h3>Add a New Crop</h3>

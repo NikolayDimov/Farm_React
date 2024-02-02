@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface AddSoilPresentationProps {
     soilName: string;
@@ -8,6 +9,13 @@ interface AddSoilPresentationProps {
 }
 
 const AddSoilPresentation: React.FC<AddSoilPresentationProps> = ({ soilName, loading, changeHandler, createSoil }) => {
+    const { user } = useAuth();
+    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
+
+    if (!canUserViewForm) {
+        return null;
+    }
+
     return (
         <div>
             <h3>Add a New Soil</h3>

@@ -13,6 +13,7 @@ import { apiProcessingType } from "../../../../services/apiProcessingType";
 import { apiGrowingCropPeriod } from "../../../../services/apiGrowingCropPeriod";
 import { apiMachine } from "../../../../services/apiMachine";
 import { apiCrop } from "../../../../services/apiCrop";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface AddProcessingProps {
     fetchProcessings: () => void;
@@ -48,6 +49,12 @@ const AddProcessing: React.FC<AddProcessingProps> = ({ fetchProcessings }) => {
     const [crops, setCrops] = useState<Crop[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [loading, setLoading] = useState(false);
+
+    const { user } = useAuth();
+    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
+    if (!canUserViewForm) {
+        return null;
+    }
 
     useEffect(() => {
         const fetchProcessingTypes = async () => {

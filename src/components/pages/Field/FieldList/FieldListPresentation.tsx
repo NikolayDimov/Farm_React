@@ -1,4 +1,5 @@
 import React from "react";
+import { useAuth } from "../../../../context/AuthContext";
 import { Field } from "../Field.static";
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
@@ -46,6 +47,8 @@ const FieldListPresentation: React.FC<FieldListPresentationProps> = ({
     handleEditConfirm,
     handleEditCancel,
 }) => {
+    const { user } = useAuth();
+
     return (
         <ListContainer>
             <ListHeader>Field List</ListHeader>
@@ -57,8 +60,12 @@ const FieldListPresentation: React.FC<FieldListPresentationProps> = ({
                             <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
                             <ButtonContainer>
-                                <EditIcon onClick={() => onEditClick(field.id, field.name, field.soilId)} />
-                                <DeleteIcon onClick={() => onDeleteClick(field.id)} />
+                                {(user?.role === "OPERATOR" || user?.role === "OWNER") && (
+                                    <>
+                                        <EditIcon onClick={() => onEditClick(field.id, field.name, field.soilId)} />
+                                        <DeleteIcon onClick={() => onDeleteClick(field.id)} />
+                                    </>
+                                )}
                             </ButtonContainer>
                         </ListItem>
                     ))

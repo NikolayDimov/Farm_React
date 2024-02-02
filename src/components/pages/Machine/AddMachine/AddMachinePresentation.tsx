@@ -1,6 +1,6 @@
-// AddMachinePresentation.tsx
 import React, { FormEvent } from "react";
 import { Farm } from "../../Farm/Farm.static";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface AddMachinePresentationProps {
     createdValues: {
@@ -17,6 +17,14 @@ interface AddMachinePresentationProps {
 }
 
 const AddMachinePresentation: React.FC<AddMachinePresentationProps> = ({ createdValues, farms, errorMessage, loading, changeHandler, createMachine }) => {
+    const { user } = useAuth();
+
+    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
+
+    if (!canUserViewForm) {
+        return null;
+    }
+
     return (
         <div>
             <h3>Add a New Machine</h3>

@@ -6,6 +6,7 @@ import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/c
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import { Farm } from "../../Farm/Farm.static";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface MachineListPresentationProps {
     machines: Machine[];
@@ -56,6 +57,9 @@ const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
     setCurrentMachineRegisterNumber,
     findFarmName,
 }) => {
+    const { user } = useAuth();
+    const canUserEdit = user?.role === "OPERATOR" || user?.role === "OWNER";
+
     return (
         <ListContainer>
             <ListHeader>Machine List</ListHeader>
@@ -67,10 +71,12 @@ const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
                             <strong>Model:</strong> {machine.model} |&nbsp;
                             <strong>Register Number:</strong> {machine.registerNumber} |&nbsp;
                             <strong>Farm:</strong> {findFarmName(machine.farmId)}
-                            <ButtonContainer>
-                                <EditIcon onClick={() => onEditClick(machine.id, machine.brand, machine.model, machine.registerNumber, machine.farmId)} />
-                                <DeleteIcon onClick={() => onDeleteClick(machine.id)} />
-                            </ButtonContainer>
+                            {canUserEdit && (
+                                <ButtonContainer>
+                                    <EditIcon onClick={() => onEditClick(machine.id, machine.brand, machine.model, machine.registerNumber, machine.farmId)} />
+                                    <DeleteIcon onClick={() => onDeleteClick(machine.id)} />
+                                </ButtonContainer>
+                            )}
                         </ListItem>
                     ))
                 ) : (

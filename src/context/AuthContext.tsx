@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { loginUser, registerUser } from "../services/apiService";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "./AuthContext.static";
@@ -10,9 +10,10 @@ import { AuthProviderProps } from "./AuthContext.static";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
             const parsedUser: User = JSON.parse(storedUser);
             setUser(parsedUser);
             setIsLoggedIn(true);
+            setIsAuthenticated(true);
         }
     }, []);
 
@@ -77,8 +79,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         setIsLoggedIn(false);
     };
 
-    return <AuthContext.Provider value={{ user, login, register, logout, isLoggedIn }}>{children}</AuthContext.Provider>;
-}
+    return <AuthContext.Provider value={{ user, login, register, logout, isLoggedIn, setIsAuthenticated }}>{children}</AuthContext.Provider>;
+};
 
 export function useAuth() {
     const context = useContext(AuthContext);

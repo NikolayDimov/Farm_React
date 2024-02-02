@@ -6,6 +6,7 @@ import FarmList from "../Farm/FarmList";
 import { Farm } from "../Farm/Farm.static";
 import styled from "styled-components";
 import WelcomeUser from "./WelcomeUser";
+import AuthHOC from "../AuthHOC";
 
 const StyledMapContainer = styled(MapContainer)`
     height: 600px;

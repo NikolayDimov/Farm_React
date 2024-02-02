@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import { useAuth } from "../../../../context/AuthContext";
 
 interface AddProcessingTypePresentationProps {
     processingTypeName: string;
@@ -8,6 +9,14 @@ interface AddProcessingTypePresentationProps {
 }
 
 const AddProcessingTypePresentation: React.FC<AddProcessingTypePresentationProps> = ({ processingTypeName, loading, changeHandler, createProcessingType }) => {
+    const { user } = useAuth();
+
+    const canUserViewForm = user?.role === "OPERATOR" || user?.role === "OWNER";
+
+    if (!canUserViewForm) {
+        return null;
+    }
+
     return (
         <div>
             <h3>Add a New Processing Type</h3>

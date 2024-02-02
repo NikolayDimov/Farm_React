@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 export interface User {
     access_token: string;
@@ -19,6 +19,7 @@ export interface AuthContextType {
     register: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
     isLoggedIn: boolean;
+    setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface AuthProviderProps {
