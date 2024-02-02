@@ -1,17 +1,15 @@
 import React, { FormEvent, useState } from "react";
-import { Farm } from "./Farm.static";
-import { apiFarm } from "../../../services/apiFarm";
-import { useAuth } from "../../../context/AuthContext";
-import UserRoleHOC from "../UserRoleHOC";
+import { Farm } from "../Farm.static";
+import { apiFarm } from "../../../../services/apiFarm";
+import UserRoleHOC from "../../UserRoleHOC";
 
 interface AddFarmFormProps {
-    onFarmAdded: (newFarm: Farm) => void;
+    fetchFarms: () => void;
 }
 
-const AddFarmForm: React.FC<AddFarmFormProps> = ({ onFarmAdded }) => {
+const AddFarmForm: React.FC<AddFarmFormProps> = ({ fetchFarms }) => {
     const [newFarmName, setNewFarmName] = useState("");
     const [loading, setLoading] = useState(false);
-    const { user } = useAuth();
 
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewFarmName(e.target.value);
@@ -36,8 +34,8 @@ const AddFarmForm: React.FC<AddFarmFormProps> = ({ onFarmAdded }) => {
             const response = await apiFarm.createFarm(newFarm);
 
             if (response.ok) {
-                onFarmAdded(newFarm);
                 setNewFarmName("");
+                fetchFarms();
             } else {
                 console.error("Failed to create a new farm in the database");
             }

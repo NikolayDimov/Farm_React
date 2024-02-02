@@ -45,4 +45,58 @@ export const apiFarm = {
             throw error;
         }
     },
+
+    editFarm: async (farmId: string, newFarmName: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/farm/${farmId}`, {
+                method: "PATCH",
+                headers,
+                credentials: "include",
+                body: JSON.stringify({ name: newFarmName }),
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to edit farm with ID: ${farmId}`, errorResponse);
+                throw new Error("Failed to edit farm");
+            }
+
+            return response;
+        } catch (error) {
+            console.error("Error editing farm:", error);
+            throw error;
+        }
+    },
+
+    deleteFarm: async (farmId: string) => {
+        try {
+            const authHeaders = authHeader();
+            const headers: Record<string, string> = {
+                "Content-Type": "application/json",
+                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
+            };
+
+            const response = await fetch(`${BASE_URL}/farm/${farmId}`, {
+                method: "DELETE",
+                headers,
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                const errorResponse = await response.json();
+                console.error(`Failed to delete farm with ID: ${farmId}`, errorResponse);
+                throw new Error("Failed to delete farm");
+            }
+            return response;
+        } catch (error) {
+            console.error("Error deleting farm:", error);
+            throw new Error("Failed to delete farm");
+        }
+    },
 };

@@ -12,7 +12,7 @@ import { BackgroundImage, Container } from "./BaseLayout.style";
 const ServicePage: React.FC = () => {
     const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
 
-    // TODO - will need for the design latar
+    // TODO - will need for the design later
     const handleSelectLocation = (coordinates: number[][]) => {
         setOutlinedCoordinates(coordinates);
     };
