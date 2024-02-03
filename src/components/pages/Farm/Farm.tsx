@@ -20,8 +20,8 @@ const Farm: React.FC = () => {
                         {loading ? "Adding Farm..." : "Add Farm"}
                     </button>
                 </form>
-                <MapContainer onSelectLocation={(coordinates: number[]) => setNewFarmCoordinates(coordinates)} />
             </UserRoleHOC>
+            <MapContainer onSelectLocation={(coordinates: number[]) => setNewFarmCoordinates(coordinates)} />
             <FarmList farms={farms} fetchFarms={fetchFarms} showFarmLocationOnMap={showFarmLocationOnMap} />
         </Layout>
     );

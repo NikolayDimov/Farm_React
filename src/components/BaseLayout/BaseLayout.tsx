@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 import Layout from "./common/Layout";
 import ProcessingLogic from "../pages/Processing/Processing.logic.tsx";
-import FieldLogic from "../pages/Field/Field.logic.tsx";
 import { BackgroundImage, Container } from "./BaseLayout.style";
 import Crop from "../pages/Crop/Crop.tsx";
 import Soil from "../pages/Soil/Soil.tsx";
 import ProcessingType from "../pages/ProcessingType/ProcessingType.tsx";
 import Machine from "../pages/Machine/Machine.tsx";
+import Field from "../pages/Field/Field.tsx";
 //import { MapContainer } from './ServicePage.style';
 
 const ServicePage: React.FC = () => {
-    const [outlinedCoordinates, setOutlinedCoordinates] = useState<number[][]>([]);
-
-    // TODO - will need for the design later
-    const handleSelectLocation = (coordinates: number[][]) => {
-        setOutlinedCoordinates(coordinates);
-    };
-
     return (
         <Layout>
             <BackgroundImage />
@@ -25,7 +18,7 @@ const ServicePage: React.FC = () => {
         <MapContainer onSelectLocation={handleSelectLocation} outlinedCoordinates={outlinedCoordinates} />
       </MapWrapper> */}
             <Container>
-                <FieldLogic coordinates={outlinedCoordinates} />
+                <Field />
             </Container>
             <Container>
                 <Soil />

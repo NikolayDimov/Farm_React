@@ -23,21 +23,21 @@ const useMachine = () => {
         return farm ? farm.name : "Unknown Farm";
     };
 
-    const fetchMachines = async () => {
-        try {
-            const machinesData = await apiMachine.fetchMachines();
-            setMachines(machinesData.data);
-        } catch (error) {
-            console.error("Error in fetching machine", error);
-        }
-    };
-
     const fetchFarms = async () => {
         try {
             const farmsData = await apiFarm.fetchFarms();
             setFarms(farmsData.data);
         } catch (error) {
             console.error("Error fetching farms:", error);
+        }
+    };
+
+    const fetchMachines = async () => {
+        try {
+            const machinesData = await apiMachine.fetchMachines();
+            setMachines(machinesData.data);
+        } catch (error) {
+            console.error("Error in fetching machine", error);
         }
     };
 

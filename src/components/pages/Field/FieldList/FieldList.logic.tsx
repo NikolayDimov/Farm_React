@@ -1,44 +1,100 @@
-import React, { useState } from "react";
-import { Field } from "../Field.static";
-import { Farm } from "../../Farm/Farm.static";
-import { Soil } from "../../Soil/Soil.static";
-import FieldListPresentation from "./FieldList";
+import React, { useEffect, useState } from "react";
+import { Field as FieldProp } from "../Field.static";
+import { apiField } from "../../../../services/apiField";
 
-interface FieldListLogicProps {
-    fields: Field[];
-    farms: Farm[];
-    soils: Soil[];
-    onDeleteField: (fieldId: string) => void;
-    onEditField: (fieldId: string, currentFieldName: string, newSoilId: string) => void;
+interface UseFieldListProps {
+    fetchFields: () => Promise<void>;
 }
 
-const FieldListLogic: React.FC<FieldListLogicProps> = ({ fields, farms, soils, onDeleteField, onEditField }) => {
+const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [selectedFieldIdForDelete, setSelectedFieldIdForDelete] = useState<string | null>(null);
     const [selectedFieldIdForEdit, setSelectedFieldIdForEdit] = useState<string | null>(null);
     const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
     const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentFieldName, setCurrentFieldName] = useState<string>("");
     const [originalFieldName, setOriginalFieldName] = useState<string>("");
+    const [selectedFarmId, setSelectedFarmId] = useState<string>("");
     const [selectedSoilId, setSelectedSoilId] = useState<string>("");
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState("");
+    const [confirmation, setConfirmation] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const findFarmName = (farmId: string): string => {
-        const farm = farms.find((farm) => farm.id === farmId);
-        return farm ? farm.name : "Unknown Farm";
+    const showModal = (message: string) => {
+        setModalMessage(message);
+        setModalVisible(true);
     };
 
-    const findSoilName = (soilId: string): string => {
-        const soil = soils.find((soil) => soil.id === soilId);
-        return soil ? soil.name : "Unknown Soil";
+    useEffect(() => {
+        if (modalVisible) {
+            const timeoutId = setTimeout(() => {
+                setModalVisible(false);
+                setModalMessage("");
+                setConfirmation(false);
+            }, 5000);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [modalVisible]);
+
+    const onDeleteField = async (fieldId: string) => {
+        try {
+            setLoading(true);
+
+            const response = await apiField.deleteField(fieldId);
+
+            if (response.ok) {
+                // setFields((prevFields) => prevFields.filter((field) => field.id !== fieldId));
+                fetchFields();
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to delete field with ID: ${fieldId}`, responseBody);
+
+                if (response.status === 400 && responseBody.error?.message) {
+                    showModal(responseBody.error.message);
+                    setConfirmation(true);
+                } else {
+                    showModal("Failed to delete Field");
+                }
+            }
+        } catch (error) {
+            console.error("Error deleting Field:", error);
+            showModal("Failed to delete Field");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleDeleteClick = (fieldId: string | undefined) => {
+    const onEditField = async (fieldId: string, newFieldName: string, newSoilId: string) => {
+        try {
+            setLoading(true);
+            //const originalOrder: Field[] = [...fields];
+            const response = await apiField.editField(fieldId, newFieldName, newSoilId);
+
+            if (response.ok) {
+                const updatedFieldData = await apiField.fetchFields();
+                //setFields(originalOrder.map((originalField: FieldProp) => updatedFieldData.data.find((updatedField: FieldProp) => updatedField.id === originalField.id) as FieldProp));
+                fetchFields();
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit field with ID: ${fieldId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing field:", error);
+            showModal("Failed to edit field");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDeleteClick = (fieldId: string | undefined) => {
         if (fieldId) {
             setSelectedFieldIdForDelete(fieldId);
             setDeleteModalVisible(true);
         }
     };
 
-    const handleEditClick = (fieldId: string | undefined, fieldName: string, soilId: string) => {
+    const onEditClick = (fieldId: string | undefined, fieldName: string, soilId: string) => {
         if (fieldId) {
             setSelectedFieldIdForEdit(fieldId);
             setCurrentFieldName(fieldName);
@@ -48,7 +104,7 @@ const FieldListLogic: React.FC<FieldListLogicProps> = ({ fields, farms, soils, o
         }
     };
 
-    const handleDeleteConfirm = async () => {
+    const onDeleteConfirm = async () => {
         if (selectedFieldIdForDelete) {
             await onDeleteField(selectedFieldIdForDelete);
             setSelectedFieldIdForDelete(null);
@@ -56,12 +112,12 @@ const FieldListLogic: React.FC<FieldListLogicProps> = ({ fields, farms, soils, o
         }
     };
 
-    const handleDeleteCancel = () => {
+    const onDeleteCancel = () => {
         setSelectedFieldIdForDelete(null);
         setDeleteModalVisible(false);
     };
 
-    const handleEditConfirm = async () => {
+    const onEditConfirm = async () => {
         try {
             if (selectedFieldIdForEdit) {
                 await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId);
@@ -76,34 +132,30 @@ const FieldListLogic: React.FC<FieldListLogicProps> = ({ fields, farms, soils, o
         }
     };
 
-    const handleEditCancel = () => {
+    const onEditCancel = () => {
         setSelectedFieldIdForEdit(null);
         setEditModalVisible(false);
         setCurrentFieldName("");
         setSelectedSoilId("");
     };
 
-    return (
-        <FieldListPresentation
-            fields={fields}
-            soils={soils}
-            findFarmName={findFarmName}
-            findSoilName={findSoilName}
-            onDeleteClick={handleDeleteClick}
-            onEditClick={handleEditClick}
-            isDeleteModalVisible={isDeleteModalVisible}
-            isEditModalVisible={isEditModalVisible}
-            currentFieldName={currentFieldName}
-            originalFieldName={originalFieldName}
-            setCurrentFieldName={setCurrentFieldName}
-            selectedSoilId={selectedSoilId}
-            setSelectedSoilId={setSelectedSoilId}
-            handleDeleteConfirm={handleDeleteConfirm}
-            handleDeleteCancel={handleDeleteCancel}
-            handleEditConfirm={handleEditConfirm}
-            handleEditCancel={handleEditCancel}
-        />
-    );
+    return {
+        onDeleteClick,
+        onEditClick,
+        isDeleteModalVisible,
+        isEditModalVisible,
+        currentFieldName,
+        originalFieldName,
+        setSelectedFarmId,
+        selectedFarmId,
+        selectedSoilId,
+        onEditConfirm,
+        onEditCancel,
+        onDeleteConfirm,
+        onDeleteCancel,
+        setCurrentFieldName,
+        setSelectedSoilId,
+    };
 };
 
-export default FieldListLogic;
+export default useFieldList;

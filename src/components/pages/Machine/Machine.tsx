@@ -46,6 +46,7 @@ const Machine: React.FC = () => {
                     </button>
                 </form>
             </UserRoleHOC>
+
             <MachineList machines={machines} farms={farms} findFarmName={findFarmName} fetchMachines={fetchMachines} />
 
             <UserRoleHOC>
