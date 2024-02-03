@@ -1,22 +1,17 @@
 import React from "react";
 import { GrowingCropPeriod } from "../GrowingCropPeriod.static";
-import { Field } from "../../Field/Field.static";
-import { Crop } from "../../Crop/Crop.static";
+import useGrowingCropPeriodList from "../GrowingCropPeriod.logic";
+
 import { ListContainer, ListHeader, ListItem, List } from "../../../BaseLayout/common/ListStyles";
 
-interface GrowingCropPeriodListPresentationProps {
+interface GrowingCropPeriodListProps {
     growingCropPeriods: GrowingCropPeriod[];
-    fields: Field[];
-    crops: Crop[];
-    loading: boolean;
     findFieldName: (fieldId: string) => string;
     findCropName: (cropId: string) => string;
 }
 
-const GrowingCropPeriodListPresentation: React.FC<GrowingCropPeriodListPresentationProps> = ({ growingCropPeriods, fields, crops, loading, findFieldName, findCropName }) => {
-    if (loading) {
-        return <p>Loading growing crop periods...</p>;
-    }
+const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCropPeriods, findFieldName, findCropName }) => {
+    useGrowingCropPeriodList();
 
     return (
         <ListContainer>
@@ -37,4 +32,4 @@ const GrowingCropPeriodListPresentation: React.FC<GrowingCropPeriodListPresentat
     );
 };
 
-export default GrowingCropPeriodListPresentation;
+export default GrowingCropPeriodList;

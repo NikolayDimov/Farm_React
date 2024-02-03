@@ -1,62 +1,45 @@
 import React from "react";
-import { Machine } from "../Machine.static";
+
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
-import { Farm } from "../../Farm/Farm.static";
 import UserRoleHOC from "../../UserRoleHOC";
+import { Machine as MachineProp } from "../Machine.static";
+import useMachineList from "../MachineList/MachineList.logic";
+import { Farm } from "../../Farm/Farm.static";
 
-interface MachineListPresentationProps {
-    machines: Machine[];
+interface MachineListProps {
+    machines: MachineProp[];
     farms: Farm[];
-    onDeleteClick: (machineId: string | undefined) => void;
-    onEditClick: (machineId: string | undefined, machineBrand: string, machineModel: string, machineRegisterNumber: string, farmId: string) => void;
-    isDeleteModalVisible: boolean;
-    isEditModalVisible: boolean;
-    currentMachineBrand: string;
-    currentMachineModel: string;
-    currentMachineRegisterNumber: string;
-    originalMachineBrand: string;
-    originalMachineModel: string;
-    originalMachineRegisterNumber: string;
-    selectedFarmId: string;
-    setSelectedFarmId: (farmId: string) => void;
-    handleDeleteConfirm: () => void;
-    handleDeleteCancel: () => void;
-    handleEditConfirm: () => void;
-    handleEditCancel: () => void;
-    setCurrentMachineBrand: (brand: string) => void;
-    setCurrentMachineModel: (model: string) => void;
-    setCurrentMachineRegisterNumber: (registerNumber: string) => void;
+    fetchMachines: () => Promise<void>;
     findFarmName: (farmId: string) => string;
 }
 
-const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
-    machines,
-    farms,
-    onDeleteClick,
-    onEditClick,
-    isDeleteModalVisible,
-    isEditModalVisible,
-    currentMachineBrand,
-    currentMachineModel,
-    currentMachineRegisterNumber,
-    originalMachineBrand,
-    originalMachineModel,
-    originalMachineRegisterNumber,
-    selectedFarmId,
-    setSelectedFarmId,
-    handleDeleteConfirm,
-    handleDeleteCancel,
-    handleEditConfirm,
-    handleEditCancel,
-    setCurrentMachineBrand,
-    setCurrentMachineModel,
-    setCurrentMachineRegisterNumber,
-    findFarmName,
-}) => {
+const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachines, findFarmName }) => {
+    const {
+        onDeleteClick,
+        onEditClick,
+        isDeleteModalVisible,
+        isEditModalVisible,
+        currentMachineBrand,
+        currentMachineModel,
+        currentMachineRegisterNumber,
+        originalMachineBrand,
+        originalMachineModel,
+        originalMachineRegisterNumber,
+        setCurrentMachineBrand,
+        setCurrentMachineModel,
+        setCurrentMachineRegisterNumber,
+        setSelectedFarmId,
+        selectedFarmId,
+        onEditConfirm,
+        onEditCancel,
+        onDeleteConfirm,
+        onDeleteCancel,
+    } = useMachineList({ fetchMachines });
+
     return (
         <ListContainer>
             <ListHeader>Machine List</ListHeader>
@@ -111,8 +94,8 @@ const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
                         </div>
                     </ModalContent>
                     <ModalActions>
-                        <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
+                        <ModalButton onClick={onEditConfirm}>Save</ModalButton>
+                        <ModalButton onClick={onEditCancel}>Cancel</ModalButton>
                     </ModalActions>
                 </StyledModalContainer>
             </ModalOverlay>
@@ -124,8 +107,8 @@ const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
                         <p>Are you sure you want to delete this machine?</p>
                     </ModalContent>
                     <ModalActions>
-                        <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
+                        <ModalButton onClick={onDeleteConfirm}>Yes</ModalButton>
+                        <ModalButton onClick={onDeleteCancel}>No</ModalButton>
                     </ModalActions>
                 </StyledModalContainer>
             </ModalOverlay>
@@ -133,4 +116,4 @@ const MachineListPresentation: React.FC<MachineListPresentationProps> = ({
     );
 };
 
-export default MachineListPresentation;
+export default MachineList;
