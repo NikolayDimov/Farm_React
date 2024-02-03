@@ -1,20 +1,24 @@
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const processingType = apiEndpoints.processingType;
 
 export const apiProcessingType = {
     fetchProcessingTypes: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processingType`, {
+            const response = await fetch(`${BASE_URL}/${processingType}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch processingType");
+            }
             const processingTypeData = await response.json();
             return processingTypeData;
         } catch (error) {
@@ -25,18 +29,19 @@ export const apiProcessingType = {
 
     createProcessingType: async (processingTypeName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processingType`, {
+            const response = await fetch(`${BASE_URL}/${processingType}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: processingTypeName }),
             });
+
+            if (!response.ok) {
+                throw new Error(`Failed to create ProcessingType: ${response.statusText}`);
+            }
 
             return response;
         } catch (error) {
@@ -47,15 +52,12 @@ export const apiProcessingType = {
 
     editProcessingType: async (processingTypeId: string, newProcessingTypeName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processingType/${processingTypeId}`, {
+            const response = await fetch(`${BASE_URL}/${processingType}/${processingTypeId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: newProcessingTypeName }),
             });
@@ -75,15 +77,12 @@ export const apiProcessingType = {
 
     deleteProcessingType: async (processingTypeId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processingType/${processingTypeId}`, {
+            const response = await fetch(`${BASE_URL}/${processingType}/${processingTypeId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

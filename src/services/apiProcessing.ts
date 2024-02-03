@@ -1,20 +1,20 @@
-import authHeader from "./authHeader";
 import { Processing } from "../components/pages/Processing/Processing.static";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const processing = apiEndpoints.processing;
 
 export const apiProcessing = {
     fetchProcessings: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processing`, {
+            const response = await fetch(`${BASE_URL}/${processing}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
 
             if (!response.ok) {
@@ -31,18 +31,18 @@ export const apiProcessing = {
 
     createProcessing: async (newProcessing: Processing) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processing`, {
+            const response = await fetch(`${BASE_URL}/${processing}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify(newProcessing),
             });
+            if (!response.ok) {
+                throw new Error(`Failed to create Processing: ${response.statusText}`);
+            }
 
             // console.log("Processing Creation Response:", response);
             return response;
@@ -54,15 +54,12 @@ export const apiProcessing = {
 
     editProcessing: async (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processing/${processingId}`, {
+            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ id: processingId, date: newProcessingDate, processingTypeId: newProcessingTypeId, machineId: newMachineId }),
             });
@@ -82,15 +79,12 @@ export const apiProcessing = {
 
     deleteProcessing: async (processingId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/processing/${processingId}`, {
+            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

@@ -1,20 +1,24 @@
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const crop = apiEndpoints.crop;
 
 export const apiCrop = {
     fetchCrops: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/crop`, {
+            const response = await fetch(`${BASE_URL}/${crop}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch crops");
+            }
+
             const cropData = await response.json();
             return cropData;
         } catch (error) {
@@ -25,18 +29,19 @@ export const apiCrop = {
 
     createCrop: async (cropName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/crop`, {
+            const response = await fetch(`${BASE_URL}/${crop}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: cropName }),
             });
+
+            if (!response.ok) {
+                throw new Error(`Failed to create Crop: ${response.statusText}`);
+            }
 
             return response;
         } catch (error) {
@@ -47,15 +52,12 @@ export const apiCrop = {
 
     editCrop: async (cropId: string, newCropName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/crop/${cropId}`, {
+            const response = await fetch(`${BASE_URL}/${crop}/${cropId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: newCropName }),
             });
@@ -75,15 +77,12 @@ export const apiCrop = {
 
     deleteCrop: async (cropId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/crop/${cropId}`, {
+            const response = await fetch(`${BASE_URL}/${crop}/${cropId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

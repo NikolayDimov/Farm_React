@@ -1,21 +1,24 @@
-// apiFarm.ts
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 import { Farm } from "../components/pages/Farm/Farm.static";
-const BASE_URL = "http://localhost:3000";
+
+const user = getUser();
+const farm = apiEndpoints.farm;
 
 export const apiFarm = {
     fetchFarms: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/farm`, {
+            const response = await fetch(`${BASE_URL}/${farm}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch farms");
+            }
             const farmData = await response.json();
             return farmData;
         } catch (error) {
@@ -26,18 +29,18 @@ export const apiFarm = {
 
     createFarm: async (newFarm: Farm) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/farm`, {
+            const response = await fetch(`${BASE_URL}/${farm}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify(newFarm),
             });
+            if (!response.ok) {
+                throw new Error(`Failed to create Soil: ${response.statusText}`);
+            }
 
             return response;
         } catch (error) {
@@ -48,15 +51,12 @@ export const apiFarm = {
 
     editFarm: async (farmId: string, newFarmName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/farm/${farmId}`, {
+            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: newFarmName }),
             });
@@ -76,15 +76,12 @@ export const apiFarm = {
 
     deleteFarm: async (farmId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/farm/${farmId}`, {
+            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

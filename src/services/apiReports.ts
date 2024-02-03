@@ -1,20 +1,28 @@
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const farmsWithMostMachines = apiEndpoints.farmsWithMostMachines;
+const fieldCountPerFarmAndCrop = apiEndpoints.fieldCountPerFarmAndCrop;
+const mostCommonSoilPerFarm = apiEndpoints.mostCommonSoilPerFarm;
+const processingReport = apiEndpoints.processingReport;
 
 export const apiFarmWithMostMachines = {
     fetchFarmWithMostMachinesReport: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/report/farms-with-most-machines`, {
+            const response = await fetch(`${BASE_URL}/${farmsWithMostMachines}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch farmsWithMostMachines");
+            }
+
             const farmWithMostMachineData = await response.json();
             return farmWithMostMachineData;
         } catch (error) {
@@ -27,16 +35,16 @@ export const apiFarmWithMostMachines = {
 export const apiFieldCountPerFarmAndCrop = {
     fetchFieldCountPerFarmAndCropReport: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/report/field-count-per-farm-and-crop`, {
+            const response = await fetch(`${BASE_URL}/report/${fieldCountPerFarmAndCrop}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch fieldCountPerFarmAndCrop");
+            }
             const fieldCountPerFarmAndCropData = await response.json();
             return fieldCountPerFarmAndCropData;
         } catch (error) {
@@ -49,16 +57,16 @@ export const apiFieldCountPerFarmAndCrop = {
 export const apiMostCommonSoilPerFarm = {
     fetchMostCommonSoilPerFarmReport: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/report/most-common-soil-per-farm`, {
+            const response = await fetch(`${BASE_URL}/report/${mostCommonSoilPerFarm}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch mostCommonSoilPerFarmData");
+            }
             const mostCommonSoilPerFarmData = await response.json();
             return mostCommonSoilPerFarmData;
         } catch (error) {
@@ -71,16 +79,16 @@ export const apiMostCommonSoilPerFarm = {
 export const apiProcessingReport = {
     fetchProcessingReport: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/report/processing-report`, {
+            const response = await fetch(`${BASE_URL}/report/${processingReport}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch processingReport");
+            }
             const processingReportData = await response.json();
             return processingReportData;
         } catch (error) {

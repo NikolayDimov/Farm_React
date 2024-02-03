@@ -1,0 +1,34 @@
+export const apiEndpoints = {
+    // Farm
+    farm: "farm",
+    farmDetails: "farm/:farmId",
+    createFarm: "farm",
+    // Crop
+    crop: "crop",
+    createCrop: "crop",
+    // Soil
+    soil: "soil",
+    soilDetails: "soil/:soilId",
+    createSoil: "soil",
+    // Field
+    field: "field",
+    fieldDetails: "field/:fieldId",
+    createField: "field",
+    // Machine
+    machine: "machine",
+    machineDetails: "machine/:machineId",
+    createMachine: "machine",
+    // ProcessingType
+    processingType: "processingType",
+    createProcessingType: "processingType",
+    // GrowingCropPeriod
+    growingPeriod: "growingCropPeriod",
+    // Processing
+    processing: "processing",
+    createProcessing: "processing",
+    // Reports
+    farmsWithMostMachines: "farms-with-most-machines",
+    fieldCountPerFarmAndCrop: "field-count-per-farm-and-crop",
+    mostCommonSoilPerFarm: "most-common-soil-per-farm",
+    processingReport: "processing-report",
+};

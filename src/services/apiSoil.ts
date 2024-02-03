@@ -1,20 +1,24 @@
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const soil = apiEndpoints.soil;
 
 export const apiSoil = {
     fetchSoils: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/soil`, {
+            const response = await fetch(`${BASE_URL}/${soil}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch soils");
+            }
+
             const soilData = await response.json();
             return soilData;
         } catch (error) {
@@ -25,18 +29,18 @@ export const apiSoil = {
 
     createSoil: async (soilName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/soil`, {
+            const response = await fetch(`${BASE_URL}/${soil}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: soilName }),
             });
+            if (!response.ok) {
+                throw new Error(`Failed to create Soil: ${response.statusText}`);
+            }
 
             return response;
         } catch (error) {
@@ -47,15 +51,12 @@ export const apiSoil = {
 
     editSoil: async (soilId: string, newSoilName: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/soil/${soilId}`, {
+            const response = await fetch(`${BASE_URL}/${soil}/${soilId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: newSoilName }),
             });
@@ -75,15 +76,12 @@ export const apiSoil = {
 
     deleteSoil: async (soilId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/soil/${soilId}`, {
+            const response = await fetch(`${BASE_URL}/${soil}/${soilId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

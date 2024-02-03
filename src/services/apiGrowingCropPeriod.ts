@@ -1,21 +1,24 @@
-import authHeader from "./authHeader";
 import { GrowingCropPeriod } from "../components/pages/GrowingCropPeriod/GrowingCropPeriod.static";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const gcp = apiEndpoints.growingPeriod;
 
 export const apiGrowingCropPeriod = {
     fetchGCP: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/growingCropPeriod`, {
+            const response = await fetch(`${BASE_URL}/${gcp}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch GCP");
+            }
             const growingCropPeriodData = await response.json();
             return growingCropPeriodData;
         } catch (error) {
@@ -26,20 +29,20 @@ export const apiGrowingCropPeriod = {
 
     createGrowingCropPeriod: async (newGrowingCropPeriodData: GrowingCropPeriod) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/growingCropPeriod`, {
+            const response = await fetch(`${BASE_URL}/${gcp}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify(newGrowingCropPeriodData),
             });
+            if (!response.ok) {
+                throw new Error("Failed to fetch GCP");
+            }
 
-            return response; // This should now return a Promise<Response>
+            return response;
         } catch (error) {
             console.error("Error creating a new growingCropPeriod:", error);
             throw error;

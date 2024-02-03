@@ -1,20 +1,20 @@
-import authHeader from "./authHeader";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 import { Field } from "../components/pages/Field/Field.static";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const field = apiEndpoints.field;
 
 export const apiField = {
     fetchFields: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/field`, {
+            const response = await fetch(`${BASE_URL}/${field}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
 
             if (!response.ok) {
@@ -31,15 +31,12 @@ export const apiField = {
 
     createField: async (newField: Field) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/field`, {
+            const response = await fetch(`${BASE_URL}/${field}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify(newField),
             });
@@ -53,15 +50,12 @@ export const apiField = {
 
     editField: async (fieldId: string, newFieldName: string, newSoilId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/field/${fieldId}`, {
+            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ name: newFieldName, soilId: newSoilId }),
             });
@@ -81,15 +75,12 @@ export const apiField = {
 
     deleteField: async (fieldId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/field/${fieldId}`, {
+            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 

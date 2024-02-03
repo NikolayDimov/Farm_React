@@ -1,21 +1,19 @@
 import { SignInDto, User } from "../context/AuthContext.static";
-import authHeader from "./authHeader";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../context/AuthContext.static";
+import { BASE_URL } from "../static/baseUrl";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
 
 export const loginUser = async (signInDto: SignInDto): Promise<User> => {
     try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-            "Content-Type": "application/json",
-            ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
         const response = await fetch(`${BASE_URL}/auth/login`, {
             method: "POST",
-            headers,
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
             credentials: "include",
             body: JSON.stringify(signInDto),
         });
@@ -45,15 +43,12 @@ export const loginUser = async (signInDto: SignInDto): Promise<User> => {
 
 export const registerUser = async (signInDto: SignInDto): Promise<User> => {
     try {
-        const authHeaders = authHeader();
-        const headers: Record<string, string> = {
-            "Content-Type": "application/json",
-            ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-        };
-
         const response = await fetch(`${BASE_URL}/auth/register`, {
             method: "POST",
-            headers,
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
             credentials: "include",
             body: JSON.stringify(signInDto),
         });
@@ -88,6 +83,7 @@ export const checkUser = async () => {
     const response = await fetch(`${BASE_URL}/auth/profile`, {
         method: "GET",
         headers: {
+            Authorization: `Bearer ${user.access_token}`,
             "Content-Type": "application/json",
         },
     });

@@ -1,20 +1,20 @@
-import authHeader from "./authHeader";
 import { Machine } from "../components/pages/Machine/Machine.static";
+import { BASE_URL } from "../static/baseUrl";
+import { apiEndpoints } from "../static/apiEndpoints";
+import { getUser } from "./authHeaders";
 
-const BASE_URL = "http://localhost:3000";
+const user = getUser();
+const machine = apiEndpoints.machine;
 
 export const apiMachine = {
     fetchMachines: async () => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/machine`, {
+            const response = await fetch(`${BASE_URL}/${machine}`, {
                 method: "GET",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
             });
 
             if (!response.ok) {
@@ -31,18 +31,18 @@ export const apiMachine = {
 
     createMachine: async (newMachine: Machine) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/machine`, {
+            const response = await fetch(`${BASE_URL}/${machine}`, {
                 method: "POST",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify(newMachine),
             });
+            if (!response.ok) {
+                throw new Error(`Failed to create Machine: ${response.statusText}`);
+            }
 
             return response;
         } catch (error) {
@@ -53,15 +53,12 @@ export const apiMachine = {
 
     editMachine: async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string, newFarmId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/machine/${machineId}`, {
+            const response = await fetch(`${BASE_URL}/${machine}/${machineId}`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ brand: newMachineBrand, model: newMachineModel, registerNumber: MachineRegisterNumber, newFarmId }),
             });
@@ -81,15 +78,12 @@ export const apiMachine = {
 
     transferMachine: async (machineId: string, newFarmId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/machine/${machineId}/transfer`, {
+            const response = await fetch(`${BASE_URL}/${machine}/${machineId}/transfer`, {
                 method: "PATCH",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
                 body: JSON.stringify({ newFarmId }),
             });
@@ -109,15 +103,12 @@ export const apiMachine = {
 
     deleteMachine: async (machineId: string) => {
         try {
-            const authHeaders = authHeader();
-            const headers: Record<string, string> = {
-                "Content-Type": "application/json",
-                ...(authHeaders.Authorization ? { Authorization: authHeaders.Authorization } : {}),
-            };
-
-            const response = await fetch(`${BASE_URL}/machine/${machineId}`, {
+            const response = await fetch(`${BASE_URL}/${machine}/${machineId}`, {
                 method: "DELETE",
-                headers,
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
                 credentials: "include",
             });
 
