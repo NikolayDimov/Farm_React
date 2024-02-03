@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Field as FieldProp } from "../Field.static";
 import { apiField } from "../../../../services/apiField";
 
 interface UseFieldListProps {
@@ -44,7 +43,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             const response = await apiField.deleteField(fieldId);
 
             if (response.ok) {
-                // setFields((prevFields) => prevFields.filter((field) => field.id !== fieldId));
                 fetchFields();
             } else {
                 const responseBody = await response.json();
@@ -72,8 +70,8 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             const response = await apiField.editField(fieldId, newFieldName, newSoilId);
 
             if (response.ok) {
-                const updatedFieldData = await apiField.fetchFields();
-                //setFields(originalOrder.map((originalField: FieldProp) => updatedFieldData.data.find((updatedField: FieldProp) => updatedField.id === originalField.id) as FieldProp));
+                // const updatedFieldData = await apiField.fetchFields();
+                // setFields(originalOrder.map((originalField: FieldProp) => updatedFieldData.data.find((updatedField: FieldProp) => updatedField.id === originalField.id) as FieldProp));
                 fetchFields();
             } else {
                 const responseBody = await response.json();

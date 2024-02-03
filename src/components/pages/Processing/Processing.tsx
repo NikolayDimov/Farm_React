@@ -1,24 +1,109 @@
 import React from "react";
-import { ModalOverlay, StyledModalContainer, modalContentStyles, closeButtonStyles } from "../../BaseLayout/BaseLayout.style";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import UserRoleHOC from "../UserRoleHOC";
+import useProcessing from "./Processing.logic";
+import ProcessingList from "./ProcessingList/ProcessingList";
 
-interface ProcessingPresentationProps {
-    modalVisible: boolean;
-    confirmation: boolean;
-    modalMessage: string;
-    setModalVisible: (visible: boolean) => void;
-}
+const Processing: React.FC = () => {
+    const {
+        processings,
+        processingTypes,
+        fields,
+        crops,
+        machines,
+        changeHandler,
+        createProcessing,
+        fetchProcessings,
+        createdValues,
+        setCreatedValues,
+        loading,
+        findProcessingTypeName,
+        findGrowingCropPeriodCrop,
+        findGrowingCropPeriodField,
+        findMachineName,
+        findFarmNameByMachineId,
+        errorMessage,
+    } = useProcessing();
 
-const ProcessingPresentation: React.FC<ProcessingPresentationProps> = ({ modalVisible, confirmation, modalMessage, setModalVisible }) => {
     return (
-        <ModalOverlay show={modalVisible} confirmation={false}>
-            <StyledModalContainer confirmation={confirmation}>
-                <div style={modalContentStyles}>{confirmation ? "Processing cannot be deleted" : modalMessage}</div>
-                <div style={closeButtonStyles}>
-                    <button onClick={() => setModalVisible(false)}>Close</button>
+        <>
+            <UserRoleHOC>
+                <div>
+                    <h3>Add a New Processing</h3>
+                    <form onSubmit={createProcessing}>
+                        <label>Processing date:</label>
+                        <DatePicker selected={createdValues.newProcessingDate} onChange={(date: Date) => setCreatedValues((state) => ({ ...state, newProcessingDate: date }))} />
+
+                        <label>Processing Type:</label>
+                        <select name="processingTypeId" value={createdValues.processingTypeId} onChange={changeHandler}>
+                            <option key="" value="">
+                                Select Processing Type
+                            </option>
+                            {processingTypes.map((processingType) => (
+                                <option key={processingType.id} value={processingType.id}>
+                                    {processingType.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <label>Field:</label>
+                        <select name="fieldId" value={createdValues.fieldId} onChange={changeHandler}>
+                            <option key="" value="">
+                                Select Field
+                            </option>
+                            {fields.map((field) => (
+                                <option key={field.id} value={field.id}>
+                                    {field.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <label>Crop:</label>
+                        <select name="cropId" value={createdValues.cropId} onChange={changeHandler}>
+                            <option key="" value="">
+                                Select Crop
+                            </option>
+                            {crops.map((crop) => (
+                                <option key={crop.id} value={crop.id}>
+                                    {crop.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <label>Machine:</label>
+                        <select name="machineId" value={createdValues.machineId} onChange={changeHandler}>
+                            <option key="" value="">
+                                Select Machine
+                            </option>
+                            {machines.map((machine) => (
+                                <option key={machine.id} value={machine.id}>
+                                    {machine.brand}, {machine.model}, {machine.registerNumber}
+                                </option>
+                            ))}
+                        </select>
+
+                        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+                        <button type="submit" disabled={loading}>
+                            {loading ? "Creating Processing..." : "Create processing"}
+                        </button>
+                    </form>
                 </div>
-            </StyledModalContainer>
-        </ModalOverlay>
+            </UserRoleHOC>
+
+            <ProcessingList
+                processings={processings}
+                processingTypes={processingTypes}
+                machines={machines}
+                fetchProcessings={fetchProcessings}
+                findProcessingTypeName={findProcessingTypeName}
+                findGrowingCropPeriodField={findGrowingCropPeriodField}
+                findGrowingCropPeriodCrop={findGrowingCropPeriodCrop}
+                findMachineName={findMachineName}
+                findFarmNameByMachineId={findFarmNameByMachineId}
+            />
+        </>
     );
 };
 
-export default ProcessingPresentation;
+export default Processing;

@@ -1,12 +1,7 @@
-import React, { useState } from "react";
-import { Processing } from "../Processing.static";
-import { Field } from "../../Field/Field.static";
-import { Farm } from "../../Farm/Farm.static";
-import { Soil } from "../../Soil/Soil.static";
-import { Crop } from "../../Crop/Crop.static";
-import { ProcessingType } from "../../ProcessingType/ProcessingType.static";
-import { Machine } from "../../Machine/Machine.static";
-import { GrowingCropPeriod } from "../../GrowingCropPeriod/GrowingCropPeriod.static";
+import React from "react";
+import { Processing as ProcessingProp } from "../Processing.static";
+import { ProcessingType as ProcessingTypeProp } from "../../ProcessingType/ProcessingType.static";
+import { Machine as MachinesProps } from "../../Machine/Machine.static";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
@@ -15,144 +10,48 @@ import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOve
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserRoleHOC from "../../UserRoleHOC";
+import useProcessingList from "../ProcessingList/ProcessingList.logic";
 
 interface ProcessingListProps {
-    processings: Processing[];
-    processingTypes: ProcessingType[];
-    growingCropPeriods: GrowingCropPeriod[];
-    fields: Field[];
-    crops: Crop[];
-    machines: Machine[];
-    farms: Farm[];
-    soils: Soil[];
-    onDeleteProcessing: (processingId: string) => void;
-    onEditProcessing: (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => void;
+    processings: ProcessingProp[];
+    processingTypes: ProcessingTypeProp[];
+    machines: MachinesProps[];
+    fetchProcessings: () => Promise<void>;
+    findProcessingTypeName: (soilId: string) => string;
+    findGrowingCropPeriodField: (soilId: string) => string;
+    findGrowingCropPeriodCrop: (soilId: string) => string;
+    findMachineName: (soilId: string) => string;
+    findFarmNameByMachineId: (soilId: string) => string;
 }
 
 const ProcessingList: React.FC<ProcessingListProps> = ({
     processings,
     processingTypes,
-    growingCropPeriods,
-    fields,
-    crops,
     machines,
-    farms,
-    soils,
-    onDeleteProcessing,
-    onEditProcessing,
+    fetchProcessings,
+    findProcessingTypeName,
+    findGrowingCropPeriodField,
+    findGrowingCropPeriodCrop,
+    findMachineName,
+    findFarmNameByMachineId,
 }) => {
-    const [selectedProcessingIdForDelete, setSelectedProcessingIdForDelete] = useState<string | null>(null);
-    const [selectedProcessingIdForEdit, setSelectedProcessingIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
-    const [currentProcessingDate, setCurrentProcessingDate] = useState<Date | undefined>();
-    const [originalProcessingDate, setOriginalProcessingDate] = useState<string>("");
-    const [selectedProcessingTypeId, setSelectedProcessingTypeId] = useState<string>("");
-    const [selectedMachinedId, setSelectedMachineId] = useState<string>("");
-
-    const findProcessingTypeName = (processingTypeId: string): string => {
-        const processingType = processingTypes.find((processingType) => processingType.id === processingTypeId);
-        return processingType ? processingType.name : "Unknown processingType";
-    };
-
-    const findGrowingCropPeriodCrop = (growingCropPeriodId: string | undefined): string => {
-        const growingCropPeriod = growingCropPeriods.find((growingCropPeriod) => growingCropPeriod.id === growingCropPeriodId);
-        return growingCropPeriod ? findCropName(growingCropPeriod.cropId) : "Unknown growingCropPeriod.crop";
-    };
-
-    const findGrowingCropPeriodField = (growingCropPeriodId: string | undefined): string => {
-        const growingCropPeriod = growingCropPeriods.find((growingCropPeriod) => growingCropPeriod.id === growingCropPeriodId);
-        return growingCropPeriod ? findFieldName(growingCropPeriod.fieldId) : "Unknown growingCropPeriod.field";
-    };
-
-    const findFieldName = (fieldId: string | undefined): string => {
-        const field = fields.find((field) => field.id === fieldId);
-        return field ? field.name : "Unknown field";
-    };
-
-    const findCropName = (cropId: string | undefined): string => {
-        const crop = crops.find((crop) => crop.id === cropId);
-        return crop ? crop.name : "Unknown crop";
-    };
-
-    const findMachineName = (machineId: string): string => {
-        const machine = machines.find((machine) => machine.id === machineId);
-        return machine ? `${machine.brand} - ${machine.model} (${machine.registerNumber})` : "Unknown machine";
-    };
-
-    const findFarmNameByMachineId = (machineId: string): string => {
-        const machine = machines.find((machine) => machine.id === machineId);
-        return machine ? findFarmName(machine.farmId) : "Unknown farm";
-    };
-
-    const findFarmName = (farmId: string): string => {
-        const farm = farms.find((farm) => farm.id === farmId);
-        return farm ? farm.name : "Unknown Farm";
-    };
-
-    // const findSoilNameByFieldId = (fieldId: string): string => {
-    //   const field = fields.find((field) => field.id === fieldId);
-    //   return field ? findSoilName(field.soilId) : 'Unknown soil';
-    // };
-
-    // const findSoilName = (soilId: string): string => {
-    //   const soil = soils.find((soil) => soil.id === soilId);
-    //   return soil ? soil.name : 'Unknown Soil';
-    // };
-
-    const handleDeleteClick = (processingId: string | undefined) => {
-        if (processingId) {
-            setSelectedProcessingIdForDelete(processingId);
-            setDeleteModalVisible(true);
-        }
-    };
-
-    const handleEditClick = (processingId: string | undefined, processingDate: Date, processingTypeId: string, machineId: string) => {
-        if (processingId && processingDate) {
-            setSelectedProcessingIdForEdit(processingId);
-            setCurrentProcessingDate(processingDate);
-            setSelectedProcessingTypeId(processingTypeId);
-            setSelectedMachineId(machineId);
-            setEditModalVisible(true);
-        }
-    };
-
-    const handleDeleteConfirm = async () => {
-        if (selectedProcessingIdForDelete) {
-            await onDeleteProcessing(selectedProcessingIdForDelete);
-            setSelectedProcessingIdForDelete(null);
-            setDeleteModalVisible(false);
-        }
-    };
-
-    const handleDeleteCancel = () => {
-        setSelectedProcessingIdForDelete(null);
-        setDeleteModalVisible(false);
-    };
-
-    const handleEditConfirm = async () => {
-        try {
-            if (selectedProcessingIdForEdit && currentProcessingDate) {
-                await onEditProcessing(selectedProcessingIdForEdit, currentProcessingDate, selectedProcessingTypeId, selectedMachinedId);
-            }
-
-            setSelectedProcessingIdForEdit(null);
-            setEditModalVisible(false);
-            setOriginalProcessingDate("");
-            setSelectedProcessingTypeId("");
-            setSelectedMachineId("");
-        } catch (error) {
-            console.error("Error handling edit confirmation:", error);
-        }
-    };
-
-    const handleEditCancel = () => {
-        setSelectedProcessingIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentProcessingDate(undefined);
-        setSelectedProcessingTypeId("");
-        setSelectedMachineId("");
-    };
+    const {
+        onDeleteClick,
+        onEditClick,
+        isDeleteModalVisible,
+        isEditModalVisible,
+        currentProcessingDate,
+        originalProcessingDate,
+        onEditConfirm,
+        onEditCancel,
+        onDeleteConfirm,
+        onDeleteCancel,
+        setSelectedProcessingTypeId,
+        setSelectedMachineId,
+        setCurrentProcessingDate,
+        selectedProcessingTypeId,
+        selectedMachinedId,
+    } = useProcessingList({ fetchProcessings });
 
     return (
         <ListContainer>
@@ -169,8 +68,8 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                             <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <EditIcon onClick={() => handleEditClick(processing.id, new Date(processing.date), processing.processingTypeId, processing.machineId)} />
-                                    <DeleteIcon onClick={() => handleDeleteClick(processing.id)} />
+                                    <EditIcon onClick={() => onEditClick(processing.id, new Date(processing.date), processing.processingTypeId, processing.machineId)} />
+                                    <DeleteIcon onClick={() => onDeleteClick(processing.id)} />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -215,8 +114,8 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                         </div>
                     </ModalContent>
                     <ModalActions>
-                        <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
+                        <ModalButton onClick={onEditConfirm}>Save</ModalButton>
+                        <ModalButton onClick={onEditCancel}>Cancel</ModalButton>
                     </ModalActions>
                 </StyledModalContainer>
             </ModalOverlay>
@@ -228,8 +127,8 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                         <p>Are you sure you want to delete this processing?</p>
                     </ModalContent>
                     <ModalActions>
-                        <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
+                        <ModalButton onClick={onDeleteConfirm}>Yes</ModalButton>
+                        <ModalButton onClick={onDeleteCancel}>No</ModalButton>
                     </ModalActions>
                 </StyledModalContainer>
             </ModalOverlay>

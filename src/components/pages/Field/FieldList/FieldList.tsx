@@ -1,6 +1,5 @@
 import React from "react";
 import { Field as FieldProp } from "../Field.static";
-import { Farm as FarmProp } from "../../Farm/Farm.static";
 import { Soil as SoilProp } from "../../Soil/Soil.static";
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";

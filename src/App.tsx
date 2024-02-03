@@ -10,6 +10,7 @@ import Service from "./components/BaseLayout/BaseLayout";
 import WithNavbar from "./components/pages/Navbar/ToggleWithNavbar";
 import WithoutNavbar from "./components/pages/Navbar/ToggleWithoutNavbar";
 import { routes } from "./static/routes";
+import NotFound from "./components/pages/NotFound/NotFound";
 
 function App() {
     return (
@@ -26,6 +27,7 @@ function App() {
                         <Route path={routes.profile} element={<ProfilePage />} />
                         <Route path={routes.service} element={<Service />} />
                         <Route path={routes.report} element={<Report />} />
+                        <Route path={routes.notFound} element={<NotFound />} />
                     </Route>
                 </Route>
             </Routes>

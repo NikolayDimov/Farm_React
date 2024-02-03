@@ -47,7 +47,6 @@ const useField = () => {
     const fetchSoils = async () => {
         try {
             const soilsData = await apiSoil.fetchSoils();
-            console.log("Soils data:", soilsData.data);
             setSoils(soilsData.data);
         } catch (error) {
             console.error("Error fetching soils:", error);
@@ -57,7 +56,6 @@ const useField = () => {
     const fetchFields = async () => {
         try {
             const fieldsData = await apiField.fetchFields();
-            console.log("Fields data:", fieldsData.data);
 
             // setFields((prevFields) => {
             //     const newFields = fieldsData.data.filter((newField: FieldProp) => !prevFields.some((prevField: Field) => prevField.id === newField.id));
