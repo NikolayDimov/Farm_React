@@ -27,6 +27,27 @@ export const apiFarm = {
         }
     },
 
+    getFarmDetails: async (farmId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch farm details for ID: ${farmId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching farm details for ID: ${farmId}`, error);
+            throw error;
+        }
+    },
+
     createFarm: async (newFarm: Farm) => {
         try {
             const response = await fetch(`${BASE_URL}/${farm}`, {

@@ -2,17 +2,17 @@ import React from "react";
 import { Processing as ProcessingProp } from "../Processing.static";
 import { ProcessingType as ProcessingTypeProp } from "../../ProcessingType/ProcessingType.static";
 import { Machine as MachinesProps } from "../../Machine/Machine.static";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../common/ModalList/Modal.style";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingList from "../ProcessingList/ProcessingList.logic";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
 
 interface ProcessingListProps {
     processings: ProcessingProp[];

@@ -27,6 +27,27 @@ export const apiProcessingType = {
         }
     },
 
+    getProcessingTypeDetails: async (processingTypeId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${processingType}/${processingTypeId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch processingType details for ID: ${processingTypeId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching processingType details for ID: ${processingTypeId}`, error);
+            throw error;
+        }
+    },
+
     createProcessingType: async (processingTypeName: string) => {
         try {
             const response = await fetch(`${BASE_URL}/${processingType}`, {
@@ -45,7 +66,7 @@ export const apiProcessingType = {
 
             return response;
         } catch (error) {
-            console.error("Error creating a new crop:", error);
+            console.error("Error creating a new processingType:", error);
             throw error;
         }
     },

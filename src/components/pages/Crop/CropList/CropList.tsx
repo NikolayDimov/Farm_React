@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import DetailsIcon from "../../../BaseLayout/common/icons/DetailsIcon";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import React from "react";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import UserRoleHOC from "../../UserRoleHOC";
 import useCropList from "../CropList/CropList.logic";
 import { Crop as CropProp } from "../Crop.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
+import useModal from "../../../common/ModalList/useModal";
+import Modal from "../../../common/ModalList/Modal";
 
 interface CropListProps {
     crops: CropProp[];
@@ -17,25 +18,14 @@ interface CropListProps {
 }
 
 const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
-    const {
-        onDeleteClick,
-        onEditClick,
-        onDetailsClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
-        isDetailsModalVisible,
-        currentCropName,
-        setCurrentCropName,
-        originalCropName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
-        handleDetailsCancel,
-        cropDetails,
-    } = useCropList({ fetchCrops });
+    const { onDeleteClick, onEditClick, onDetailsClick, currentCropName, setCurrentCropName, originalCropName, onDeleteConfirm, onEditConfirm, cropDetails } = useCropList({
+        fetchCrops,
+    });
 
     const { filteredItems, setSearchQuery } = useFilter<CropProp>({ items: crops });
+    const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
+    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (
         <ListContainer>
@@ -48,9 +38,24 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                             {crop.name}
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <DetailsIcon onClick={() => onDetailsClick(crop.id || "")} />
-                                    <EditIcon onClick={() => onEditClick(crop.id || "", crop.name)} />
-                                    <DeleteIcon onClick={() => onDeleteClick(crop.id || "")} />
+                                    <DetailsIcon
+                                        onClick={() => {
+                                            onDetailsClick(crop.id || "");
+                                            showDetailsModal();
+                                        }}
+                                    />
+                                    <EditIcon
+                                        onClick={() => {
+                                            onEditClick(crop.id || "", crop.name);
+                                            showEditModal();
+                                        }}
+                                    />
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            onDeleteClick(crop.id || "");
+                                            showDeleteModal();
+                                        }}
+                                    />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -60,51 +65,21 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                 )}
             </List>
 
-            {/* Edit Modal */}
-            <ModalOverlay show={isEditModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Current Crop Name: {originalCropName}</p>
-                        <input type="text" placeholder="Enter new crop name" value={currentCropName} onChange={(e) => setCurrentCropName(e.target.value)} />
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Delete Modal */}
-            <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Are you sure you want to delete this crop?</p>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Details Modal */}
-            <ModalOverlay show={isDetailsModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Crop Details: {originalCropName}</p>
-                        {cropDetails && (
-                            <div>
-                                <p>ID: {cropDetails.id}</p>
-                                <p>Created At: {cropDetails.created_at}</p>
-                                <p>Deleted At: {cropDetails.deleted_at}</p>
-                            </div>
-                        )}
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleDetailsCancel}>Close</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+                <p>Current Crop Name: {originalCropName}</p>
+                <input type="text" placeholder="Enter new crop name" value={currentCropName} onChange={(e) => setCurrentCropName(e.target.value)} />
+            </Modal>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+                <p>Are you sure you want to delete this crop?</p>
+            </Modal>
+            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
+                <p>Crop Details:</p>
+                {cropDetails && (
+                    <div>
+                        <p>Crop Name: {cropDetails.name}</p>
+                    </div>
+                )}
+            </Modal>
         </ListContainer>
     );
 };

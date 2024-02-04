@@ -1,15 +1,17 @@
 import React from "react";
 import { Field as FieldProp } from "../Field.static";
 import { Soil as SoilProp } from "../../Soil/Soil.static";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import UserRoleHOC from "../../UserRoleHOC";
 import useFieldList from "../FieldList/FieldList.logic";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
+import useModal from "../../../common/ModalList/useModal";
+import Modal from "../../../common/ModalList/Modal";
 
 interface FieldListProps {
     fields: FieldProp[];
@@ -23,20 +25,21 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     const {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
-        currentFieldName,
+        onDetailsClick,
         originalFieldName,
+        currentFieldName,
         selectedSoilId,
         onEditConfirm,
-        onEditCancel,
         onDeleteConfirm,
-        onDeleteCancel,
         setCurrentFieldName,
         setSelectedSoilId,
+        fieldDetails,
     } = useFieldList({ fetchFields });
 
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
+    const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
+    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (
         <ListContainer>
@@ -51,8 +54,24 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <EditIcon onClick={() => onEditClick(field.id, field.name, field.soilId)} />
-                                    <DeleteIcon onClick={() => onDeleteClick(field.id)} />
+                                    <DetailsIcon
+                                        onClick={() => {
+                                            onDetailsClick(field.id || "");
+                                            showDetailsModal();
+                                        }}
+                                    />
+                                    <EditIcon
+                                        onClick={() => {
+                                            onEditClick(field.id || "", field.name, field.soilId);
+                                            showEditModal();
+                                        }}
+                                    />
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            onDeleteClick(field.id || "");
+                                            showDeleteModal();
+                                        }}
+                                    />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -62,45 +81,37 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 )}
             </List>
 
-            {/* Edit Modal */}
-            <ModalOverlay show={isEditModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Current Field Name: {originalFieldName}</p>
-                        <input type="text" placeholder="Enter new field name" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />
-                        <div>
-                            <label>Select Soil:</label>
-                            <select value={selectedSoilId} onChange={(e) => setSelectedSoilId(e.target.value)}>
-                                <option value="" disabled>
-                                    Select Soil
-                                </option>
-                                {soils.map((soil) => (
-                                    <option key={soil.id} value={soil.id}>
-                                        {soil.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={onEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={onEditCancel}>Cancel</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Delete Modal */}
-            <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Are you sure you want to delete this field?</p>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={onDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={onDeleteCancel}>No</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+                <p>Current Field Name: {originalFieldName}</p>
+                <p>Current Field Soil: {findSoilName(selectedSoilId)}</p>
+                <input type="text" placeholder="Enter new machine brand" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />
+                <div>
+                    <label>Select Soil:</label>
+                    <select value={selectedSoilId} onChange={(e) => setSelectedSoilId(e.target.value)}>
+                        <option value="" disabled>
+                            Select Soil
+                        </option>
+                        {soils.map((soil) => (
+                            <option key={soil.id} value={soil.id}>
+                                {soil.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </Modal>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+                <p>Are you sure you want to delete this field?</p>
+            </Modal>
+            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
+                <p>Filed Details:</p>
+                {fieldDetails && (
+                    <div>
+                        <p>Field name: {fieldDetails.name}</p>
+                        <p>Farm: {findFarmName(fieldDetails.farmId)}</p>
+                        <p>Soil: {findSoilName(fieldDetails.soilId)}</p>
+                    </div>
+                )}
+            </Modal>
         </ListContainer>
     );
 };

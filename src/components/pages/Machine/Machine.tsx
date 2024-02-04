@@ -2,23 +2,11 @@ import React from "react";
 import useMachine from "./Machine.logic";
 import UserRoleHOC from "../UserRoleHOC";
 import MachineList from "./MachineList/MachineList";
-import TransferMachineLogic from "./TransferMachine/TransferMachine.logic";
+import TransferMachine from "./TransferMachine/TransferMachine";
 
 const Machine: React.FC = () => {
-    const {
-        createdValues,
-        createMachine,
-        changeHandler,
-        machines,
-        farms,
-        errorMessage,
-        loading,
-        findFarmName,
-        fetchMachines,
-        setTransferMode,
-        transferMode,
-        handleTransferSuccess,
-    } = useMachine();
+    const { createdValues, createMachine, changeHandler, machines, farms, errorMessage, loading, findFarmName, fetchMachines, setTransferMode, transferMode, onTransferSuccess } =
+        useMachine();
 
     return (
         <>
@@ -52,7 +40,7 @@ const Machine: React.FC = () => {
             <UserRoleHOC>
                 <h2>Transfer Machine</h2>
                 {transferMode ? (
-                    <TransferMachineLogic machines={machines} farms={farms} onTransferSuccess={handleTransferSuccess} />
+                    <TransferMachine machines={machines} farms={farms} onTransferSuccess={onTransferSuccess} fetchMachines={fetchMachines} />
                 ) : (
                     <button onClick={() => setTransferMode(true)}>Transfer Machine</button>
                 )}

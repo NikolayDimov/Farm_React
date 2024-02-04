@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiCrop } from "../../../../services/apiCrop";
+import { Crop as CropProp } from "../Crop.static";
 
 interface UseCropListProps {
     fetchCrops: () => Promise<void>;
@@ -8,34 +9,10 @@ interface UseCropListProps {
 const useCropList = ({ fetchCrops }: UseCropListProps) => {
     const [selectedCropIdForDelete, setSelectedCropIdForDelete] = useState<string | null>(null);
     const [selectedCropIdForEdit, setSelectedCropIdForEdit] = useState<string | null>(null);
-    const [selectedCropIdForDetails, setSelectedCropIdForDetails] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
-    const [isDetailsModalVisible, setDetailsModalVisible] = useState<boolean>(false);
     const [currentCropName, setCurrentCropName] = useState<string>("");
     const [originalCropName, setOriginalCropName] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [cropDetails, setCropDetails] = useState<any>(null);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
+    const [cropDetails, setCropDetails] = useState<CropProp>();
 
     const onDeleteCrop = async (cropId: string) => {
         try {
@@ -49,15 +26,11 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
                 console.error(`Failed to delete crop with ID: ${cropId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete crop");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting crop:", error);
-            showModal("Failed to delete crop");
         } finally {
             setLoading(false);
         }
@@ -76,7 +49,6 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
             }
         } catch (error) {
             console.error("Error editing crop:", error);
-            showModal("Failed to edit crop");
         } finally {
             setLoading(false);
         }
@@ -88,50 +60,41 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
             const response = await apiCrop.getCropDetails(cropId);
 
             if (response.ok) {
-                setCropDetails(response.data);
+                const responseData = await response.json();
+                setCropDetails(responseData.data);
             } else {
                 const responseBody = await response.json();
                 console.error(`Failed to edit crop with ID: ${cropId}`, responseBody);
             }
         } catch (error) {
             console.error("Error editing crop:", error);
-            showModal("Failed to edit crop");
         } finally {
             setLoading(false);
         }
     };
 
-    const onDetailsClick = (cropId: string) => {
-        onDetailCrop(cropId);
-        setEditModalVisible(true);
-    };
-
     const onDeleteClick = (cropId: string) => {
         setSelectedCropIdForDelete(cropId);
-        setDeleteModalVisible(true);
     };
 
     const onEditClick = (cropId: string, cropName: string) => {
         setSelectedCropIdForEdit(cropId);
         setCurrentCropName(cropName);
         setOriginalCropName(cropName);
-        setEditModalVisible(true);
     };
 
-    const handleDeleteConfirm = async () => {
+    const onDetailsClick = (cropId: string) => {
+        onDetailCrop(cropId);
+    };
+
+    const onDeleteConfirm = async () => {
         if (selectedCropIdForDelete) {
             await onDeleteCrop(selectedCropIdForDelete);
             setSelectedCropIdForDelete(null);
-            setDeleteModalVisible(false);
         }
     };
 
-    const handleDeleteCancel = () => {
-        setSelectedCropIdForDelete(null);
-        setDeleteModalVisible(false);
-    };
-
-    const handleEditConfirm = async () => {
+    const onEditConfirm = async () => {
         try {
             if (selectedCropIdForEdit) {
                 await onEditCrop(selectedCropIdForEdit, currentCropName);
@@ -139,39 +102,21 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
             }
 
             setSelectedCropIdForEdit(null);
-            setEditModalVisible(false);
             setCurrentCropName("");
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
     };
 
-    const handleEditCancel = () => {
-        setSelectedCropIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentCropName("");
-    };
-
-    const handleDetailsCancel = () => {
-        setSelectedCropIdForDetails(null);
-        setDetailsModalVisible(false);
-    };
-
     return {
         onDeleteClick,
         onEditClick,
         onDetailsClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
-        isDetailsModalVisible,
         currentCropName,
         setCurrentCropName,
         originalCropName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
-        handleDetailsCancel,
+        onDeleteConfirm,
+        onEditConfirm,
         cropDetails,
     };
 };

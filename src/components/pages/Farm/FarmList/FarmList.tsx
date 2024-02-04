@@ -1,15 +1,16 @@
 import React from "react";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
-// import FarmCard from "./FarmCard/FarmCard";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
 import useFarmList from "./FarmList.logic";
 import UserRoleHOC from "../../UserRoleHOC";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import { Farm as FarmProp } from "../Farm.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
+import useModal from "../../../common/ModalList/useModal";
+import Modal from "../../../common/ModalList/Modal";
 
 interface FarmListProps {
     farms: FarmProp[];
@@ -18,21 +19,14 @@ interface FarmListProps {
 }
 
 const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocationOnMap }) => {
-    const {
-        onDeleteClick,
-        onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
-        currentFarmName,
-        originalFarmName,
-        setCurrentFarmName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
-    } = useFarmList({ fetchFarms });
+    const { onDeleteClick, onEditClick, onDetailsClick, currentFarmName, originalFarmName, setCurrentFarmName, onDeleteConfirm, onEditConfirm, farmDetails } = useFarmList({
+        fetchFarms,
+    });
 
     const { filteredItems, setSearchQuery } = useFilter<FarmProp>({ items: farms });
+    const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
+    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (
         <ListContainer>
@@ -54,9 +48,24 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
                             {farm.name}
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <EditIcon onClick={() => onEditClick(farm.id || "", farm.name)} />
-                                    <DeleteIcon onClick={() => onDeleteClick(farm.id || "")} />
-                                    <button onClick={() => showFarmLocationOnMap(farm.location?.coordinates)}>Show on Map</button>
+                                    <DetailsIcon
+                                        onClick={() => {
+                                            onDetailsClick(farm.id || "");
+                                            showDetailsModal();
+                                        }}
+                                    />
+                                    <EditIcon
+                                        onClick={() => {
+                                            onEditClick(farm.id || "", farm.name);
+                                            showEditModal();
+                                        }}
+                                    />
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            onDeleteClick(farm.id || "");
+                                            showDeleteModal();
+                                        }}
+                                    />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -66,32 +75,22 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
                 )}
             </List>
 
-            {/* Edit Modal */}
-            <ModalOverlay show={isEditModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Current Farm Name: {originalFarmName}</p>
-                        <input type="text" placeholder="Enter new farm name" value={currentFarmName} onChange={(e) => setCurrentFarmName(e.target.value)} />
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Delete Modal */}
-            <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Are you sure you want to delete this farm?</p>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+                <p>Current Fram Name: {originalFarmName}</p>
+                <input type="text" placeholder="Enter new farm name" value={currentFarmName} onChange={(e) => setCurrentFarmName(e.target.value)} />
+            </Modal>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+                <p>Are you sure you want to delete this farm?</p>
+            </Modal>
+            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
+                <p>Farm Details:</p>
+                {farmDetails && (
+                    <div>
+                        <p>Farm Name: {farmDetails.name}</p>
+                        <p>Location: {farmDetails.location.coordinates}</p>
+                    </div>
+                )}
+            </Modal>
         </ListContainer>
     );
 };

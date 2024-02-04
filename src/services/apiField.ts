@@ -29,6 +29,27 @@ export const apiField = {
         }
     },
 
+    getFieldDetails: async (fieldId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch field details for ID: ${fieldId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching field details for ID: ${fieldId}`, error);
+            throw error;
+        }
+    },
+
     createField: async (newField: Field) => {
         try {
             const response = await fetch(`${BASE_URL}/${field}`, {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiSoil } from "../../../../services/apiSoil";
 import { Soil as SoilProp } from "../Soil.static";
 
@@ -9,43 +9,10 @@ interface UseSoilListProps {
 const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
     const [selectedSoilIdForDelete, setSelectedSoilIdForDelete] = useState<string | null>(null);
     const [selectedSoilIdForEdit, setSelectedSoilIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentSoilName, setCurrentSoilName] = useState<string>("");
     const [originalSoilName, setOriginalSoilName] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
-
-    const onDeleteClick = (soilId: string) => {
-        setSelectedSoilIdForDelete(soilId);
-        setDeleteModalVisible(true);
-    };
-
-    const onEditClick = (soilId: string, soilName: string) => {
-        setSelectedSoilIdForEdit(soilId);
-        setCurrentSoilName(soilName);
-        setOriginalSoilName(soilName);
-        setEditModalVisible(true);
-    };
+    const [soilDetails, setSoilDetails] = useState<SoilProp>();
 
     const onDeleteSoil = async (soilId: string) => {
         try {
@@ -59,15 +26,11 @@ const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
                 console.error(`Failed to delete soil with ID: ${soilId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete soil");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting soil:", error);
-            showModal("Failed to delete soil");
         } finally {
             setLoading(false);
         }
@@ -79,33 +42,59 @@ const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
             const response = await apiSoil.editSoil(soilId, newSoilName);
 
             if (response.ok) {
-                fetchSoils(); // Refresh soils after editing
+                fetchSoils();
             } else {
                 const responseBody = await response.json();
                 console.error(`Failed to edit soil with ID: ${soilId}`, responseBody);
             }
         } catch (error) {
             console.error("Error editing soil:", error);
-            showModal("Failed to edit soil");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        if (selectedSoilIdForDelete) {
-            await onDeleteSoil(selectedSoilIdForDelete);
-            setSelectedSoilIdForDelete(null);
-            setDeleteModalVisible(false);
+    const onDetailSoil = async (soilId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiSoil.getSoilDetails(soilId);
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setSoilDetails(responseData.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit soil with ID: ${soilId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing soil:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleDeleteCancel = () => {
-        setSelectedSoilIdForDelete(null);
-        setDeleteModalVisible(false);
+    const onDeleteClick = (soilId: string) => {
+        setSelectedSoilIdForDelete(soilId);
     };
 
-    const handleEditConfirm = async () => {
+    const onEditClick = (soilId: string, soilName: string) => {
+        setSelectedSoilIdForEdit(soilId);
+        setCurrentSoilName(soilName);
+        setOriginalSoilName(soilName);
+    };
+
+    const onDetailsClick = (soilId: string) => {
+        onDetailSoil(soilId);
+    };
+
+    const onDeleteConfirm = async () => {
+        if (selectedSoilIdForDelete) {
+            await onDeleteSoil(selectedSoilIdForDelete);
+            setSelectedSoilIdForDelete(null);
+        }
+    };
+
+    const onEditConfirm = async () => {
         try {
             if (selectedSoilIdForEdit) {
                 await onEditSoil(selectedSoilIdForEdit, currentSoilName);
@@ -113,31 +102,22 @@ const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
             }
 
             setSelectedSoilIdForEdit(null);
-            setEditModalVisible(false);
             setCurrentSoilName("");
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
     };
 
-    const handleEditCancel = () => {
-        setSelectedSoilIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentSoilName("");
-    };
-
     return {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentSoilName,
         setCurrentSoilName,
         originalSoilName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
+        onDeleteConfirm,
+        onEditConfirm,
+        soilDetails,
     };
 };
 

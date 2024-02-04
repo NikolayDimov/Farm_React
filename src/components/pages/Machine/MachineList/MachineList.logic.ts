@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiMachine } from "../../../../services/apiMachine";
+import { Machine as MachineProp } from "../Machine.static";
 
 interface UseMachineListProps {
     fetchMachines: () => Promise<void>;
@@ -8,36 +9,14 @@ interface UseMachineListProps {
 const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
     const [selectedMachineIdForDelete, setSelectedMachineIdForDelete] = useState<string | null>(null);
     const [selectedMachineIdForEdit, setSelectedMachineIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentMachineBrand, setCurrentMachineBrand] = useState<string>("");
     const [currentMachineModel, setCurrentMachineModel] = useState<string>("");
     const [currentMachineRegisterNumber, setCurrentMachineRegisterNumber] = useState<string>("");
     const [originalMachineBrand, setOriginalMachineBrand] = useState<string>("");
     const [originalMachineModel, setOriginalMachineModel] = useState<string>("");
     const [originalMachineRegisterNumber, setOriginalMachineRegisterNumber] = useState<string>("");
-    const [selectedFarmId, setSelectedFarmId] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
+    const [machineDetails, setMachineDetails] = useState<MachineProp>();
 
     const onDeleteMachine = async (machineId: string) => {
         try {
@@ -52,25 +31,21 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
                 console.error(`Failed to delete machine with ID: ${machineId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete Machine");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting Machine:", error);
-            showModal("Failed to delete Machine");
         } finally {
             setLoading(false);
         }
     };
 
-    const onEditMachine = async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string, newFarmId: string) => {
+    const onEditMachine = async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string) => {
         try {
             setLoading(true);
 
-            const response = await apiMachine.editMachine(machineId, newMachineBrand, newMachineModel, MachineRegisterNumber, newFarmId);
+            const response = await apiMachine.editMachine(machineId, newMachineBrand, newMachineModel, MachineRegisterNumber);
 
             if (response.ok) {
                 fetchMachines();
@@ -80,7 +55,25 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
             }
         } catch (error) {
             console.error("Error editing machine:", error);
-            showModal("Failed to edit machine");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDetailMachine = async (machineId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiMachine.getMachineDetails(machineId);
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setMachineDetails(responseData.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit farm with ID: ${machineId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing farm:", error);
         } finally {
             setLoading(false);
         }
@@ -89,11 +82,10 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
     const onDeleteClick = (machineId: string | undefined) => {
         if (machineId) {
             setSelectedMachineIdForDelete(machineId);
-            setDeleteModalVisible(true);
         }
     };
 
-    const onEditClick = (machineId: string | undefined, machineBrand: string, machineModel: string, machineRegisterNumber: string, farmId: string) => {
+    const onEditClick = (machineId: string | undefined, machineBrand: string, machineModel: string, machineRegisterNumber: string) => {
         if (machineId) {
             setSelectedMachineIdForEdit(machineId);
             setCurrentMachineBrand(machineBrand);
@@ -102,55 +94,40 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
             setOriginalMachineBrand(machineBrand);
             setOriginalMachineModel(machineModel);
             setOriginalMachineRegisterNumber(machineRegisterNumber);
-            setSelectedFarmId(farmId);
-            setEditModalVisible(true);
         }
+    };
+
+    const onDetailsClick = (machineId: string) => {
+        onDetailMachine(machineId);
     };
 
     const onDeleteConfirm = async () => {
         if (selectedMachineIdForDelete) {
             await onDeleteMachine(selectedMachineIdForDelete);
             setSelectedMachineIdForDelete(null);
-            setDeleteModalVisible(false);
         }
-    };
-
-    const onDeleteCancel = () => {
-        setSelectedMachineIdForDelete(null);
-        setDeleteModalVisible(false);
     };
 
     const onEditConfirm = async () => {
         try {
             if (selectedMachineIdForEdit) {
-                await onEditMachine(selectedMachineIdForEdit, currentMachineBrand, currentMachineModel, currentMachineRegisterNumber, selectedFarmId);
+                await onEditMachine(selectedMachineIdForEdit, currentMachineBrand, currentMachineModel, currentMachineRegisterNumber);
+                fetchMachines();
             }
 
             setSelectedMachineIdForEdit(null);
-            setEditModalVisible(false);
             setOriginalMachineBrand("");
             setOriginalMachineModel("");
             setOriginalMachineRegisterNumber("");
-            setSelectedFarmId("");
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
     };
 
-    const onEditCancel = () => {
-        setSelectedMachineIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentMachineBrand("");
-        setCurrentMachineModel("");
-        setCurrentMachineRegisterNumber("");
-        setSelectedFarmId("");
-    };
-
     return {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentMachineBrand,
         currentMachineModel,
         currentMachineRegisterNumber,
@@ -160,12 +137,9 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
         setCurrentMachineBrand,
         setCurrentMachineModel,
         setCurrentMachineRegisterNumber,
-        setSelectedFarmId,
-        selectedFarmId,
         onEditConfirm,
-        onEditCancel,
         onDeleteConfirm,
-        onDeleteCancel,
+        machineDetails,
     };
 };
 

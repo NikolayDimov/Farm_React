@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiProcessingType } from "../../../../services/apiProcessingType";
 import { ProcessingType as ProcessingTypeProp } from "../ProcessingType.static";
 
@@ -9,43 +9,10 @@ interface UseProcessingTypeListProps {
 const useProcessingTypeList = ({ fetchProcessingTypes }: UseProcessingTypeListProps) => {
     const [selectedProcessingTypeIdForDelete, setSelectedProcessingTypeIdForDelete] = useState<string | null>(null);
     const [selectedProcessingTypeIdForEdit, setSelectedProcessingTypeIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentProcessingTypeName, setCurrentProcessingTypeName] = useState<string>("");
     const [originalProcessingTypeName, setOriginalProcessingTypeName] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
-
-    const onDeleteClick = (processingTypeId: string) => {
-        setSelectedProcessingTypeIdForDelete(processingTypeId);
-        setDeleteModalVisible(true);
-    };
-
-    const onEditClick = (processingTypeId: string, processingTypeName: string) => {
-        setSelectedProcessingTypeIdForEdit(processingTypeId);
-        setCurrentProcessingTypeName(processingTypeName);
-        setOriginalProcessingTypeName(processingTypeName);
-        setEditModalVisible(true);
-    };
+    const [processingTypeDetails, setProcessingTypeDetails] = useState<ProcessingTypeProp>();
 
     const onDeleteProcessingType = async (processingTypeId: string) => {
         try {
@@ -59,15 +26,11 @@ const useProcessingTypeList = ({ fetchProcessingTypes }: UseProcessingTypeListPr
                 console.error(`Failed to delete processingType with ID: ${processingTypeId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete processingType");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting processingType:", error);
-            showModal("Failed to delete processingType");
         } finally {
             setLoading(false);
         }
@@ -79,65 +42,82 @@ const useProcessingTypeList = ({ fetchProcessingTypes }: UseProcessingTypeListPr
             const response = await apiProcessingType.editProcessingType(processingTypeId, newProcessingTypeName);
 
             if (response.ok) {
-                fetchProcessingTypes(); // Refresh processingTypes after editing
+                fetchProcessingTypes();
             } else {
                 const responseBody = await response.json();
                 console.error(`Failed to edit processingType with ID: ${processingTypeId}`, responseBody);
             }
         } catch (error) {
             console.error("Error editing processingType:", error);
-            showModal("Failed to edit processingType");
         } finally {
             setLoading(false);
         }
     };
 
-    const handleDeleteConfirm = async () => {
-        if (selectedProcessingTypeIdForDelete) {
-            await onDeleteProcessingType(selectedProcessingTypeIdForDelete);
-            setSelectedProcessingTypeIdForDelete(null);
-            setDeleteModalVisible(false);
+    const onDetailProcessingType = async (processingTypeId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiProcessingType.getProcessingTypeDetails(processingTypeId);
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setProcessingTypeDetails(responseData.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit processingType with ID: ${processingTypeId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing processingType:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const handleDeleteCancel = () => {
-        setSelectedProcessingTypeIdForDelete(null);
-        setDeleteModalVisible(false);
+    const onDeleteClick = (processingTypeId: string) => {
+        setSelectedProcessingTypeIdForDelete(processingTypeId);
     };
 
-    const handleEditConfirm = async () => {
+    const onEditClick = (processingTypeId: string, processingTypeName: string) => {
+        setSelectedProcessingTypeIdForEdit(processingTypeId);
+        setCurrentProcessingTypeName(processingTypeName);
+        setOriginalProcessingTypeName(processingTypeName);
+    };
+
+    const onDetailsClick = (processingTypeId: string) => {
+        onDetailProcessingType(processingTypeId);
+    };
+
+    const onDeleteConfirm = async () => {
+        if (selectedProcessingTypeIdForDelete) {
+            await onDeleteProcessingType(selectedProcessingTypeIdForDelete);
+            setSelectedProcessingTypeIdForDelete(null);
+        }
+    };
+
+    const onEditConfirm = async () => {
         try {
             if (selectedProcessingTypeIdForEdit) {
                 await onEditProcessingType(selectedProcessingTypeIdForEdit, currentProcessingTypeName);
-                fetchProcessingTypes(); // Refresh processingTypes after editing
+                fetchProcessingTypes();
             }
 
             setSelectedProcessingTypeIdForEdit(null);
-            setEditModalVisible(false);
             setCurrentProcessingTypeName("");
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
     };
 
-    const handleEditCancel = () => {
-        setSelectedProcessingTypeIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentProcessingTypeName("");
-    };
-
     return {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentProcessingTypeName,
         setCurrentProcessingTypeName,
         originalProcessingTypeName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
+        onDeleteConfirm,
+        onEditConfirm,
+        processingTypeDetails,
     };
 };
 

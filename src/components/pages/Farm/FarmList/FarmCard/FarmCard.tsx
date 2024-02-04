@@ -1,8 +1,8 @@
 import React from "react";
-import EditIcon from "../../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../../BaseLayout/common/icons/DeleteIcon";
-import { ListItem } from "../../../../BaseLayout/common/ListStyles";
-import { ButtonContainer } from "../../../../BaseLayout/common/icons/ButtonContainer";
+import EditIcon from "../../../../common/icons/EditIcon";
+import DeleteIcon from "../../../../common/icons/DeleteIcon";
+import { ListItem } from "../../../../common/ListStyles";
+import { ButtonContainer } from "../../../../common/icons/ButtonContainer";
 import MapContainer from "../../MapContainer/MapContainer";
 import { Farm } from "../../Farm.static";
 import UserRoleHOC from "../../../UserRoleHOC";

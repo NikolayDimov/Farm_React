@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../../BaseLayout/common/Layout";
+import Layout from "../../common/Layout";
 import WelcomeUser from "./WelcomeUser/WelcomeUser";
 import { BackgroundImage, Container } from "../../BaseLayout/BaseLayout.style";
 import Farm from "../Farm/Farm";

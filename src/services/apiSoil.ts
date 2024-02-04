@@ -27,6 +27,27 @@ export const apiSoil = {
         }
     },
 
+    getSoilDetails: async (soilId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${soil}/${soilId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch soil details for ID: ${soilId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching soil details for ID: ${soilId}`, error);
+            throw error;
+        }
+    },
+
     createSoil: async (soilName: string) => {
         try {
             const response = await fetch(`${BASE_URL}/${soil}`, {

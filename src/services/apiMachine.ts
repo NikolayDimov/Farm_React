@@ -29,6 +29,27 @@ export const apiMachine = {
         }
     },
 
+    getMachineDetails: async (machineId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${machine}/${machineId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch machine details for ID: ${machineId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching machine details for ID: ${machineId}`, error);
+            throw error;
+        }
+    },
+
     createMachine: async (newMachine: Machine) => {
         try {
             const response = await fetch(`${BASE_URL}/${machine}`, {
@@ -51,7 +72,7 @@ export const apiMachine = {
         }
     },
 
-    editMachine: async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string, newFarmId: string) => {
+    editMachine: async (machineId: string, newMachineBrand: string, newMachineModel: string, MachineRegisterNumber: string) => {
         try {
             const response = await fetch(`${BASE_URL}/${machine}/${machineId}`, {
                 method: "PATCH",
@@ -60,7 +81,7 @@ export const apiMachine = {
                     "Content-Type": "application/json",
                 },
                 credentials: "include",
-                body: JSON.stringify({ brand: newMachineBrand, model: newMachineModel, registerNumber: MachineRegisterNumber, newFarmId }),
+                body: JSON.stringify({ brand: newMachineBrand, model: newMachineModel, registerNumber: MachineRegisterNumber }),
             });
 
             if (!response.ok) {
@@ -93,8 +114,7 @@ export const apiMachine = {
                 throw new Error(`Failed to transfer machine with ID ${machineId}. Status: ${response.status}`);
             }
 
-            const updatedMachine = await response.json();
-            return updatedMachine;
+            return response;
         } catch (error) {
             console.error("Error transferring machine:", error);
             throw error;

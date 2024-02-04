@@ -1,5 +1,5 @@
 import MapContainer from "./MapContainer/MapContainer";
-import Layout from "../../BaseLayout/common/Layout";
+import Layout from "../../common/Layout";
 import useFarm from "./Farm.logic";
 import FarmList from "./FarmList/FarmList";
 import UserRoleHOC from "../UserRoleHOC";

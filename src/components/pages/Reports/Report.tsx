@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { apiFarmWithMostMachines, apiFieldCountPerFarmAndCrop, apiMostCommonSoilPerFarm, apiProcessingReport } from "../../../services/apiReports";
 import FarmsWithMostMachinesReport from "./FarmsWithMostMachines";
 import { FarmsWithMostMachinesReportListProps, FieldCountPerFarmAndCropProps, MostCommonSoilPerFarmProps, ProcessingReportProps } from "./Report.static.ts";
-import Layout from "../../BaseLayout/common/Layout";
+import Layout from "../../common/Layout.tsx";
 import FieldCountPerFarmAndCrop from "./FieldCountPerFarmAndCrop";
 import MostCommonSoilPerFarm from "./MostCommonSoilPerfarm";
 import ProcessingReport from "./ProcessingReport.tsx";

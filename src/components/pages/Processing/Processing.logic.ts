@@ -20,7 +20,6 @@ import { apiFarm } from "../../../services/apiFarm";
 //     fetchProcessings: () => void;
 // }
 
-// // Assuming your apiGrowingCropPeriod type looks like this:
 // type ApiGrowingCropPeriod = {
 //     fetchGCP: () => Promise<any>;
 //     createGrowingCropPeriod: (newGrowingCropPeriodData: GrowingCropPeriod) => Promise<Response>;

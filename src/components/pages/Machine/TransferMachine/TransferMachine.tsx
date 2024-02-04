@@ -1,33 +1,28 @@
-import React from "react";
-import { Machine } from "../Machine.static";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Machine as MachineProp } from "../Machine.static";
 import { Farm } from "../../Farm/Farm.static";
-import { TransferMachineContainer, SelectContainer, Label, Select, TransferButton } from "../../../BaseLayout/common/Machine.styles";
+import { TransferMachineContainer, SelectContainer, Label, Select, TransferButton } from "../../../common/Machine.styles";
 import { Title } from "../../Auth/StyledComponents";
+import useTransferMachine from "./TransferMachine.logic";
 
-interface TransferMachinePresentationProps {
-    machines: Machine[];
+interface MachineTransferProps {
+    machines: MachineProp[];
     farms: Farm[];
-    selectedMachineId: string;
-    selectedFarmId: string;
-    loading: boolean;
-    setSelectedMachineId: React.Dispatch<React.SetStateAction<string>>;
-    setSelectedFarmId: React.Dispatch<React.SetStateAction<string>>;
-    handleTransfer: () => void;
+    onTransferSuccess: () => void;
+    fetchMachines: () => Promise<void>;
 }
 
-const TransferMachinePresentation: React.FC<TransferMachinePresentationProps> = ({
-    machines,
-    farms,
-    selectedMachineId,
-    selectedFarmId,
-    loading,
-    setSelectedMachineId,
-    setSelectedFarmId,
-    handleTransfer,
-}) => {
+const TransferMachine: React.FC<MachineTransferProps> = ({ machines, farms, onTransferSuccess, fetchMachines }) => {
+    const { selectedMachineId, selectedFarmId, loading, setSelectedMachineId, setSelectedFarmId, handleTransfer, successMessage } = useTransferMachine({
+        onTransferSuccess,
+        fetchMachines,
+    });
+
     return (
         <TransferMachineContainer>
             <Title>Transfer Machine</Title>
+            {successMessage && <p style={{ color: successMessage.includes("Cannot") ? "red" : "green" }}>{successMessage}</p>}
             <SelectContainer>
                 <Label>Select Machine:</Label>
                 <Select value={selectedMachineId} onChange={(e) => setSelectedMachineId(e.target.value)} disabled={loading}>
@@ -54,11 +49,16 @@ const TransferMachinePresentation: React.FC<TransferMachinePresentationProps> = 
                     ))}
                 </Select>
             </SelectContainer>
-            <TransferButton onClick={handleTransfer} disabled={!selectedMachineId || !selectedFarmId || loading}>
+            <TransferButton
+                onClick={() => {
+                    handleTransfer();
+                }}
+                disabled={!selectedMachineId || !selectedFarmId || loading}
+            >
                 Transfer Machine
             </TransferButton>
         </TransferMachineContainer>
     );
 };
 
-export default TransferMachinePresentation;
+export default TransferMachine;

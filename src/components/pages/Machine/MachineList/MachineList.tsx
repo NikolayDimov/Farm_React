@@ -1,15 +1,18 @@
 import React from "react";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../common/ModalList/Modal.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import { Machine as MachineProp } from "../Machine.static";
 import useMachineList from "../MachineList/MachineList.logic";
 import { Farm } from "../../Farm/Farm.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
+import useModal from "../../../common/ModalList/useModal";
+import Modal from "../../../common/ModalList/Modal";
 
 interface MachineListProps {
     machines: MachineProp[];
@@ -18,12 +21,11 @@ interface MachineListProps {
     findFarmName: (farmId: string) => string;
 }
 
-const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachines, findFarmName }) => {
+const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, findFarmName }) => {
     const {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentMachineBrand,
         currentMachineModel,
         currentMachineRegisterNumber,
@@ -33,15 +35,15 @@ const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachine
         setCurrentMachineBrand,
         setCurrentMachineModel,
         setCurrentMachineRegisterNumber,
-        setSelectedFarmId,
-        selectedFarmId,
         onEditConfirm,
-        onEditCancel,
         onDeleteConfirm,
-        onDeleteCancel,
+        machineDetails,
     } = useMachineList({ fetchMachines });
 
     const { filteredItems, setSearchQuery } = useFilter<MachineProp>({ items: machines });
+    const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
+    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (
         <ListContainer>
@@ -57,8 +59,24 @@ const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachine
                             <strong>Farm:</strong> {findFarmName(machine.farmId)}
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <EditIcon onClick={() => onEditClick(machine.id, machine.brand, machine.model, machine.registerNumber, machine.farmId)} />
-                                    <DeleteIcon onClick={() => onDeleteClick(machine.id)} />
+                                    <DetailsIcon
+                                        onClick={() => {
+                                            onDetailsClick(machine.id || "");
+                                            showDetailsModal();
+                                        }}
+                                    />
+                                    <EditIcon
+                                        onClick={() => {
+                                            onEditClick(machine.id || "", machine.brand, machine.model, machine.registerNumber);
+                                            showEditModal();
+                                        }}
+                                    />
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            onDeleteClick(machine.id || "");
+                                            showDeleteModal();
+                                        }}
+                                    />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -68,54 +86,33 @@ const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachine
                 )}
             </List>
 
-            {/* Edit Modal */}
-            <ModalOverlay show={isEditModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Machine Brand: {originalMachineBrand}</p>
-                        <input type="text" placeholder="Enter new machine brand" value={currentMachineBrand} onChange={(e) => setCurrentMachineBrand(e.target.value)} />
-                        <p>Machine Model: {originalMachineModel}</p>
-                        <input type="text" placeholder="Enter new machine model" value={currentMachineModel} onChange={(e) => setCurrentMachineModel(e.target.value)} />
-                        <p>Machine Register Number: {originalMachineRegisterNumber}</p>
-                        <input
-                            type="text"
-                            placeholder="Enter new machine register number"
-                            value={currentMachineRegisterNumber}
-                            onChange={(e) => setCurrentMachineRegisterNumber(e.target.value)}
-                        />
-                        <div>
-                            <label>Select Farm:</label>
-                            <select value={selectedFarmId} onChange={(e) => setSelectedFarmId(e.target.value)}>
-                                <option value="" disabled>
-                                    Select Farm
-                                </option>
-                                {farms.map((farm) => (
-                                    <option key={farm.id} value={farm.id}>
-                                        {farm.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={onEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={onEditCancel}>Cancel</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Delete Modal */}
-            <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Are you sure you want to delete this machine?</p>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={onDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={onDeleteCancel}>No</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+                <p>Current Machine Brand: {originalMachineBrand}</p>
+                <p>Current Machine Model: {originalMachineModel}</p>
+                <p>Current Machine Register Number: {originalMachineRegisterNumber}</p>
+                <input type="text" placeholder="Enter new machine brand" value={currentMachineBrand} onChange={(e) => setCurrentMachineBrand(e.target.value)} />
+                <input type="text" placeholder="Enter new machine model" value={currentMachineModel} onChange={(e) => setCurrentMachineModel(e.target.value)} />
+                <input
+                    type="text"
+                    placeholder="Enter new machine regoster number"
+                    value={currentMachineRegisterNumber}
+                    onChange={(e) => setCurrentMachineRegisterNumber(e.target.value)}
+                />
+            </Modal>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+                <p>Are you sure you want to delete this machine?</p>
+            </Modal>
+            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
+                <p>Crop Details:</p>
+                {machineDetails && (
+                    <div>
+                        <p>Machine Brand: {machineDetails.brand}</p>
+                        <p>Machine Model: {machineDetails.model}</p>
+                        <p>Machine Register Number: {machineDetails.registerNumber}</p>
+                        <p>Fram: {findFarmName(machineDetails.farmId)}</p>
+                    </div>
+                )}
+            </Modal>
         </ListContainer>
     );
 };

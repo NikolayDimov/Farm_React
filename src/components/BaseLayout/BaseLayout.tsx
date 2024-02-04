@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "./common/Layout";
+import Layout from "../common/Layout.tsx";
 import { BackgroundImage, Container } from "./BaseLayout.style";
 import Crop from "../pages/Crop/Crop.tsx";
 import Soil from "../pages/Soil/Soil.tsx";

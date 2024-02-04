@@ -1,14 +1,17 @@
 import React from "react";
-import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
-import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
-import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
-import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
+import EditIcon from "../../../common/icons/EditIcon";
+import DeleteIcon from "../../../common/icons/DeleteIcon";
+import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
+import { ButtonContainer } from "../../../common/icons/ButtonContainer";
+import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../common/ModalList/Modal.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingTypeList from "./ProcessingTypeList.logic";
 import { ProcessingType as ProcessingTypeProp } from "../ProcessingType.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
+import useModal from "../../../common/ModalList/useModal";
+import Modal from "../../../common/ModalList/Modal";
 
 interface ProcessingTypeListProps {
     processingTypes: ProcessingTypeProp[];
@@ -19,18 +22,19 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
     const {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentProcessingTypeName,
         setCurrentProcessingTypeName,
         originalProcessingTypeName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
+        onDeleteConfirm,
+        onEditConfirm,
+        processingTypeDetails,
     } = useProcessingTypeList({ fetchProcessingTypes });
 
     const { filteredItems, setSearchQuery } = useFilter<ProcessingTypeProp>({ items: processingTypes });
+    const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
+    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (
         <ListContainer>
@@ -43,8 +47,24 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                             {processingType.name}
                             <UserRoleHOC>
                                 <ButtonContainer>
-                                    <EditIcon onClick={() => onEditClick(processingType.id || "", processingType.name)} />
-                                    <DeleteIcon onClick={() => onDeleteClick(processingType.id || "")} />
+                                    <DetailsIcon
+                                        onClick={() => {
+                                            onDetailsClick(processingType.id || "");
+                                            showDetailsModal();
+                                        }}
+                                    />
+                                    <EditIcon
+                                        onClick={() => {
+                                            onEditClick(processingType.id || "", processingType.name);
+                                            showEditModal();
+                                        }}
+                                    />
+                                    <DeleteIcon
+                                        onClick={() => {
+                                            onDeleteClick(processingType.id || "");
+                                            showDeleteModal();
+                                        }}
+                                    />
                                 </ButtonContainer>
                             </UserRoleHOC>
                         </ListItem>
@@ -54,37 +74,21 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                 )}
             </List>
 
-            {/* Edit Modal */}
-            <ModalOverlay show={isEditModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Current ProcessingType Name: {originalProcessingTypeName}</p>
-                        <input
-                            type="text"
-                            placeholder="Enter new processingType name"
-                            value={currentProcessingTypeName}
-                            onChange={(e) => setCurrentProcessingTypeName(e.target.value)}
-                        />
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleEditConfirm}>Save</ModalButton>
-                        <ModalButton onClick={handleEditCancel}>Cancel</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
-
-            {/* Delete Modal */}
-            <ModalOverlay show={isDeleteModalVisible} confirmation={false}>
-                <StyledModalContainer confirmation={false}>
-                    <ModalContent>
-                        <p>Are you sure you want to delete this processingType?</p>
-                    </ModalContent>
-                    <ModalActions>
-                        <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
-                        <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
-                    </ModalActions>
-                </StyledModalContainer>
-            </ModalOverlay>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+                <p>Current Crop Name: {originalProcessingTypeName}</p>
+                <input type="text" placeholder="Enter new crop name" value={currentProcessingTypeName} onChange={(e) => setCurrentProcessingTypeName(e.target.value)} />
+            </Modal>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+                <p>Are you sure you want to delete this crop?</p>
+            </Modal>
+            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
+                <p>Crop Details:</p>
+                {processingTypeDetails && (
+                    <div>
+                        <p>Crop Name: {processingTypeDetails.name}</p>
+                    </div>
+                )}
+            </Modal>
         </ListContainer>
     );
 };

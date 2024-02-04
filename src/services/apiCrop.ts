@@ -41,8 +41,7 @@ export const apiCrop = {
                 throw new Error(`Failed to fetch crop details for ID: ${cropId}`);
             }
 
-            const cropDetailsData = await response.json();
-            return cropDetailsData;
+            return response;
         } catch (error) {
             console.error(`Error in fetching crop details for ID: ${cropId}`, error);
             throw error;

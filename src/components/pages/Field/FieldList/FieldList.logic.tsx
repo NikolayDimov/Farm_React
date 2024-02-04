@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiField } from "../../../../services/apiField";
+import { Field as FieldProp } from "../Field.static";
 
 interface UseFieldListProps {
     fetchFields: () => Promise<void>;
@@ -8,33 +9,12 @@ interface UseFieldListProps {
 const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [selectedFieldIdForDelete, setSelectedFieldIdForDelete] = useState<string | null>(null);
     const [selectedFieldIdForEdit, setSelectedFieldIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentFieldName, setCurrentFieldName] = useState<string>("");
     const [originalFieldName, setOriginalFieldName] = useState<string>("");
     const [selectedFarmId, setSelectedFarmId] = useState<string>("");
     const [selectedSoilId, setSelectedSoilId] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
+    const [fieldDetails, setFieldDetails] = useState<FieldProp>();
 
     const onDeleteField = async (fieldId: string) => {
         try {
@@ -49,15 +29,11 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
                 console.error(`Failed to delete field with ID: ${fieldId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete Field");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting Field:", error);
-            showModal("Failed to delete Field");
         } finally {
             setLoading(false);
         }
@@ -79,7 +55,26 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             }
         } catch (error) {
             console.error("Error editing field:", error);
-            showModal("Failed to edit field");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDetailField = async (fieldId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiField.getFieldDetails(fieldId);
+
+            if (response.ok) {
+                const responseData = await response.json();
+                console.log(responseData);
+                setFieldDetails(responseData.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit field with ID: ${fieldId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing field:", error);
         } finally {
             setLoading(false);
         }
@@ -88,7 +83,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const onDeleteClick = (fieldId: string | undefined) => {
         if (fieldId) {
             setSelectedFieldIdForDelete(fieldId);
-            setDeleteModalVisible(true);
         }
     };
 
@@ -98,21 +92,18 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             setCurrentFieldName(fieldName);
             setOriginalFieldName(fieldName);
             setSelectedSoilId(soilId);
-            setEditModalVisible(true);
         }
+    };
+
+    const onDetailsClick = (machineId: string) => {
+        onDetailField(machineId);
     };
 
     const onDeleteConfirm = async () => {
         if (selectedFieldIdForDelete) {
             await onDeleteField(selectedFieldIdForDelete);
             setSelectedFieldIdForDelete(null);
-            setDeleteModalVisible(false);
         }
-    };
-
-    const onDeleteCancel = () => {
-        setSelectedFieldIdForDelete(null);
-        setDeleteModalVisible(false);
     };
 
     const onEditConfirm = async () => {
@@ -122,7 +113,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             }
 
             setSelectedFieldIdForEdit(null);
-            setEditModalVisible(false);
             setCurrentFieldName("");
             setSelectedSoilId("");
         } catch (error) {
@@ -130,29 +120,20 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
-    const onEditCancel = () => {
-        setSelectedFieldIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentFieldName("");
-        setSelectedSoilId("");
-    };
-
     return {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentFieldName,
         originalFieldName,
         setSelectedFarmId,
         selectedFarmId,
         selectedSoilId,
         onEditConfirm,
-        onEditCancel,
         onDeleteConfirm,
-        onDeleteCancel,
         setCurrentFieldName,
         setSelectedSoilId,
+        fieldDetails,
     };
 };
 

@@ -11,7 +11,7 @@ const processingReport = apiEndpoints.processingReport;
 export const apiFarmWithMostMachines = {
     fetchFarmWithMostMachinesReport: async () => {
         try {
-            const response = await fetch(`${BASE_URL}/${farmsWithMostMachines}`, {
+            const response = await fetch(`${BASE_URL}/report/${farmsWithMostMachines}`, {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${user.access_token}`,
@@ -20,6 +20,8 @@ export const apiFarmWithMostMachines = {
             });
 
             if (!response.ok) {
+                const errorMessage = await response.text();
+                console.error(`Failed to fetch farmsWithMostMachines. Error: ${errorMessage}`);
                 throw new Error("Failed to fetch farmsWithMostMachines");
             }
 

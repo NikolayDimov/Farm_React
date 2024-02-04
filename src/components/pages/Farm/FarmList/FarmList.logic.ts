@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-
+import { useState } from "react";
 import { apiFarm } from "../../../../services/apiFarm";
+import { Farm as FarmProp } from "../Farm.static";
 
 interface UseFarmListProps {
     fetchFarms: () => Promise<void>;
@@ -9,31 +9,10 @@ interface UseFarmListProps {
 const useFarmList = ({ fetchFarms }: UseFarmListProps) => {
     const [selectedFarmIdForDelete, setSelectedFarmIdForDelete] = useState<string | null>(null);
     const [selectedFarmIdForEdit, setSelectedFarmIdForEdit] = useState<string | null>(null);
-    const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
     const [currentFarmName, setCurrentFarmName] = useState<string>("");
     const [originalFarmName, setOriginalFarmName] = useState<string>("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [modalMessage, setModalMessage] = useState("");
-    const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
-
-    const showModal = (message: string) => {
-        setModalMessage(message);
-        setModalVisible(true);
-    };
-
-    useEffect(() => {
-        if (modalVisible) {
-            const timeoutId = setTimeout(() => {
-                setModalVisible(false);
-                setModalMessage("");
-                setConfirmation(false);
-            }, 5000);
-
-            return () => clearTimeout(timeoutId);
-        }
-    }, [modalVisible]);
+    const [farmDetails, setFarmDetails] = useState<FarmProp>();
 
     const onDeleteFarm = async (farmId: string) => {
         try {
@@ -48,16 +27,11 @@ const useFarmList = ({ fetchFarms }: UseFarmListProps) => {
                 console.error(`Failed to delete farm with ID: ${farmId}`, responseBody);
 
                 if (response.status === 400 && responseBody.error?.message) {
-                    showModal(responseBody.error.message);
-                    setConfirmation(true);
-                } else {
-                    showModal("Failed to delete farm");
+                    console.error("Error deleting crop:", responseBody.error?.message);
                 }
             }
         } catch (error) {
             console.error("Error deleting farm:", error);
-
-            showModal("Failed to delete farm");
         } finally {
             setLoading(false);
         }
@@ -76,7 +50,25 @@ const useFarmList = ({ fetchFarms }: UseFarmListProps) => {
             }
         } catch (error) {
             console.error("Error editing farm:", error);
-            showModal("Failed to edit farm");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDetailFarm = async (farmId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiFarm.getFarmDetails(farmId);
+
+            if (response.ok) {
+                const responseData = await response.json();
+                setFarmDetails(responseData.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit farm with ID: ${farmId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing farm:", error);
         } finally {
             setLoading(false);
         }
@@ -84,30 +76,26 @@ const useFarmList = ({ fetchFarms }: UseFarmListProps) => {
 
     const onDeleteClick = (farmId: string) => {
         setSelectedFarmIdForDelete(farmId);
-        setDeleteModalVisible(true);
     };
 
     const onEditClick = (farmId: string, farmName: string) => {
         setSelectedFarmIdForEdit(farmId);
         setCurrentFarmName(farmName);
         setOriginalFarmName(farmName);
-        setEditModalVisible(true);
     };
 
-    const handleDeleteConfirm = async () => {
+    const onDetailsClick = (farmId: string) => {
+        onDetailFarm(farmId);
+    };
+
+    const onDeleteConfirm = async () => {
         if (selectedFarmIdForDelete) {
             await onDeleteFarm(selectedFarmIdForDelete);
             setSelectedFarmIdForDelete(null);
-            setDeleteModalVisible(false);
         }
     };
 
-    const handleDeleteCancel = () => {
-        setSelectedFarmIdForDelete(null);
-        setDeleteModalVisible(false);
-    };
-
-    const handleEditConfirm = async () => {
+    const onEditConfirm = async () => {
         try {
             if (selectedFarmIdForEdit) {
                 await onEditFarm(selectedFarmIdForEdit, currentFarmName);
@@ -115,31 +103,22 @@ const useFarmList = ({ fetchFarms }: UseFarmListProps) => {
             }
 
             setSelectedFarmIdForEdit(null);
-            setEditModalVisible(false);
             setCurrentFarmName("");
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
     };
 
-    const handleEditCancel = () => {
-        setSelectedFarmIdForEdit(null);
-        setEditModalVisible(false);
-        setCurrentFarmName("");
-    };
-
     return {
         onDeleteClick,
         onEditClick,
-        isDeleteModalVisible,
-        isEditModalVisible,
+        onDetailsClick,
         currentFarmName,
         setCurrentFarmName,
         originalFarmName,
-        handleDeleteConfirm,
-        handleDeleteCancel,
-        handleEditConfirm,
-        handleEditCancel,
+        onDeleteConfirm,
+        onEditConfirm,
+        farmDetails,
     };
 };
 

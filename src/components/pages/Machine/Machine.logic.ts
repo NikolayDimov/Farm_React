@@ -86,7 +86,7 @@ const useMachine = () => {
         }
     }
 
-    const handleTransferSuccess = () => {
+    const onTransferSuccess = () => {
         setTransferMode(false);
         fetchMachines();
     };
@@ -108,7 +108,7 @@ const useMachine = () => {
         errorMessage,
         findFarmName,
         setTransferMode,
-        handleTransferSuccess,
+        onTransferSuccess,
         transferMode,
     };
 };

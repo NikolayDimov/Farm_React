@@ -2,7 +2,7 @@ import React from "react";
 import { GrowingCropPeriod } from "../GrowingCropPeriod.static";
 import useGrowingCropPeriodList from "../GrowingCropPeriod.logic";
 
-import { ListContainer, ListHeader, ListItem, List } from "../../../BaseLayout/common/ListStyles";
+import { ListContainer, ListHeader, ListItem, List } from "../../../common/ListStyles";
 
 interface GrowingCropPeriodListProps {
     growingCropPeriods: GrowingCropPeriod[];
