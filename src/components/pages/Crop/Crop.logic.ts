@@ -15,10 +15,6 @@ const useCrop = () => {
         }
     };
 
-    useEffect(() => {
-        fetchCrops();
-    }, []);
-
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCropName(e.target.value);
     };
@@ -44,6 +40,10 @@ const useCrop = () => {
             console.error("Error creating a new Crop:", error);
         }
     };
+
+    useEffect(() => {
+        fetchCrops();
+    }, []);
 
     return { crops, createCrop, changeHandler, cropName, fetchCrops };
 };

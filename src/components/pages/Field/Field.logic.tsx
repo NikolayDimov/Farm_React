@@ -57,12 +57,13 @@ const useField = () => {
         try {
             const fieldsData = await apiField.fetchFields();
 
-            // setFields((prevFields) => {
-            //     const newFields = fieldsData.data.filter((newField: FieldProp) => !prevFields.some((prevField: Field) => prevField.id === newField.id));
-            //     return [...prevFields, ...newFields];
-            // });
+            // new field to be last in the list
+            setFields((prevFields) => {
+                const newFields = fieldsData.data.filter((newField: FieldProp) => !prevFields.some((prevField: FieldProp) => prevField.id === newField.id));
+                return [...prevFields, ...newFields];
+            });
 
-            setFields(fieldsData.data);
+            //setFields(fieldsData.data);
         } catch (error) {
             console.error("Error in fetching Field", error);
         }
@@ -121,9 +122,9 @@ const useField = () => {
     }
 
     useEffect(() => {
-        fetchFields();
         fetchFarms();
         fetchSoils();
+        fetchFields();
     }, []);
 
     return {

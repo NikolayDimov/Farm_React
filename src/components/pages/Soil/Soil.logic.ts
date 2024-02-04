@@ -15,10 +15,6 @@ const useSoil = () => {
         }
     };
 
-    useEffect(() => {
-        fetchSoils();
-    }, []);
-
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSoilName(e.target.value);
     };
@@ -44,6 +40,10 @@ const useSoil = () => {
             console.error("Error creating a new Soil:", error);
         }
     };
+
+    useEffect(() => {
+        fetchSoils();
+    }, []);
 
     return { soils, createSoil, changeHandler, soilName, fetchSoils };
 };

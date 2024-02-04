@@ -3,7 +3,6 @@ import EditIcon from "../../../common/icons/EditIcon";
 import DeleteIcon from "../../../common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
 import { ButtonContainer } from "../../../common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../common/ModalList/Modal.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import { Machine as MachineProp } from "../Machine.static";
 import useMachineList from "../MachineList/MachineList.logic";
@@ -48,7 +47,7 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
     return (
         <ListContainer>
             <ListHeader>Machine List</ListHeader>
-            <SearchBar placeholder="Search by crop name" onSearch={setSearchQuery} />
+            <SearchBar placeholder="Search by machine brand, model and reister number" onSearch={setSearchQuery} />
             <List>
                 {Array.isArray(filteredItems) ? (
                     filteredItems.map((machine) => (
@@ -103,7 +102,7 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                 <p>Are you sure you want to delete this machine?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
-                <p>Crop Details:</p>
+                <p>Machine Details:</p>
                 {machineDetails && (
                     <div>
                         <p>Machine Brand: {machineDetails.brand}</p>

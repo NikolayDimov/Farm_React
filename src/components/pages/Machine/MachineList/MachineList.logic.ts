@@ -70,10 +70,10 @@ const useMachineList = ({ fetchMachines }: UseMachineListProps) => {
                 setMachineDetails(responseData.data);
             } else {
                 const responseBody = await response.json();
-                console.error(`Failed to edit farm with ID: ${machineId}`, responseBody);
+                console.error(`Failed to edit machine with ID: ${machineId}`, responseBody);
             }
         } catch (error) {
-            console.error("Error editing farm:", error);
+            console.error("Error editing machine:", error);
         } finally {
             setLoading(false);
         }

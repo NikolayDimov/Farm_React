@@ -8,16 +8,20 @@ const useProcessingType = () => {
 
     const fetchProcessingTypes = async () => {
         try {
-            const processingTypeData = await apiProcessingType.fetchProcessingTypes();
-            setProcessingTypes(processingTypeData.data);
+            const processingsTypeData = await apiProcessingType.fetchProcessingTypes();
+            // new field to be last in the list
+            setProcessingTypes((prevProcessingTypes) => {
+                const newProcessingTypes = processingsTypeData.data.filter(
+                    (newProcessingType: ProcessingTypeProp) => !prevProcessingTypes.some((prevProcessingType: ProcessingTypeProp) => prevProcessingType.id === newProcessingType.id)
+                );
+                return [...prevProcessingTypes, ...newProcessingTypes];
+            });
+
+            // setProcessingTypes(processingsTypeData.data);
         } catch (error) {
             console.error("Error in fetching processingTypes", error);
         }
     };
-
-    useEffect(() => {
-        fetchProcessingTypes();
-    }, []);
 
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProcessingTypeName(e.target.value);
@@ -44,6 +48,10 @@ const useProcessingType = () => {
             console.error("Error creating a new ProcessingType:", error);
         }
     };
+
+    useEffect(() => {
+        fetchProcessingTypes();
+    }, []);
 
     return { processingTypes, createProcessingType, changeHandler, processingTypeName, fetchProcessingTypes };
 };

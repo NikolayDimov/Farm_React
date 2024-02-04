@@ -7,7 +7,6 @@ import { Machine } from "../Machine/Machine.static";
 import { Farm } from "../Farm/Farm.static";
 import { Soil } from "../Soil/Soil.static";
 import { apiField } from "../../../services/apiField";
-
 import { apiProcessing } from "../../../services/apiProcessing";
 import { apiProcessingType } from "../../../services/apiProcessingType";
 import { apiCrop } from "../../../services/apiCrop";
@@ -15,6 +14,7 @@ import { apiMachine } from "../../../services/apiMachine";
 import { apiGrowingCropPeriod } from "../../../services/apiGrowingCropPeriod";
 import { GrowingCropPeriod } from "../GrowingCropPeriod/GrowingCropPeriod.static";
 import { apiFarm } from "../../../services/apiFarm";
+import { apiSoil } from "../../../services/apiSoil";
 
 // interface AddProcessingProps {
 //     fetchProcessings: () => void;
@@ -92,15 +92,23 @@ const useProcessing = () => {
         return farm ? farm.name : "Unknown Farm";
     };
 
-    // const findSoilNameByFieldId = (fieldId: string): string => {
-    //   const field = fields.find((field) => field.id === fieldId);
-    //   return field ? findSoilName(field.soilId) : 'Unknown soil';
-    // };
+    const findSoilNameForProcessing = (growingCropPeriodId: string | undefined): string => {
+        const growingCropPeriod = growingCropPeriods.find((growingCropPeriod) => growingCropPeriod.id === growingCropPeriodId);
 
-    // const findSoilName = (soilId: string): string => {
-    //   const soil = soils.find((soil) => soil.id === soilId);
-    //   return soil ? soil.name : 'Unknown Soil';
-    // };
+        if (growingCropPeriod) {
+            const field = fields.find((field) => field.id === growingCropPeriod.fieldId);
+
+            if (field) {
+                const soil = soils.find((soil) => soil.id === field.soilId);
+
+                if (soil) {
+                    return soil.name;
+                }
+            }
+        }
+
+        return "Unknown Soil";
+    };
 
     const fetchProcessingTypes = async () => {
         try {
@@ -153,6 +161,15 @@ const useProcessing = () => {
             setFarms(farmsData.data);
         } catch (error) {
             console.error("Error fetching farms:", error);
+        }
+    };
+
+    const fetchSoils = async () => {
+        try {
+            const soilsData = await apiSoil.fetchSoils();
+            setSoils(soilsData.data);
+        } catch (error) {
+            console.error("Error fetching soils:", error);
         }
     };
 
@@ -249,6 +266,7 @@ const useProcessing = () => {
         fetchMachines();
         fetchFields();
         fetchCrops();
+        fetchSoils();
         fetchProcessings();
     }, []);
 
@@ -275,6 +293,7 @@ const useProcessing = () => {
         findMachineName,
         findFarmNameByMachineId,
         findFarmName,
+        findSoilNameForProcessing,
         errorMessage,
     };
 };

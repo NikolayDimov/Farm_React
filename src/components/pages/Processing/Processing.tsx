@@ -23,6 +23,7 @@ const Processing: React.FC = () => {
         findGrowingCropPeriodField,
         findMachineName,
         findFarmNameByMachineId,
+        findSoilNameForProcessing,
         errorMessage,
     } = useProcessing();
 
@@ -101,6 +102,7 @@ const Processing: React.FC = () => {
                 findGrowingCropPeriodCrop={findGrowingCropPeriodCrop}
                 findMachineName={findMachineName}
                 findFarmNameByMachineId={findFarmNameByMachineId}
+                findSoilNameForProcessing={findSoilNameForProcessing}
             />
         </>
     );

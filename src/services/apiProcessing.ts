@@ -29,6 +29,27 @@ export const apiProcessing = {
         }
     },
 
+    getProcessingDetails: async (processingId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch processing details for ID: ${processingId}`);
+            }
+
+            return response;
+        } catch (error) {
+            console.error(`Error in fetching processing details for ID: ${processingId}`, error);
+            throw error;
+        }
+    },
+
     createProcessing: async (newProcessing: Processing) => {
         try {
             const response = await fetch(`${BASE_URL}/${processing}`, {
