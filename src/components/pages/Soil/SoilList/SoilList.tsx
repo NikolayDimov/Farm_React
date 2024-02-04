@@ -7,6 +7,8 @@ import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOve
 import UserRoleHOC from "../../UserRoleHOC";
 import useSoilList from "./SoilList.logic";
 import { Soil as SoilProp } from "../Soil.static";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface SoilListProps {
     soils: SoilProp[];
@@ -28,12 +30,15 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
         handleEditCancel,
     } = useSoilList({ fetchSoils });
 
+    const { filteredItems, setSearchQuery } = useFilter<SoilProp>({ items: soils });
+
     return (
         <ListContainer>
             <ListHeader>Soil List</ListHeader>
+            <SearchBar placeholder="Search by soil name" onSearch={setSearchQuery} />
             <List>
-                {Array.isArray(soils) && soils.length > 0 ? (
-                    soils.map((soil) => (
+                {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
+                    filteredItems.map((soil) => (
                         <ListItem key={soil.id}>
                             {soil.name}
                             <UserRoleHOC>

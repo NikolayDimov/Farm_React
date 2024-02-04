@@ -2,8 +2,8 @@ import { BASE_URL } from "../static/baseUrl";
 import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 
-const user = getUser();
 const soil = apiEndpoints.soil;
+const user = getUser();
 
 export const apiSoil = {
     fetchSoils: async () => {

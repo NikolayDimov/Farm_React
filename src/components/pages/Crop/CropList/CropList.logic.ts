@@ -8,14 +8,17 @@ interface UseCropListProps {
 const useCropList = ({ fetchCrops }: UseCropListProps) => {
     const [selectedCropIdForDelete, setSelectedCropIdForDelete] = useState<string | null>(null);
     const [selectedCropIdForEdit, setSelectedCropIdForEdit] = useState<string | null>(null);
+    const [selectedCropIdForDetails, setSelectedCropIdForDetails] = useState<string | null>(null);
     const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
     const [isEditModalVisible, setEditModalVisible] = useState<boolean>(false);
+    const [isDetailsModalVisible, setDetailsModalVisible] = useState<boolean>(false);
     const [currentCropName, setCurrentCropName] = useState<string>("");
     const [originalCropName, setOriginalCropName] = useState<string>("");
     const [modalVisible, setModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
     const [confirmation, setConfirmation] = useState(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [cropDetails, setCropDetails] = useState<any>(null);
 
     const showModal = (message: string) => {
         setModalMessage(message);
@@ -79,6 +82,30 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
         }
     };
 
+    const onDetailCrop = async (cropId: string) => {
+        try {
+            setLoading(true);
+            const response = await apiCrop.getCropDetails(cropId);
+
+            if (response.ok) {
+                setCropDetails(response.data);
+            } else {
+                const responseBody = await response.json();
+                console.error(`Failed to edit crop with ID: ${cropId}`, responseBody);
+            }
+        } catch (error) {
+            console.error("Error editing crop:", error);
+            showModal("Failed to edit crop");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const onDetailsClick = (cropId: string) => {
+        onDetailCrop(cropId);
+        setEditModalVisible(true);
+    };
+
     const onDeleteClick = (cropId: string) => {
         setSelectedCropIdForDelete(cropId);
         setDeleteModalVisible(true);
@@ -125,11 +152,18 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
         setCurrentCropName("");
     };
 
+    const handleDetailsCancel = () => {
+        setSelectedCropIdForDetails(null);
+        setDetailsModalVisible(false);
+    };
+
     return {
         onDeleteClick,
         onEditClick,
+        onDetailsClick,
         isDeleteModalVisible,
         isEditModalVisible,
+        isDetailsModalVisible,
         currentCropName,
         setCurrentCropName,
         originalCropName,
@@ -137,6 +171,8 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
         handleDeleteCancel,
         handleEditConfirm,
         handleEditCancel,
+        handleDetailsCancel,
+        cropDetails,
     };
 };
 

@@ -7,6 +7,8 @@ import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOve
 import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingTypeList from "./ProcessingTypeList.logic";
 import { ProcessingType as ProcessingTypeProp } from "../ProcessingType.static";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface ProcessingTypeListProps {
     processingTypes: ProcessingTypeProp[];
@@ -28,12 +30,15 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
         handleEditCancel,
     } = useProcessingTypeList({ fetchProcessingTypes });
 
+    const { filteredItems, setSearchQuery } = useFilter<ProcessingTypeProp>({ items: processingTypes });
+
     return (
         <ListContainer>
             <ListHeader>ProcessingType List</ListHeader>
+            <SearchBar placeholder="Search by processing type name" onSearch={setSearchQuery} />
             <List>
-                {Array.isArray(processingTypes) && processingTypes.length > 0 ? (
-                    processingTypes.map((processingType) => (
+                {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
+                    filteredItems.map((processingType) => (
                         <ListItem key={processingType.id}>
                             {processingType.name}
                             <UserRoleHOC>

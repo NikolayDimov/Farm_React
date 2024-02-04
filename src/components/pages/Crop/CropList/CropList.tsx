@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
+import DetailsIcon from "../../../BaseLayout/common/icons/DetailsIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../BaseLayout/common/ListStyles";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import useCropList from "../CropList/CropList.logic";
 import { Crop as CropProp } from "../Crop.static";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface CropListProps {
     crops: CropProp[];
@@ -17,8 +20,10 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
     const {
         onDeleteClick,
         onEditClick,
+        onDetailsClick,
         isDeleteModalVisible,
         isEditModalVisible,
+        isDetailsModalVisible,
         currentCropName,
         setCurrentCropName,
         originalCropName,
@@ -26,18 +31,24 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
         handleDeleteCancel,
         handleEditConfirm,
         handleEditCancel,
+        handleDetailsCancel,
+        cropDetails,
     } = useCropList({ fetchCrops });
+
+    const { filteredItems, setSearchQuery } = useFilter<CropProp>({ items: crops });
 
     return (
         <ListContainer>
             <ListHeader>Crop List</ListHeader>
+            <SearchBar placeholder="Search by crop name" onSearch={setSearchQuery} />
             <List>
-                {Array.isArray(crops) && crops.length > 0 ? (
-                    crops.map((crop) => (
+                {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
+                    filteredItems.map((crop) => (
                         <ListItem key={crop.id}>
                             {crop.name}
                             <UserRoleHOC>
                                 <ButtonContainer>
+                                    <DetailsIcon onClick={() => onDetailsClick(crop.id || "")} />
                                     <EditIcon onClick={() => onEditClick(crop.id || "", crop.name)} />
                                     <DeleteIcon onClick={() => onDeleteClick(crop.id || "")} />
                                 </ButtonContainer>
@@ -72,6 +83,25 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                     <ModalActions>
                         <ModalButton onClick={handleDeleteConfirm}>Yes</ModalButton>
                         <ModalButton onClick={handleDeleteCancel}>No</ModalButton>
+                    </ModalActions>
+                </StyledModalContainer>
+            </ModalOverlay>
+
+            {/* Details Modal */}
+            <ModalOverlay show={isDetailsModalVisible} confirmation={false}>
+                <StyledModalContainer confirmation={false}>
+                    <ModalContent>
+                        <p>Crop Details: {originalCropName}</p>
+                        {cropDetails && (
+                            <div>
+                                <p>ID: {cropDetails.id}</p>
+                                <p>Created At: {cropDetails.created_at}</p>
+                                <p>Deleted At: {cropDetails.deleted_at}</p>
+                            </div>
+                        )}
+                    </ModalContent>
+                    <ModalActions>
+                        <ModalButton onClick={handleDetailsCancel}>Close</ModalButton>
                     </ModalActions>
                 </StyledModalContainer>
             </ModalOverlay>

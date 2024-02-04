@@ -3,8 +3,8 @@ import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 import { Field } from "../components/pages/Field/Field.static";
 
-const user = getUser();
 const field = apiEndpoints.field;
+const user = getUser();
 
 export const apiField = {
     fetchFields: async () => {

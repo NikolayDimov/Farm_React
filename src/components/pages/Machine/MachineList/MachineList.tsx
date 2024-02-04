@@ -8,6 +8,8 @@ import UserRoleHOC from "../../UserRoleHOC";
 import { Machine as MachineProp } from "../Machine.static";
 import useMachineList from "../MachineList/MachineList.logic";
 import { Farm } from "../../Farm/Farm.static";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface MachineListProps {
     machines: MachineProp[];
@@ -39,12 +41,15 @@ const MachineList: React.FC<MachineListProps> = ({ machines, farms, fetchMachine
         onDeleteCancel,
     } = useMachineList({ fetchMachines });
 
+    const { filteredItems, setSearchQuery } = useFilter<MachineProp>({ items: machines });
+
     return (
         <ListContainer>
             <ListHeader>Machine List</ListHeader>
+            <SearchBar placeholder="Search by crop name" onSearch={setSearchQuery} />
             <List>
-                {Array.isArray(machines) ? (
-                    machines.map((machine) => (
+                {Array.isArray(filteredItems) ? (
+                    filteredItems.map((machine) => (
                         <ListItem key={machine.id}>
                             <strong>Brand:</strong> {machine.brand} |&nbsp;
                             <strong>Model:</strong> {machine.model} |&nbsp;

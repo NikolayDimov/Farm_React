@@ -11,6 +11,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingList from "../ProcessingList/ProcessingList.logic";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface ProcessingListProps {
     processings: ProcessingProp[];
@@ -53,12 +55,17 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
         selectedMachinedId,
     } = useProcessingList({ fetchProcessings });
 
+    const { filteredItems, setSearchQuery } = useFilter<ProcessingProp>({ items: processings });
+
     return (
         <ListContainer>
             <ListHeader>Processing List</ListHeader>
+
+            <SearchBar placeholder="Search by crop name" onSearch={setSearchQuery} />
+
             <List>
-                {Array.isArray(processings) ? (
-                    processings.map((processing) => (
+                {Array.isArray(filteredItems) ? (
+                    filteredItems.map((processing) => (
                         <ListItem key={processing.id}>
                             <strong>Date:</strong> {new Date(processing.date).toLocaleDateString()} |&nbsp;
                             <strong>ProcessingType:</strong> {findProcessingTypeName(processing.processingTypeId)} |&nbsp;

@@ -3,7 +3,7 @@ import Layout from "../../BaseLayout/common/Layout";
 import useFarm from "./Farm.logic";
 import FarmList from "./FarmList/FarmList";
 import UserRoleHOC from "../UserRoleHOC";
-import { showFarmLocationOnMap } from "../../../unility/farmLocation";
+import { showFarmLocationOnMap } from "../../../utils/farmLocation";
 
 const Farm: React.FC = () => {
     const { farms, createFarm, changeHandler, farmName, coordinates, setNewFarmCoordinates, fetchFarms, loading } = useFarm();

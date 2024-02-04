@@ -1,7 +1,12 @@
 export const getUser = () => {
     const userString = localStorage.getItem("user");
-    if (userString === null) {
-        throw new Error("User not authenticated");
+
+    if (userString) {
+        const user = JSON.parse(userString);
+        if (user && user.access_token) {
+            return JSON.parse(userString);
+        }
     }
-    return JSON.parse(userString);
+
+    return {};
 };

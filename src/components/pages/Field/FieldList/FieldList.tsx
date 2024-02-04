@@ -8,6 +8,8 @@ import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContaine
 import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../BaseLayout/BaseLayout.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import useFieldList from "../FieldList/FieldList.logic";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface FieldListProps {
     fields: FieldProp[];
@@ -34,12 +36,15 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
         setSelectedSoilId,
     } = useFieldList({ fetchFields });
 
+    const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
+
     return (
         <ListContainer>
             <ListHeader>Field List</ListHeader>
+            <SearchBar placeholder="Search by field name" onSearch={setSearchQuery} />
             <List>
-                {Array.isArray(fields) && fields.length > 0 ? (
-                    fields.map((field) => (
+                {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
+                    filteredItems.map((field) => (
                         <ListItem key={field.id}>
                             <strong>Name:</strong> {field.name} |&nbsp;
                             <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;

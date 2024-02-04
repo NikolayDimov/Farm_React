@@ -3,8 +3,8 @@ import { BASE_URL } from "../static/baseUrl";
 import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 
-const user = getUser();
 const gcp = apiEndpoints.growingPeriod;
+const user = getUser();
 
 export const apiGrowingCropPeriod = {
     fetchGCP: async () => {

@@ -8,6 +8,8 @@ import EditIcon from "../../../BaseLayout/common/icons/EditIcon";
 import DeleteIcon from "../../../BaseLayout/common/icons/DeleteIcon";
 import { ButtonContainer } from "../../../BaseLayout/common/icons/ButtonContainer";
 import { Farm as FarmProp } from "../Farm.static";
+import useFilter from "../../../../utils/search";
+import SearchBar from "../../../BaseLayout/common/searchBar/searchBar";
 
 interface FarmListProps {
     farms: FarmProp[];
@@ -30,9 +32,12 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
         handleEditCancel,
     } = useFarmList({ fetchFarms });
 
+    const { filteredItems, setSearchQuery } = useFilter<FarmProp>({ items: farms });
+
     return (
         <ListContainer>
             <ListHeader>Farm List</ListHeader>
+            <SearchBar placeholder="Search by farm name" onSearch={setSearchQuery} />
 
             {/* <List>
                 {Array.isArray(farms) && farms.length > 0 ? (
@@ -43,8 +48,8 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
             </List> */}
 
             <List>
-                {Array.isArray(farms) && farms.length > 0 ? (
-                    farms.map((farm) => (
+                {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
+                    filteredItems.map((farm) => (
                         <ListItem key={farm.id}>
                             {farm.name}
                             <UserRoleHOC>

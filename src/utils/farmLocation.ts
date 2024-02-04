@@ -1,4 +1,3 @@
-// farmUtils.ts
 export const showFarmLocationOnMap = (coordinates: number[] | undefined) => {
     if (!coordinates) {
         console.error("Coordinates are undefined");

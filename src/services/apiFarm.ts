@@ -3,8 +3,8 @@ import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 import { Farm } from "../components/pages/Farm/Farm.static";
 
-const user = getUser();
 const farm = apiEndpoints.farm;
+const user = getUser();
 
 export const apiFarm = {
     fetchFarms: async () => {

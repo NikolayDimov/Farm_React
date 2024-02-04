@@ -3,8 +3,8 @@ import { BASE_URL } from "../static/baseUrl";
 import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 
-const user = getUser();
 const machine = apiEndpoints.machine;
+const user = getUser();
 
 export const apiMachine = {
     fetchMachines: async () => {

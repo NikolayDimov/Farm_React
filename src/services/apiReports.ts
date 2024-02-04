@@ -26,7 +26,7 @@ export const apiFarmWithMostMachines = {
             const farmWithMostMachineData = await response.json();
             return farmWithMostMachineData;
         } catch (error) {
-            console.error("Error in fetching soils", error);
+            console.error("Error in fetching farmsWithMostMachines", error);
             throw error;
         }
     },

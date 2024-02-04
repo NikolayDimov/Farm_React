@@ -2,8 +2,8 @@ import { BASE_URL } from "../static/baseUrl";
 import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
 
-const user = getUser();
 const crop = apiEndpoints.crop;
+const user = getUser();
 
 export const apiCrop = {
     fetchCrops: async () => {
@@ -23,6 +23,28 @@ export const apiCrop = {
             return cropData;
         } catch (error) {
             console.error("Error in fetching crops", error);
+            throw error;
+        }
+    },
+
+    getCropDetails: async (cropId: string) => {
+        try {
+            const response = await fetch(`${BASE_URL}/${crop}/${cropId}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${user.access_token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch crop details for ID: ${cropId}`);
+            }
+
+            const cropDetailsData = await response.json();
+            return cropDetailsData;
+        } catch (error) {
+            console.error(`Error in fetching crop details for ID: ${cropId}`, error);
             throw error;
         }
     },
