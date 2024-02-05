@@ -23,21 +23,26 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
                 return;
             }
 
-            if (!window.google || !window.google.maps) {
-                const script = document.createElement("script");
-                script.src = `https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=drawing`;
-                script.async = true;
-                script.defer = true;
+            const script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=drawing`;
+            script.async = true;
+            script.defer = true;
 
-                script.onload = initializeMap;
-                script.onerror = (error) => {
-                    console.error("Error loading Google Maps script:", error);
-                };
+            script.onload = () => {
+                console.log("Google Maps script loaded successfully");
+                // Check if the drawing library is available before initializing the map
+                if (window.google && window.google.maps && window.google.maps.drawing) {
+                    initializeMap();
+                } else {
+                    console.error("Google Maps drawing library is not available.");
+                }
+            };
 
-                document.head.appendChild(script);
-            } else {
-                initializeMap();
-            }
+            script.onerror = (error) => {
+                console.error("Error loading Google Maps script:", error);
+            };
+
+            document.head.appendChild(script);
         };
 
         const initializeMap = () => {

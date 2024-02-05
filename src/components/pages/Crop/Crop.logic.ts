@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { apiCrop } from "../../../services/apiCrop";
 import { Crop as CropProp } from "./Crop.static";
+import { useCropFormError } from "./CropErrorHadnler";
 
 const useCrop = () => {
     const [crops, setCrops] = useState<CropProp[]>([]);
     const [cropName, setCropName] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const { formErrors, validateCropName } = useCropFormError();
+
+    const handleCropNameBlur = () => {
+        validateCropName(cropName);
+    };
 
     const fetchCrops = async () => {
         try {
@@ -23,29 +30,38 @@ const useCrop = () => {
         e.preventDefault();
 
         try {
-            if (!cropName) {
-                console.error("Crop name cannot be empty");
-                return;
-            }
+            const isCropValid = validateCropName(cropName);
 
-            const response = await apiCrop.createCrop(cropName);
-
-            if (response.ok) {
-                setCropName("");
-                fetchCrops();
+            if (!isCropValid || !cropName) {
+                console.log(`crop: ${cropName}`);
             } else {
-                console.error("Failed to create a new Crop in the database");
+                // formErrors.name = "";
+
+                const response = await apiCrop.createCrop(cropName);
+
+                if (response.ok) {
+                    setCropName("");
+                    fetchCrops();
+                } else {
+                    const responseData = await response.json();
+                    setError(responseData.error?.message || "Failed to create a new Crop");
+                    // const responseData = await response.json();
+                    // const errorMessage = responseData.error?.message || "Failed to create a new Crop";
+                    // throw new Error(errorMessage);
+                }
             }
-        } catch (error) {
-            console.error("Error creating a new Crop:", error);
+        } catch (error: any) {
+            console.error("Unexpected error:", error);
         }
     };
+
+    console.log("fromerr", error);
 
     useEffect(() => {
         fetchCrops();
     }, []);
 
-    return { crops, createCrop, changeHandler, cropName, fetchCrops };
+    return { crops, createCrop, changeHandler, cropName, fetchCrops, error, formErrors, handleCropNameBlur };
 };
 
 export default useCrop;

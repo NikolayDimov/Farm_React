@@ -16,11 +16,14 @@ export const apiCrop = {
                 },
             });
             if (!response.ok) {
-                throw new Error("Failed to fetch crops");
+                const responseData = await response.json();
+                throw new Error(responseData?.error?.message || "Failed to create a new Crop");
+                return;
             }
 
             const cropData = await response.json();
             return cropData;
+            // return response;
         } catch (error) {
             console.error("Error in fetching crops", error);
             throw error;
