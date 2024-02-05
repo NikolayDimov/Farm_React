@@ -22,10 +22,6 @@ const useFarm = () => {
         }
     };
 
-    useEffect(() => {
-        fetchFarms();
-    }, []);
-
     const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFarmName(e.target.value);
     };
@@ -72,6 +68,11 @@ const useFarm = () => {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        fetchFarms();
+    }, []);
+
     return { farms, createFarm, changeHandler, farmName, fetchFarms, loading, coordinates: selectedFarmCoordinates, setNewFarmCoordinates };
 };
 
