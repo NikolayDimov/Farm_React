@@ -1,9 +1,13 @@
-// Modal.style.ts
-
+import { HTMLAttributes } from "react";
 import styled from "styled-components";
 
-export const ModalOverlay = styled.div<{ show: boolean; confirmation: boolean }>`
-    display: ${(props) => (props.show ? "block" : "none")};
+interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+    $show: boolean;
+    $confirmation?: boolean;
+}
+
+export const ModalOverlay = styled.div<ModalProps>`
+    display: ${($props) => ($props.$show ? "block" : "none")};
     position: fixed;
     top: 0;
     left: 0;
@@ -13,7 +17,7 @@ export const ModalOverlay = styled.div<{ show: boolean; confirmation: boolean }>
     z-index: 1000;
 `;
 
-export const StyledModalContainer = styled.div<{ confirmation: boolean }>`
+export const StyledModalContainer = styled.div<ModalProps>`
     position: fixed;
     top: 50%;
     left: 50%;
@@ -21,12 +25,12 @@ export const StyledModalContainer = styled.div<{ confirmation: boolean }>`
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    width: ${(props) => (props.confirmation ? "300px" : "400px")};
+    width: ${($props) => ($props.$confirmation ? "300px" : "400px")};
     text-align: center;
 `;
 
 export const ModalContent = styled.div`
-    color: black; // Add this line to set the text color to black
+    color: black;
 `;
 
 export const ModalActions = styled.div`

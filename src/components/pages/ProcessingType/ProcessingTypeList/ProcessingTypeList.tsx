@@ -74,11 +74,11 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
                 <p>Current Crop Name: {originalProcessingTypeName}</p>
                 <input type="text" placeholder="Enter new crop name" value={currentProcessingTypeName} onChange={(e) => setCurrentProcessingTypeName(e.target.value)} />
             </Modal>
-            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
                 <p>Are you sure you want to delete this crop?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>

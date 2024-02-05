@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import loginImage from "../../../assets/corn_field.webp";
 
 export const AuthLink = styled.div`

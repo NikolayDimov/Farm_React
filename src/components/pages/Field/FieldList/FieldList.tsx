@@ -81,7 +81,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
                 <p>Current Field Name: {originalFieldName}</p>
                 <p>Current Field Soil: {findSoilName(selectedSoilId)}</p>
                 <input type="text" placeholder="Enter new machine brand" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />
@@ -99,7 +99,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                     </select>
                 </div>
             </Modal>
-            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
                 <p>Are you sure you want to delete this field?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>

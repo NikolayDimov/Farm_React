@@ -85,7 +85,7 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
                 <p>Current Machine Brand: {originalMachineBrand}</p>
                 <p>Current Machine Model: {originalMachineModel}</p>
                 <p>Current Machine Register Number: {originalMachineRegisterNumber}</p>
@@ -98,7 +98,7 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                     onChange={(e) => setCurrentMachineRegisterNumber(e.target.value)}
                 />
             </Modal>
-            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
                 <p>Are you sure you want to delete this machine?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>

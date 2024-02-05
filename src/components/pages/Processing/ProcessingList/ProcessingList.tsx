@@ -106,7 +106,7 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
                 <p>Processing date: {originalProcessingDate}</p>
                 <DatePicker selected={currentProcessingDate ? new Date(currentProcessingDate) : null} onChange={(date) => setCurrentProcessingDate(date as Date)} />
 
@@ -137,7 +137,7 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                     </select>
                 </div>
             </Modal>
-            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton>
+            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
                 <p>Are you sure you want to delete this machine?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
