@@ -12,6 +12,7 @@ import SearchBar from "../../../common/searchBar/searchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
+import { FieldCoordinates } from "../Field.static";
 
 interface FieldListProps {
     fields: FieldProp[];
@@ -19,7 +20,12 @@ interface FieldListProps {
     fetchFields: () => Promise<void>;
     findFarmName: (farmId: string) => string;
     findSoilName: (soilId: string) => string;
-    displayFieldOnGoogleMap: (fieldBoundary: { type: string; coordinates: number[][][] }) => void;
+    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void;
+}
+
+interface FieldListProps {
+    // ...
+    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void; // Correct type
 }
 
 const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName, displayFieldOnGoogleMap }) => {
@@ -42,6 +48,37 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
     const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
+    const [mapVisibility, setMapVisibility] = useState(false);
+    const [mapCenter, setMapCenter] = useState({ lat: 46, lng: 15 });
+
+    const handleShowFieldOnMap = (fieldMapCoordinates: FieldCoordinates) => {
+        // Check if there are coordinates to show
+        if (fieldMapCoordinates.coordinates.length > 0) {
+            // Set the map visibility and coordinates
+            setMapVisibility(true);
+
+            // Set the map center based on the field's coordinates
+            const bounds = new window.google.maps.LatLngBounds();
+
+            fieldMapCoordinates.coordinates.forEach((coordinateSet) => {
+                coordinateSet.forEach((coordinate) => {
+                    const [lat, lng] = coordinate;
+                    bounds.extend(new window.google.maps.LatLng(lat, lng));
+                });
+            });
+
+            const center = bounds.getCenter();
+
+            setMapCenter({
+                lat: center.lat(),
+                lng: center.lng(),
+            });
+        } else {
+            // No coordinates to show
+            console.warn("No field coordinates available to show on the map.");
+        }
+    };
+
     return (
         <ListContainer>
             <ListHeader>Field List</ListHeader>
@@ -57,8 +94,23 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                 <ButtonContainer>
                                     <button
                                         onClick={() => {
-                                            console.log(field.boundary);
-                                            displayFieldOnGoogleMap(field.boundary);
+                                            if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
+                                                // const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lng, lat]: number[]) => [lat, lng]));
+                                                // Convert the coordinates to the correct order [latitude, longitude]
+                                                const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
+
+                                                console.log("Field Coordinates:", field.boundary?.coordinates);
+
+                                                const convertedCoordinates: FieldCoordinates = {
+                                                    coordinates,
+                                                };
+
+                                                console.log(convertedCoordinates);
+                                                displayFieldOnGoogleMap(convertedCoordinates); // Adjust the argument type here
+                                                handleShowFieldOnMap(convertedCoordinates);
+                                            } else {
+                                                console.warn("Field boundary coordinates not available or not in the expected format.");
+                                            }
                                         }}
                                     >
                                         Show Field Boundary on Map
@@ -113,7 +165,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 <p>Are you sure you want to delete this field?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
-                <p>Filed Details:</p>
+                <p>Field Details:</p>
                 {fieldDetails && (
                     <div>
                         <p>Field name: {fieldDetails.name}</p>

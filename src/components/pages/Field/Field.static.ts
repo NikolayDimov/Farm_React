@@ -10,3 +10,9 @@ export interface Field {
     soilId: string;
     soil?: Soil;
 }
+
+export const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY as string;
+
+export interface FieldCoordinates {
+    coordinates: number[][][];
+}

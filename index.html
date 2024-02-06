@@ -1,13 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vite + React + TS</title>
+
+  <!-- Add the following script tags -->
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    window.onload = function () {
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.GOOGLE_MAPS_API_KEY}&libraries=drawing`;
+      document.head.appendChild(script);
+    };
+  </script>
+
+</head>
+
+<body>
+  <div id="root"></div>
+
+  </script>
+</body>
+
 </html>

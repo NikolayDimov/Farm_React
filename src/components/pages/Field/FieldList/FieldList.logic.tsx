@@ -23,7 +23,7 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             const response = await apiField.deleteField(fieldId);
 
             if (response.ok) {
-                fetchFields();
+                await fetchFields();
             } else {
                 const responseBody = await response.json();
                 console.error(`Failed to delete field with ID: ${fieldId}`, responseBody);

@@ -1,22 +1,45 @@
 import React, { useEffect, useState } from "react";
 import useField from "./Field.logic";
 import UserRoleHOC from "../UserRoleHOC";
-import MapContainer from "./MapContainer/MapContainer";
 import FieldList from "./FieldList/FieldList";
-import { apiField } from "../../../services/apiField";
+import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
+import { GOOGLE_MAPS_API_KEY } from "./Field.static";
+import { FieldCoordinates } from "./Field.static";
 
 const Field: React.FC = () => {
     const { fields, farms, soils, fetchFields, changeHandler, createField, createdValues, errorMessage, findFarmName, findSoilName, loading, handleSelectLocation } = useField();
 
+    const libraries: ("drawing" | "geometry")[] = ["drawing"];
+
     const [isMapVisible, setMapVisibility] = useState(false);
     const [fieldMapCoordinates, setFieldMapCoordinates] = useState<number[][][]>([]);
+    const [mapLoaded, setMapLoaded] = useState(false);
 
-    const displayFieldOnGoogleMap = (fieldBoundary: { type: string; coordinates: number[][][] }) => {
-        console.log("Field Boundary:", fieldBoundary);
-        const coordinates = fieldBoundary.coordinates;
-        setFieldMapCoordinates(coordinates);
-        setMapVisibility(true);
-    };
+    const [mapCenter, setMapCenter] = useState({ lat: 46, lng: 15 });
+    const [mapZoom, setMapZoom] = useState(5);
+
+    useEffect(() => {
+        if (fieldMapCoordinates.length > 0) {
+            const bounds = new window.google.maps.LatLngBounds();
+
+            fieldMapCoordinates.forEach((coordinateSet) => {
+                coordinateSet.forEach(([lat, lng]) => {
+                    bounds.extend(new window.google.maps.LatLng(lat, lng));
+                });
+            });
+
+            const center = bounds.getCenter();
+            const zoom = 12;
+
+            setMapCenter({
+                lat: center.lat(),
+                lng: center.lng(),
+            });
+            setMapZoom(zoom);
+        } else {
+            console.warn("No field coordinates available to show on the map.");
+        }
+    }, [fieldMapCoordinates]);
 
     return (
         <>
@@ -51,10 +74,34 @@ const Field: React.FC = () => {
                     </form>
                 </UserRoleHOC>
 
-                {/* <MapContainer onSelectLocation={handleSelectLocation} /> */}
-                {/* <MapContainer onSelectLocation={(coordinates) => console.log("Selected coordinates:", coordinates)} /> */}
-
-                <MapContainer onSelectLocation={handleSelectLocation} initialCoordinates={fieldMapCoordinates} isMapVisible={isMapVisible} />
+                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries} onLoad={() => setMapLoaded(true)}>
+                    {mapLoaded && (
+                        <GoogleMap center={mapCenter} zoom={mapZoom} mapContainerStyle={{ height: "500px", width: "100%" }}>
+                            <DrawingManager
+                                options={{
+                                    drawingControl: true,
+                                    drawingControlOptions: {
+                                        position: window.google.maps.ControlPosition.TOP_CENTER,
+                                        drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
+                                    },
+                                    polygonOptions: {
+                                        editable: true,
+                                    },
+                                }}
+                                onPolygonComplete={(polygon: google.maps.Polygon) => {
+                                    const coordinates = polygon
+                                        .getPath()
+                                        .getArray()
+                                        .map(({ lat, lng }: google.maps.LatLng) => [lat(), lng()]);
+                                    handleSelectLocation([coordinates]);
+                                }}
+                            />
+                            {fieldMapCoordinates.map((coordinates, index) => (
+                                <Polygon key={index} paths={coordinates.map((coord) => ({ lat: coord[0], lng: coord[1] }))} editable={true} />
+                            ))}
+                        </GoogleMap>
+                    )}
+                </LoadScript>
             </div>
 
             <FieldList
@@ -63,7 +110,22 @@ const Field: React.FC = () => {
                 findFarmName={findFarmName}
                 findSoilName={findSoilName}
                 fetchFields={fetchFields}
-                displayFieldOnGoogleMap={displayFieldOnGoogleMap}
+                displayFieldOnGoogleMap={(fieldBoundary: FieldCoordinates) => {
+                    console.log("Newly outlined coordinates:", fieldBoundary);
+
+                    const coordinates = fieldBoundary.coordinates;
+
+                    if (Array.isArray(coordinates) && coordinates.length > 0 && Array.isArray(coordinates[0])) {
+                        const convertedCoordinates = coordinates.map((coordinateSet) => coordinateSet.map(([lat, lng]) => [lat, lng]));
+
+                        console.log("Converted Coordinates:", convertedCoordinates);
+
+                        setFieldMapCoordinates(convertedCoordinates);
+                        setMapVisibility(true);
+                    } else {
+                        console.error("Invalid coordinates format:", coordinates);
+                    }
+                }}
             />
         </>
     );

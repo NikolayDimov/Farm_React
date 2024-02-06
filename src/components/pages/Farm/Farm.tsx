@@ -4,21 +4,27 @@ import useFarm from "./Farm.logic";
 import FarmList from "./FarmList/FarmList";
 import UserRoleHOC from "../UserRoleHOC";
 import { showFarmLocationOnMap } from "../../../utils/farmLocation";
+import InputField from "../../common/InputFiled/InputField";
 
 const Farm: React.FC = () => {
-    const { farms, createFarm, changeHandler, farmName, coordinates, setNewFarmCoordinates, fetchFarms, loading } = useFarm();
+    const { farms, createFarm, changeHandler, farmName, coordinates, setNewFarmCoordinates, fetchFarms, loading, error, formErrors, handleFarmNameBlur } = useFarm();
 
     return (
         <Layout>
             <UserRoleHOC>
                 <h3>Add a New Farm</h3>
                 <form onSubmit={createFarm}>
-                    <label>Farm Name:</label>
-                    <input type="text" value={farmName} onChange={changeHandler} />
-
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Adding Farm..." : "Add Farm"}
-                    </button>
+                    <InputField
+                        label="Farm Name"
+                        type="text"
+                        id="farmName"
+                        name="farmName"
+                        value={farmName}
+                        onChange={changeHandler}
+                        onBlur={handleFarmNameBlur}
+                        error={error || formErrors.name}
+                        buttonText="Add Farm"
+                    />
                 </form>
             </UserRoleHOC>
             <MapContainer onSelectLocation={(coordinates: number[]) => setNewFarmCoordinates(coordinates)} />
