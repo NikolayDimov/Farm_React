@@ -2,18 +2,27 @@ import React from "react";
 import ProcessingTypeList from "./ProcessingTypeList/ProcessingTypeList";
 import useProcessingType from "./ProcessingType.logic";
 import UserRoleHOC from "../UserRoleHOC";
+import InputField from "../../common/InputFiled/InputField";
 
 const ProcessingType: React.FC = () => {
-    const { processingTypes, createProcessingType, changeHandler, processingTypeName, fetchProcessingTypes } = useProcessingType();
+    const { processingTypes, createProcessingType, changeHandler, processingTypeName, fetchProcessingTypes, error, formErrors, handleProcessingTypeNameBlur } = useProcessingType();
 
     return (
         <>
             <UserRoleHOC>
                 <h3>Add a New ProcessingType</h3>
                 <form onSubmit={createProcessingType}>
-                    <label>ProcessingType Name:</label>
-                    <input type="text" value={processingTypeName} onChange={changeHandler} />
-                    <button type="submit">Add ProcessingType</button>
+                    <InputField
+                        label="Processing Type Name"
+                        type="text"
+                        id="processingTypeName"
+                        name="processingTypeName"
+                        value={processingTypeName}
+                        onChange={changeHandler}
+                        onBlur={handleProcessingTypeNameBlur}
+                        error={error || formErrors.name}
+                        buttonText="Add Processing Type"
+                    />
                 </form>
             </UserRoleHOC>
 

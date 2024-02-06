@@ -11,7 +11,7 @@ const Navbar = () => {
     return (
         <NavbarContainer>
             <ContentWrapper>
-                <Logo to="/">Your Farm</Logo>
+                <Logo to="/">MyFarm</Logo>
                 <NavbarButtons>
                     {!isLoggedIn ? (
                         <></>
@@ -20,7 +20,7 @@ const Navbar = () => {
                             <NavbarButton to="/home">Home</NavbarButton>
                             <NavbarButton to="/service">Service</NavbarButton>
                             <NavbarButton to="/report">Report</NavbarButton>
-                            <NavbarButton to="/profile">Profile</NavbarButton>
+                            <NavbarButton to="/profile">Farms</NavbarButton>
                             <NavbarButton to="/" onClick={handleLogout}>
                                 Logout
                             </NavbarButton>

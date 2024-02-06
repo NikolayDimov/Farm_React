@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { apiProcessingType } from "../../../services/apiProcessingType";
 import { ProcessingType as ProcessingTypeProp } from "./ProcessingType.static";
+import { useFormError } from "../../common/validations/useFormError";
 
 const useProcessingType = () => {
     const [processingTypes, setProcessingTypes] = useState<ProcessingTypeProp[]>([]);
     const [processingTypeName, setProcessingTypeName] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const { formErrors, validateName } = useFormError();
+
+    const handleProcessingTypeNameBlur = () => {
+        validateName(processingTypeName);
+    };
 
     const fetchProcessingTypes = async () => {
         try {
@@ -31,21 +38,28 @@ const useProcessingType = () => {
         e.preventDefault();
 
         try {
-            if (!processingTypeName) {
-                console.error("ProcessingType name cannot be empty");
-                return;
-            }
+            const isCropValid = validateName(processingTypeName);
 
-            const response = await apiProcessingType.createProcessingType(processingTypeName);
-
-            if (response.ok) {
-                setProcessingTypeName("");
-                fetchProcessingTypes();
+            if (!isCropValid || !processingTypeName) {
+                console.log(`crop: ${processingTypeName}`);
             } else {
-                console.error("Failed to create a new ProcessingType in the database");
+                const response = await apiProcessingType.createProcessingType(processingTypeName);
+
+                if (response.ok) {
+                    setProcessingTypeName("");
+                    fetchProcessingTypes();
+                } else {
+                    const responseData = await response.json();
+                    const errorMessage = responseData.message;
+                    console.log(errorMessage);
+                    setError(errorMessage);
+                    throw new Error(responseData.error.message);
+                }
             }
-        } catch (error) {
-            console.error("Error creating a new ProcessingType:", error);
+        } catch (error: any) {
+            const errorMessage = error.message || "An unexpected error occurred.";
+            console.log("errorMessage", errorMessage);
+            setError(errorMessage);
         }
     };
 
@@ -53,7 +67,7 @@ const useProcessingType = () => {
         fetchProcessingTypes();
     }, []);
 
-    return { processingTypes, createProcessingType, changeHandler, processingTypeName, fetchProcessingTypes };
+    return { processingTypes, createProcessingType, changeHandler, processingTypeName, fetchProcessingTypes, error, formErrors, handleProcessingTypeNameBlur };
 };
 
 export default useProcessingType;

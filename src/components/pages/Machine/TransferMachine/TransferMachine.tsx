@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Machine as MachineProp } from "../Machine.static";
+import React from "react";
+import { Machine as MachineProp } from "../../Machine/Machine.static";
 import { Farm } from "../../Farm/Farm.static";
 import { TransferMachineContainer, SelectContainer, Label, Select, TransferButton } from "../../../common/Machine.styles";
 import { Title } from "../../Auth/StyledComponents";

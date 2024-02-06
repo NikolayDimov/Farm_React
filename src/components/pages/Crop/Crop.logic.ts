@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { apiCrop } from "../../../services/apiCrop";
 import { Crop as CropProp } from "./Crop.static";
-import { useCropFormError } from "./CropErrorHadnler";
+import { useFormError } from "../../common/validations/useFormError";
 
 const useCrop = () => {
     const [crops, setCrops] = useState<CropProp[]>([]);
     const [cropName, setCropName] = useState("");
     const [error, setError] = useState<string | null>(null);
-    const { formErrors, validateCropName } = useCropFormError();
+    const { formErrors, validateName } = useFormError();
 
     const handleCropNameBlur = () => {
-        validateCropName(cropName);
+        validateName(cropName);
     };
 
     const fetchCrops = async () => {
@@ -30,7 +30,7 @@ const useCrop = () => {
         e.preventDefault();
 
         try {
-            const isCropValid = validateCropName(cropName);
+            const isCropValid = validateName(cropName);
 
             if (!isCropValid || !cropName) {
                 console.log(`crop: ${cropName}`);
@@ -44,18 +44,29 @@ const useCrop = () => {
                     fetchCrops();
                 } else {
                     const responseData = await response.json();
-                    setError(responseData.error?.message || "Failed to create a new Crop");
-                    // const responseData = await response.json();
-                    // const errorMessage = responseData.error?.message || "Failed to create a new Crop";
-                    // throw new Error(errorMessage);
+
+                    // throw new Error(responseData.error);
+
+                    if (responseData.error && responseData.message) {
+                        const errorMessage = responseData.message;
+                        console.log(errorMessage);
+
+                        setError(errorMessage);
+                    } else {
+                        console.error("Unexpected error structure in response:", responseData);
+                        setError("Failed to create a new Crop");
+                    }
                 }
             }
         } catch (error: any) {
-            console.error("Unexpected error:", error);
+            const errorMessage = error.message || "An unexpected error occurred.";
+            // setError(errorMessage);
+            // const errorMessage = error instanceof Error ? error.message : "non";
+
+            console.log("errorMessage", errorMessage);
+            setError(errorMessage);
         }
     };
-
-    console.log("fromerr", error);
 
     useEffect(() => {
         fetchCrops();

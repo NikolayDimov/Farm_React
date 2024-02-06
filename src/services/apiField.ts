@@ -22,6 +22,7 @@ export const apiField = {
                 throw new Error(`Failed to fetch fields. Status: ${response.status}`);
             }
             const fieldData = await response.json();
+            console.log("fieldData", fieldData);
             return fieldData;
         } catch (error) {
             console.error("Error in fetching fields", error);

@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { apiSoil } from "../../../services/apiSoil";
 import { Soil as SoilProp } from "./Soil.static";
+import { useFormError } from "../../common/validations/useFormError";
 
 const useSoil = () => {
     const [soils, setSoils] = useState<SoilProp[]>([]);
     const [soilName, setSoilName] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const { formErrors, validateName } = useFormError();
+
+    const handleSoilNameBlur = () => {
+        validateName(soilName);
+    };
 
     const fetchSoils = async () => {
         try {
@@ -23,21 +30,30 @@ const useSoil = () => {
         e.preventDefault();
 
         try {
-            if (!soilName) {
-                console.error("Soil name cannot be empty");
-                return;
-            }
+            const isCropValid = validateName(soilName);
 
-            const response = await apiSoil.createSoil(soilName);
-
-            if (response.ok) {
-                setSoilName("");
-                fetchSoils();
+            if (!isCropValid || !soilName) {
+                console.log(`crop: ${soilName}`);
             } else {
-                console.error("Failed to create a new Soil in the database");
+                // formErrors.name = "";
+
+                const response = await apiSoil.createSoil(soilName);
+
+                if (response.ok) {
+                    setSoilName("");
+                    fetchSoils();
+                } else {
+                    const responseData = await response.json();
+                    console.error(responseData);
+                }
             }
-        } catch (error) {
-            console.error("Error creating a new Soil:", error);
+        } catch (error: any) {
+            const errorMessage = error.message || "An unexpected error occurred.";
+            // setError(errorMessage);
+            // const errorMessage = error instanceof Error ? error.message : "non";
+
+            console.log("errorMessage", errorMessage);
+            setError(errorMessage);
         }
     };
 
@@ -45,7 +61,7 @@ const useSoil = () => {
         fetchSoils();
     }, []);
 
-    return { soils, createSoil, changeHandler, soilName, fetchSoils };
+    return { soils, createSoil, changeHandler, soilName, fetchSoils, error, formErrors, handleSoilNameBlur };
 };
 
 export default useSoil;

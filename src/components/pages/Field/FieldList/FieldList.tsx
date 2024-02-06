@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Field as FieldProp } from "../Field.static";
 import { Soil as SoilProp } from "../../Soil/Soil.static";
 import EditIcon from "../../../common/icons/EditIcon";
@@ -19,9 +19,10 @@ interface FieldListProps {
     fetchFields: () => Promise<void>;
     findFarmName: (farmId: string) => string;
     findSoilName: (soilId: string) => string;
+    displayFieldOnGoogleMap: (fieldBoundary: { type: string; coordinates: number[][][] }) => void;
 }
 
-const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName }) => {
+const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName, displayFieldOnGoogleMap }) => {
     const {
         onDeleteClick,
         onEditClick,
@@ -54,6 +55,15 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
                             <UserRoleHOC>
                                 <ButtonContainer>
+                                    <button
+                                        onClick={() => {
+                                            console.log(field.boundary);
+                                            displayFieldOnGoogleMap(field.boundary);
+                                        }}
+                                    >
+                                        Show Field Boundary on Map
+                                    </button>
+
                                     <DetailsIcon
                                         onClick={() => {
                                             onDetailsClick(field.id || "");

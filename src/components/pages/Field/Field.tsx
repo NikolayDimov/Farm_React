@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useField from "./Field.logic";
 import UserRoleHOC from "../UserRoleHOC";
 import MapContainer from "./MapContainer/MapContainer";
 import FieldList from "./FieldList/FieldList";
+import { apiField } from "../../../services/apiField";
 
 const Field: React.FC = () => {
     const { fields, farms, soils, fetchFields, changeHandler, createField, createdValues, errorMessage, findFarmName, findSoilName, loading, handleSelectLocation } = useField();
+
+    const [isMapVisible, setMapVisibility] = useState(false);
+    const [fieldMapCoordinates, setFieldMapCoordinates] = useState<number[][][]>([]);
+
+    const displayFieldOnGoogleMap = (fieldBoundary: { type: string; coordinates: number[][][] }) => {
+        console.log("Field Boundary:", fieldBoundary);
+        const coordinates = fieldBoundary.coordinates;
+        setFieldMapCoordinates(coordinates);
+        setMapVisibility(true);
+    };
 
     return (
         <>
@@ -40,10 +51,20 @@ const Field: React.FC = () => {
                     </form>
                 </UserRoleHOC>
 
-                <MapContainer onSelectLocation={handleSelectLocation} />
+                {/* <MapContainer onSelectLocation={handleSelectLocation} /> */}
+                {/* <MapContainer onSelectLocation={(coordinates) => console.log("Selected coordinates:", coordinates)} /> */}
+
+                <MapContainer onSelectLocation={handleSelectLocation} initialCoordinates={fieldMapCoordinates} isMapVisible={isMapVisible} />
             </div>
 
-            <FieldList fields={fields} soils={soils} findFarmName={findFarmName} findSoilName={findSoilName} fetchFields={fetchFields} />
+            <FieldList
+                fields={fields}
+                soils={soils}
+                findFarmName={findFarmName}
+                findSoilName={findSoilName}
+                fetchFields={fetchFields}
+                displayFieldOnGoogleMap={displayFieldOnGoogleMap}
+            />
         </>
     );
 };

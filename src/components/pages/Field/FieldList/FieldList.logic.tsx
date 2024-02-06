@@ -67,7 +67,7 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
 
             if (response.ok) {
                 const responseData = await response.json();
-                console.log(responseData);
+                // console.log(responseData);
                 setFieldDetails(responseData.data);
             } else {
                 const responseBody = await response.json();

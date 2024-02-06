@@ -1,18 +1,30 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import styled from "styled-components";
 
 interface MapContainerProps {
     onSelectLocation: (coordinates: number[][][]) => void;
-    // outlinedCoordinates: number[][][];
+    initialCoordinates?: number[][][];
+    isMapVisible: boolean;
 }
 
 const StyledMapContainer = styled.div`
-    height: 400px;
+    height: 500px;
     width: 100%;
 `;
 
-const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
+const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, initialCoordinates, isMapVisible }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
+    const [userDrawnCoordinates, setUserDrawnCoordinates] = useState<number[][][]>(initialCoordinates || []);
+    // const [userDrawnCoordinates, setUserDrawnCoordinates] = useState<number[][][]>([
+    //     [
+    //         [42.175, 24.655],
+    //         [42.179, 24.662],
+    //         [42.175, 24.67],
+    //         [42.174, 24.666],
+    //         [42.172, 24.663],
+    //         [42.173, 24.66],
+    //     ],
+    // ]);
 
     useEffect(() => {
         const loadGoogleMapsScript = () => {
@@ -20,6 +32,12 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
 
             if (!googleApiKey) {
                 console.error("Google Maps API key is not defined.");
+                return;
+            }
+
+            if (window.google && window.google.maps) {
+                console.log("Google Maps API already loaded.");
+                initializeMap();
                 return;
             }
 
@@ -69,19 +87,27 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation }) => {
 
             drawingManager.setMap(map);
 
+            setUserDrawnCoordinates(initialCoordinates || []);
+
             window.google.maps.event.addListener(drawingManager, "overlaycomplete", (event) => {
                 if (event.type === "polygon" && event.overlay.getPath) {
                     const coordinates: number[][][] = event.overlay
                         .getPath()
                         .getArray()
                         .map((latLng: google.maps.LatLng) => [latLng.lat(), latLng.lng()]);
+                    console.log("Drawing complete. Coordinates:", coordinates);
                     onSelectLocation(coordinates);
                 }
             });
         };
 
         loadGoogleMapsScript();
-    }, []);
+    }, [initialCoordinates]);
+
+    useEffect(() => {
+        console.log("MapContainer useEffect called");
+        console.log("Selected coordinates:", userDrawnCoordinates);
+    }, [userDrawnCoordinates]);
 
     return <StyledMapContainer ref={mapContainerRef} />;
 };

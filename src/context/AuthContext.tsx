@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const userData = await loginUser({ email, password });
             handleLogin(userData);
-            navigate("/profile");
+            navigate("/service");
         } catch (error) {
             console.error("Login error:", error);
             return Promise.reject(error);
@@ -44,7 +44,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const userData = await registerUser({ email, password });
             // login( email, password )
             handleLogin(userData);
-            navigate("/profile");
+            navigate("/service");
         } catch (error) {
             console.error("Registration error:", error);
         }
