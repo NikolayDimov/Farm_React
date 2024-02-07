@@ -3,7 +3,6 @@ import { Machine as MachineProp } from "./Machine.static";
 import { apiMachine } from "../../../services/apiMachine";
 import { apiFarm } from "../../../services/apiFarm";
 import { Farm } from "../Farm/Farm.static";
-import { useFormErrorMachineBrand, useFormErrorMachineModel, useFormErrorMachineRegNumber } from "../../common/validations/useFormErrorMachine";
 
 const useMachine = () => {
     const [machines, setMachines] = useState<MachineProp[]>([]);
@@ -18,23 +17,6 @@ const useMachine = () => {
         newMachineRegNumber: "",
         newMachineFarmId: "",
     });
-
-    const [error, setError] = useState<string | null>(null);
-    const { formErrors: formErrorsMachineBrand, validateMachineBrand } = useFormErrorMachineBrand();
-    const { formErrors: formErrorsMachineModel, validateMachineModel } = useFormErrorMachineModel();
-    const { formErrors: formErrorsMachineRegNumber, validateMachineRegNumber } = useFormErrorMachineRegNumber();
-
-    const handleMachineBrandBlur = () => {
-        validateMachineBrand(createdValues.newMachineBrand);
-    };
-
-    const handleMachineModelBlur = () => {
-        validateMachineModel(createdValues.newMachineModel);
-    };
-
-    const handleMachineRegNumberBlur = () => {
-        validateMachineRegNumber(createdValues.newMachineRegNumber);
-    };
 
     const findFarmName = (farmId: string): string => {
         const farm = farms.find((farm) => farm.id === farmId);
@@ -67,49 +49,38 @@ const useMachine = () => {
         e.preventDefault();
 
         try {
-            const isMachineBrandValid = validateMachineBrand(createdValues.newMachineBrand);
-            const isMachineModelValid = validateMachineModel(createdValues.newMachineModel);
-            const isMachineRegNumberValid = validateMachineRegNumber(createdValues.newMachineRegNumber);
-            if (!createdValues.newMachineFarmId || !isMachineBrandValid || !isMachineModelValid || !isMachineRegNumberValid) {
-                setErrorMessage("Machine is required.");
+            if (!createdValues.newMachineFarmId) {
+                setErrorMessage("Please fill all inputs fro machine");
                 return;
+            }
+
+            setLoading(true);
+
+            const newMachineData = {
+                brand: createdValues.newMachineBrand,
+                model: createdValues.newMachineModel,
+                registerNumber: createdValues.newMachineRegNumber,
+                farmId: createdValues.newMachineFarmId,
+            };
+
+            const response = await apiMachine.createMachine(newMachineData);
+
+            if (response.ok) {
+                setCreatedValues({
+                    newMachineBrand: "",
+                    newMachineModel: "",
+                    newMachineRegNumber: "",
+                    newMachineFarmId: "",
+                });
+                fetchMachines();
             } else {
-                setLoading(true);
-
-                const newMachineData = {
-                    brand: createdValues.newMachineBrand,
-                    model: createdValues.newMachineModel,
-                    registerNumber: createdValues.newMachineRegNumber,
-                    farmId: createdValues.newMachineFarmId,
-                };
-
-                const response = await apiMachine.createMachine(newMachineData);
-
-                if (response.ok) {
-                    setCreatedValues({
-                        newMachineBrand: "",
-                        newMachineModel: "",
-                        newMachineRegNumber: "",
-                        newMachineFarmId: "",
-                    });
-                    fetchMachines();
-                } else {
-                    const responseData = await response.json();
-                    if (responseData.error && responseData.message) {
-                        const errorMessage = responseData.message;
-                        console.log(errorMessage);
-
-                        setError(errorMessage);
-                    } else {
-                        console.error("Unexpected error structure in response:", responseData);
-                        setError("Failed to create a new Crop");
-                    }
-                }
+                const responseBody = await response.json();
+                console.error("Failed to create a new machine in the database:", responseBody);
+                setErrorMessage("Failed to create a new machine in the database");
             }
         } catch (error) {
             console.error("Failed to create a new machine in the database:", error);
             setErrorMessage("Failed to create a new machine in the database");
-            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -139,13 +110,6 @@ const useMachine = () => {
         setTransferMode,
         onTransferSuccess,
         transferMode,
-        error,
-        formErrorsMachineBrand,
-        formErrorsMachineModel,
-        formErrorsMachineRegNumber,
-        handleMachineBrandBlur,
-        handleMachineModelBlur,
-        handleMachineRegNumberBlur,
     };
 };
 

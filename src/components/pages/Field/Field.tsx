@@ -29,7 +29,7 @@ const Field: React.FC = () => {
             });
 
             const center = bounds.getCenter();
-            const zoom = 12;
+            const zoom = 14;
 
             setMapCenter({
                 lat: center.lat(),

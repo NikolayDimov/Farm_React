@@ -191,7 +191,7 @@ const useProcessing = () => {
 
         try {
             if (!createdValues.newProcessingDate || !createdValues.processingTypeId || !createdValues.fieldId || !createdValues.cropId || !createdValues.machineId) {
-                setErrorMessage("Fields are required.");
+                setErrorMessage("Please fill all inputs for the processing");
                 return;
             }
 

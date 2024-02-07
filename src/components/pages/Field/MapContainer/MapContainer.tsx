@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { GoogleMap, LoadScript, DrawingManager } from "@react-google-maps/api";
+import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from "../Field.static";
 
 interface MapContainerProps {

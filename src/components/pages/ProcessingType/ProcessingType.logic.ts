@@ -17,14 +17,14 @@ const useProcessingType = () => {
         try {
             const processingsTypeData = await apiProcessingType.fetchProcessingTypes();
             // new processingType to be last in the list
-            setProcessingTypes((prevProcessingTypes) => {
-                const newProcessingTypes = processingsTypeData.data.filter(
-                    (newProcessingType: ProcessingTypeProp) => !prevProcessingTypes.some((prevProcessingType: ProcessingTypeProp) => prevProcessingType.id === newProcessingType.id)
-                );
-                return [...prevProcessingTypes, ...newProcessingTypes];
-            });
+            // setProcessingTypes((prevProcessingTypes) => {
+            //     const newProcessingTypes = processingsTypeData.data.filter(
+            //         (newProcessingType: ProcessingTypeProp) => !prevProcessingTypes.some((prevProcessingType: ProcessingTypeProp) => prevProcessingType.id === newProcessingType.id)
+            //     );
+            //     return [...prevProcessingTypes, ...newProcessingTypes];
+            // });
 
-            // setProcessingTypes(processingsTypeData.data);
+            setProcessingTypes(processingsTypeData.data);
         } catch (error) {
             console.error("Error in fetching processingTypes", error);
         }

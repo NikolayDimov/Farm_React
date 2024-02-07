@@ -25,7 +25,7 @@ interface FieldListProps {
 
 interface FieldListProps {
     // ...
-    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void; // Correct type
+    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void;
 }
 
 const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName, displayFieldOnGoogleMap }) => {
@@ -95,10 +95,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                     <button
                                         onClick={() => {
                                             if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
-                                                // const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lng, lat]: number[]) => [lat, lng]));
-                                                // Convert the coordinates to the correct order [latitude, longitude]
                                                 const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
-
                                                 console.log("Field Coordinates:", field.boundary?.coordinates);
 
                                                 const convertedCoordinates: FieldCoordinates = {
@@ -106,7 +103,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                                 };
 
                                                 console.log(convertedCoordinates);
-                                                displayFieldOnGoogleMap(convertedCoordinates); // Adjust the argument type here
+                                                displayFieldOnGoogleMap(convertedCoordinates);
                                                 handleShowFieldOnMap(convertedCoordinates);
                                             } else {
                                                 console.warn("Field boundary coordinates not available or not in the expected format.");

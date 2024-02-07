@@ -15,8 +15,9 @@ const useSoil = () => {
 
     const fetchSoils = async () => {
         try {
-            const soilData = await apiSoil.fetchSoils();
-            setSoils(soilData.data);
+            const soilsData = await apiSoil.fetchSoils();
+            // setSoils(soilsData.data);
+            setSoils([...soilsData.data.reverse()]);
         } catch (error) {
             console.error("Error in fetching soils", error);
         }
