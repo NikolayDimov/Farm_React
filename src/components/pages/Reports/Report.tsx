@@ -1,108 +1,97 @@
-import React, { useEffect, useState } from "react";
-import { apiFarmWithMostMachines, apiFieldCountPerFarmAndCrop, apiMostCommonSoilPerFarm, apiProcessingReport } from "../../../services/apiReports";
-import { FarmsWithMostMachinesReportListProps, FieldCountPerFarmAndCropProps, MostCommonSoilPerFarmProps, ProcessingReportProps } from "./Report.static.ts";
+import React, { useState, useEffect } from "react";
 import Layout from "../../common/Layout.tsx";
-import { ButtonContainer, GenerateTableButton } from "./Report.styled.ts";
-import TableModal from "./TableModal.tsx";
+import Modal, { BottomBar, GenerateTableButton, MinimizedTableButton } from "./ReportModal.tsx";
+import { FarmsWithMostMachinesReportListProps, FieldCountPerFarmAndCropProps, MostCommonSoilPerFarmProps, ProcessingReportProps } from "./Report.static.ts";
+import { apiFarmWithMostMachines, apiFieldCountPerFarmAndCrop, apiMostCommonSoilPerFarm, apiProcessingReport } from "../../../services/apiReports";
+import FarmsWithMostMachinesReport from "./AllReports/FarmsWithMostMachines.tsx";
+import FieldCountPerFarmAndCrop from "./AllReports/FieldCountPerFarmAndCrop.tsx";
+import MostCommonSoilPerFarm from "./AllReports/MostCommonSoilPerfarm.tsx";
+import ProcessingReport from "./AllReports/ProcessingReport.tsx";
+import { ButtonContainer } from "../../common/icons/ButtonContainer.tsx";
 
 const ReportPage: React.FC = () => {
-    const [isFarmsTableOpen, setFarmsTableOpen] = useState(false);
-    const [isFieldCountTableOpen, setFieldCountTableOpen] = useState(false);
-    const [isSoilTableOpen, setSoilTableOpen] = useState(false);
-    const [isProcessingReportTableOpen, setProcessingReportTableOpen] = useState(false);
+    const [openWindows, setOpenWindows] = useState<string[]>([]);
+    const [minimizedWindows, setMinimizedWindows] = useState<string[]>([]);
 
-    // State for table data
     const [farmsWithMostMachines, setFarmsWithMostMachines] = useState<FarmsWithMostMachinesReportListProps[]>([]);
     const [fieldCountPerFarmAndCrop, setFieldCountPerFarmAndCrop] = useState<FieldCountPerFarmAndCropProps[]>([]);
     const [mostCommonSoilPerFarm, setMostCommonSoilPerFarm] = useState<MostCommonSoilPerFarmProps[]>([]);
     const [processingReport, setProcessingReport] = useState<ProcessingReportProps[]>([]);
 
     useEffect(() => {
-        const fetchFarmsWithMostMachines = async () => {
+        const fetchData = async () => {
             try {
-                const data = await apiFarmWithMostMachines.fetchFarmWithMostMachinesReport();
-                setFarmsWithMostMachines(data);
+                const farmsData = await apiFarmWithMostMachines.fetchFarmWithMostMachinesReport();
+                const fieldCountData = await apiFieldCountPerFarmAndCrop.fetchFieldCountPerFarmAndCropReport();
+                const soilData = await apiMostCommonSoilPerFarm.fetchMostCommonSoilPerFarmReport();
+                const processingData = await apiProcessingReport.fetchProcessingReport();
+
+                setFarmsWithMostMachines(farmsData);
+                setFieldCountPerFarmAndCrop(fieldCountData);
+                setMostCommonSoilPerFarm(soilData);
+                setProcessingReport(processingData);
             } catch (error) {
-                console.error("Error fetching farms with most machines report:", error);
+                console.error("Error fetching reports:", error);
             }
         };
 
-        fetchFarmsWithMostMachines();
+        fetchData();
     }, []);
 
-    useEffect(() => {
-        const fetchFieldCountPerFarmAndCropReport = async () => {
-            try {
-                const data = await apiFieldCountPerFarmAndCrop.fetchFieldCountPerFarmAndCropReport();
-                setFieldCountPerFarmAndCrop(data);
-            } catch (error) {
-                console.error("Error fetching farms with most machines report:", error);
+    const openModal = (modalName: string) => {
+        if (!openWindows.includes(modalName)) {
+            if (minimizedWindows.includes(modalName)) {
+                maximizeModal(modalName);
+            } else {
+                setOpenWindows((prevWindows) => [...prevWindows, modalName]);
             }
-        };
+        }
+    };
 
-        fetchFieldCountPerFarmAndCropReport();
-    }, []);
+    const minimizeModal = (modalName: string) => {
+        if (!minimizedWindows.includes(modalName)) {
+            setOpenWindows((prevWindows) => prevWindows.filter((window) => window !== modalName));
+            setMinimizedWindows((prevMinimized) => [...prevMinimized, modalName]);
+        }
+    };
 
-    useEffect(() => {
-        const fetchMostCommonSoilPerFarmReport = async () => {
-            try {
-                const data = await apiMostCommonSoilPerFarm.fetchMostCommonSoilPerFarmReport();
-                setMostCommonSoilPerFarm(data);
-            } catch (error) {
-                console.error("Error fetching farms with most machines report:", error);
-            }
-        };
+    const maximizeModal = (modalName: string) => {
+        setMinimizedWindows((prevMinimized) => prevMinimized.filter((window) => window !== modalName));
+        setOpenWindows((prevWindows) => [...prevWindows, modalName]);
+    };
 
-        fetchMostCommonSoilPerFarmReport();
-    }, []);
+    const closeModal = (modalName: string) => {
+        setOpenWindows((prevWindows) => prevWindows.filter((window) => window !== modalName));
+        setMinimizedWindows((prevMinimized) => prevMinimized.filter((window) => window !== modalName));
+    };
 
-    useEffect(() => {
-        const fetchProcessingReport = async () => {
-            try {
-                const data = await apiProcessingReport.fetchProcessingReport();
-                setProcessingReport(data);
-            } catch (error) {
-                console.error("Error fetching farms with most machines report:", error);
-            }
-        };
-
-        fetchProcessingReport();
-    }, []);
-
-    // Functions to open/close tables
-    const openFarmsTable = () => setFarmsTableOpen(true);
-    const closeFarmsTable = () => setFarmsTableOpen(false);
-
-    const openFieldCountTable = () => setFieldCountTableOpen(true);
-    const closeFieldCountTable = () => setFieldCountTableOpen(false);
-
-    const openSoilTable = () => setSoilTableOpen(true);
-    const closeSoilTable = () => setSoilTableOpen(false);
-
-    const openProcessingReportTable = () => setProcessingReportTableOpen(true);
-    const closeProcessingReportTable = () => setProcessingReportTableOpen(false);
-
-    // Render buttons and tables
     return (
         <Layout>
             <ButtonContainer>
-                <GenerateTableButton onClick={openFarmsTable}>Generate Farms Table</GenerateTableButton>
-                <GenerateTableButton onClick={openFieldCountTable}>Generate Field Count Table</GenerateTableButton>
-                <GenerateTableButton onClick={openSoilTable}>Generate Soil Table</GenerateTableButton>
-                <GenerateTableButton onClick={openProcessingReportTable}>Generate Processing Report Table</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Most Machine")}>Most Machine</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Field Count Table Per Crop")}>Field Count Table Per Crop</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Soil Table")}>Generate Soil Table</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Processing Report Table")}>Generate Processing Report Table</GenerateTableButton>
             </ButtonContainer>
 
-            {/* Render Farm table modal */}
-            <TableModal isOpen={isFarmsTableOpen} onRequestClose={closeFarmsTable} data={farmsWithMostMachines} title="Farms Table" />
+            {openWindows.map((modalName, index) => (
+                <div key={`${modalName}-${index}`}>
+                    <Modal modalName={modalName} onClose={() => closeModal(modalName)} onMinimize={() => minimizeModal(modalName)}>
+                        {modalName === "Most Machine" && <FarmsWithMostMachinesReport farmsWithMostMachines={farmsWithMostMachines} />}
+                        {modalName === "Field Count Table Per Crop" && <FieldCountPerFarmAndCrop fieldCountPerFarmAndCrop={fieldCountPerFarmAndCrop} />}
+                        {modalName === "Soil Table" && <MostCommonSoilPerFarm mostCommonSoilPerFarm={mostCommonSoilPerFarm} />}
+                        {modalName === "Processing Report Table" && <ProcessingReport processingReport={processingReport} />}
+                    </Modal>
+                </div>
+            ))}
 
-            {/* Render Field Count table modal */}
-            <TableModal isOpen={isFieldCountTableOpen} onRequestClose={closeFieldCountTable} data={fieldCountPerFarmAndCrop} title="Field Count Table" />
-
-            {/* Render Soil table modal */}
-            <TableModal isOpen={isSoilTableOpen} onRequestClose={closeSoilTable} data={mostCommonSoilPerFarm} title="Soil Table" />
-
-            {/* Render Processing Report table modal */}
-            <TableModal isOpen={isProcessingReportTableOpen} onRequestClose={closeProcessingReportTable} data={processingReport} title="Processing Report Table" />
+            <BottomBar>
+                {minimizedWindows.map((modalName, index) => (
+                    <MinimizedTableButton key={`minimized-${modalName}-${index}`} onClick={() => openModal(modalName)}>
+                        {modalName}
+                    </MinimizedTableButton>
+                ))}
+            </BottomBar>
         </Layout>
     );
 };
