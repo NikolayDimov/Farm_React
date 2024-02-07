@@ -47,7 +47,7 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
     return (
         <ListContainer>
             <ListHeader>Machine List</ListHeader>
-            <SearchBar placeholder="Search by machine brand, model and reister number" onSearch={setSearchQuery} />
+            <SearchBar placeholder="Search by machine brand, model and register number" onSearch={setSearchQuery} />
             <List>
                 {Array.isArray(filteredItems) ? (
                     filteredItems.map((machine) => (

@@ -65,7 +65,7 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
     return (
         <ListContainer>
             <ListHeader>Processing List</ListHeader>
-            <SearchBar placeholder="Search by crop name" onSearch={setSearchQuery} />
+            <SearchBar placeholder="Search by processing" onSearch={setSearchQuery} />
             <List>
                 {Array.isArray(filteredItems) ? (
                     filteredItems.map((processing) => (

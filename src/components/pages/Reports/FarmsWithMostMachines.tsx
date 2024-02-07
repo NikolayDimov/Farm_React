@@ -1,40 +1,35 @@
-import React from 'react';
-import {FarmsWithMostMachinesReportListProps} from './Report.static.ts'
-
+import React from "react";
+import { FarmsWithMostMachinesReportListProps } from "./Report.static.ts";
+import { TableContainer, TableContent, TableHeader, TableHeaderCell, TableRow, TableCell } from "./Report.styled.ts";
 
 const FarmsWithMostMachinesReport: React.FC<{ farmsWithMostMachines: FarmsWithMostMachinesReportListProps[] }> = ({ farmsWithMostMachines }) => {
-
-    if (!Array.isArray(farmsWithMostMachines)) {
+    if (!Array.isArray(farmsWithMostMachines) || farmsWithMostMachines.length === 0) {
         return <div>No data available</div>;
-      }
-  
-  return (
-    <div>
-      <h2>Farms with Most Machines Report</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Farm ID</th>
-            <th>Farm Name</th>
-            <th>Machine Count</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {farmsWithMostMachines.map((farm, index) => (
-            <tr key={index}>
-              <td>{farm.farmId}</td>
-              <td>{farm.farmname}</td>
-              <td>{farm.machinecount}</td>
-              <td>
-                
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+    }
+
+    return (
+        <TableContainer>
+            <h2>Farms with Most Machines Report</h2>
+            <TableContent>
+                <table>
+                    <TableHeader>
+                        <tr>
+                            <TableHeaderCell>Farm Name</TableHeaderCell>
+                            <TableHeaderCell>Machine Count</TableHeaderCell>
+                        </tr>
+                    </TableHeader>
+                    <tbody>
+                        {farmsWithMostMachines.map((farm, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{farm.farmname}</TableCell>
+                                <TableCell>{farm.machinecount}</TableCell>
+                            </TableRow>
+                        ))}
+                    </tbody>
+                </table>
+            </TableContent>
+        </TableContainer>
+    );
 };
 
 export default FarmsWithMostMachinesReport;

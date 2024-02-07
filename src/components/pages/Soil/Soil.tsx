@@ -13,7 +13,7 @@ const Soil: React.FC = () => {
                 <h3>Add a New Soil</h3>
                 <form onSubmit={createSoil}>
                     <InputField
-                        label="Crop Name"
+                        label="Soil Name"
                         type="text"
                         id="cropName"
                         name="cropName"

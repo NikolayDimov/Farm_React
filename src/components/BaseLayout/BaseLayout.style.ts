@@ -6,7 +6,7 @@ export const Container = styled.div`
     max-width: 1400px;
     margin: 20px auto;
     background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 `;
@@ -34,7 +34,6 @@ export const BackgroundImage = styled.div`
 
 const PageContainer = styled.div`
     display: flex;
-    height: 100vh;
     overflow: hidden;
 `;
 
@@ -43,6 +42,7 @@ const Sidebar = styled.div`
     padding: 20px;
     background-color: #f0f0f0;
     z-index: 2;
+    height: 100vh;
 `;
 
 const SidebarButton = styled.button`

@@ -9,7 +9,7 @@ const user = getUser();
 export const apiFarm = {
     fetchFarms: async () => {
         try {
-            if (!user || !user.access_token) {
+            if (!user && !user.access_token) {
                 throw new Error("User not authenticated");
             }
             const response = await fetch(`${BASE_URL}/${farm}`, {

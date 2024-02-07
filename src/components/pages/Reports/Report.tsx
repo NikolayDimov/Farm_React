@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
 import { apiFarmWithMostMachines, apiFieldCountPerFarmAndCrop, apiMostCommonSoilPerFarm, apiProcessingReport } from "../../../services/apiReports";
 import FarmsWithMostMachinesReport from "./FarmsWithMostMachines";
 import { FarmsWithMostMachinesReportListProps, FieldCountPerFarmAndCropProps, MostCommonSoilPerFarmProps, ProcessingReportProps } from "./Report.static.ts";
@@ -7,17 +6,6 @@ import Layout from "../../common/Layout.tsx";
 import FieldCountPerFarmAndCrop from "./FieldCountPerFarmAndCrop";
 import MostCommonSoilPerFarm from "./MostCommonSoilPerfarm";
 import ProcessingReport from "./ProcessingReport.tsx";
-import { BackgroundImage } from "../../BaseLayout/BaseLayout.style.ts";
-
-const Container = styled.div`
-    width: 90%;
-    max-width: 1200px;
-    margin: 20px auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-`;
 
 const ReportPage: React.FC = () => {
     const [farmsWithMostMachines, setFarmsWithMostMachines] = useState<FarmsWithMostMachinesReportListProps[]>([]);
@@ -79,13 +67,10 @@ const ReportPage: React.FC = () => {
 
     return (
         <Layout>
-            <BackgroundImage />
-            <Container>
-                <FarmsWithMostMachinesReport farmsWithMostMachines={farmsWithMostMachines} />
-                <FieldCountPerFarmAndCrop fieldCountPerFarmAndCrop={fieldCountPerFarmAndCrop} />
-                <MostCommonSoilPerFarm mostCommonSoilPerFarm={mostCommonSoilPerFarm} />
-                <ProcessingReport processingReport={processingReport} />
-            </Container>
+            <FarmsWithMostMachinesReport farmsWithMostMachines={farmsWithMostMachines} />
+            <FieldCountPerFarmAndCrop fieldCountPerFarmAndCrop={fieldCountPerFarmAndCrop} />
+            <MostCommonSoilPerFarm mostCommonSoilPerFarm={mostCommonSoilPerFarm} />
+            <ProcessingReport processingReport={processingReport} />
         </Layout>
     );
 };

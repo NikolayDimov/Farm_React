@@ -42,3 +42,9 @@ export const ErrorStyles = styled.p`
     font-size: 12px;
     margin-left: 15px;
 `;
+
+export const ErrorStylesMachine = styled.p`
+    color: red;
+    font-size: 12px;
+    margin-left: 15px;
+`;

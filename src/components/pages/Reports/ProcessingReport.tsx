@@ -1,5 +1,6 @@
 import React from "react";
 import { ProcessingReportProps } from "./Report.static.ts";
+import { TableContainer, TableContent, TableHeader, TableHeaderCell, TableRow, TableCell } from "./Report.styled.ts";
 
 const ProcessingReport: React.FC<{ processingReport: ProcessingReportProps[] }> = ({ processingReport }) => {
     if (!Array.isArray(processingReport)) {
@@ -7,40 +8,41 @@ const ProcessingReport: React.FC<{ processingReport: ProcessingReportProps[] }> 
     }
 
     return (
-        <div>
+        <TableContainer>
             <h2>Processing Report</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Processing Date</th>
-                        <th>Processing Type</th>
-                        <th>Field Name</th>
-                        <th>Machine Brand</th>
-                        <th>Machine Model</th>
-                        <th>Machine Register Number</th>
-                        <th>Crop Name</th>
-                        <th>Soil Name</th>
-                        <th>Farm Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {processingReport.map((processing, index) => (
-                        <tr key={index}>
-                            <td>{new Date(processing.processingdate).toLocaleDateString("en-GB")}</td>
-                            <td>{processing.processingtypename}</td>
-                            <td>{processing.fieldname}</td>
-                            <td>{processing.machinebrand}</td>
-                            <td>{processing.machinemodel}</td>
-                            <td>{processing.machineregisternumber}</td>
-                            <td>{processing.cropname}</td>
-                            <td>{processing.soilname}</td>
-                            <td>{processing.farmname}</td>
-                            <td></td>
+            <TableContent>
+                <table>
+                    <TableHeader>
+                        <tr>
+                            <TableHeaderCell>Processing Date</TableHeaderCell>
+                            <TableHeaderCell>Processing Type</TableHeaderCell>
+                            <TableHeaderCell>Field Name</TableHeaderCell>
+                            <TableHeaderCell>Machine Brand</TableHeaderCell>
+                            <TableHeaderCell>Machine Model</TableHeaderCell>
+                            <TableHeaderCell>Machine Register Number</TableHeaderCell>
+                            <TableHeaderCell>Crop Name</TableHeaderCell>
+                            <TableHeaderCell>Soil Name</TableHeaderCell>
+                            <TableHeaderCell>Farm Name</TableHeaderCell>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+                    </TableHeader>
+                    <tbody>
+                        {processingReport.map((processing, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{new Date(processing.processingdate).toLocaleDateString("en-GB")}</TableCell>
+                                <TableCell>{processing.processingtypename}</TableCell>
+                                <TableCell>{processing.fieldname}</TableCell>
+                                <TableCell>{processing.machinebrand}</TableCell>
+                                <TableCell>{processing.machinemodel}</TableCell>
+                                <TableCell>{processing.machineregisternumber}</TableCell>
+                                <TableCell>{processing.cropname}</TableCell>
+                                <TableCell>{processing.soilname}</TableCell>
+                                <TableCell>{processing.farmname}</TableCell>
+                            </TableRow>
+                        ))}
+                    </tbody>
+                </table>
+            </TableContent>
+        </TableContainer>
     );
 };
 
