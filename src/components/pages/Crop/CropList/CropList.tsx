@@ -18,13 +18,34 @@ interface CropListProps {
 }
 
 const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
-    const { onDeleteClick, onEditClick, onDetailsClick, currentCropName, setCurrentCropName, originalCropName, onDeleteConfirm, onEditConfirm, cropDetails } = useCropList({
+    const {
+        onDeleteClick,
+        onEditClick,
+        onDetailsClick,
+        currentCropName,
+        setCurrentCropName,
+        originalCropName,
+        onDeleteConfirm,
+        onEditConfirm,
+        cropDetails,
+        selectedCropIdForEdit,
+    } = useCropList({
         fetchCrops,
     });
 
     const { filteredItems, setSearchQuery } = useFilter<CropProp>({ items: crops });
     const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
-    const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
+    const {
+        isVisible: isEditModalVisible,
+        showModal: showEditModal,
+        hideModal: hideEditModal,
+        navigate,
+    } = useModal({
+        onModalOpen: () => {
+            // Use navigate to update the URL when the edit modal is opened
+            navigate(`/service/crop/${selectedCropIdForEdit}`);
+        },
+    });
     const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
     return (

@@ -89,11 +89,11 @@ const PhoneNumber = styled.p`
 `;
 
 const GoogleMap = styled.iframe`
-    width: 100%;
+    width: 700px;
     height: 500px;
     border: none;
     border-radius: 5px;
-    margin: 20px auto;
+    margin: auto;
 `;
 
 const Contact = () => {
@@ -123,7 +123,7 @@ const Contact = () => {
                         <Email>info@example.com</Email>
                         <PhoneNumber>+1 (123) 456-7890</PhoneNumber>
                         <GoogleMap
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12345.678901234567!2d-73.98765432109876!3d40.741112233445566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x87654321fedcba98!2sYour%20Business%20Name!5e0!3m2!1sen!2sus!4v1624989898765!5m2!1sen!2sus"
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d38005.71174407845!2d27.918253009488133!3d43.21863228930401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbg!4v1707318749225!5m2!1sen!2sbg"
                             title="Google Map"
                             loading="lazy"
                         ></GoogleMap>

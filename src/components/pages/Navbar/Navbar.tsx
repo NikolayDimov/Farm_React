@@ -1,7 +1,9 @@
 import { useAuth } from "../../../context/AuthContext";
-import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, NavbarButton } from "./Navbar.static";
+
+import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, NavbarButton, UserRoleText, WelcomeTitle } from "./Navbar.styles";
 
 const Navbar = () => {
+    const { user } = useAuth();
     const { isLoggedIn, logout } = useAuth();
 
     const handleLogout = async () => {
@@ -17,10 +19,10 @@ const Navbar = () => {
                         <></>
                     ) : (
                         <>
-                            <NavbarButton to="/home">Home</NavbarButton>
+                            <WelcomeTitle>Welcome, {user?.email}</WelcomeTitle>
+                            <UserRoleText>User role: {user?.role}</UserRoleText>
+                            <NavbarButton to="/home">Contacts</NavbarButton>
                             <NavbarButton to="/service">Service</NavbarButton>
-                            <NavbarButton to="/report">Report</NavbarButton>
-                            <NavbarButton to="/profile">Farms</NavbarButton>
                             <NavbarButton to="/" onClick={handleLogout}>
                                 Logout
                             </NavbarButton>

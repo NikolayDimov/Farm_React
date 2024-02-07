@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { apiCrop } from "../../../../services/apiCrop";
 import { Crop as CropProp } from "../Crop.static";
+import { useNavigate } from "react-router-dom";
 
 interface UseCropListProps {
     fetchCrops: () => Promise<void>;
@@ -13,6 +14,7 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
     const [originalCropName, setOriginalCropName] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [cropDetails, setCropDetails] = useState<CropProp>();
+    const navigate = useNavigate();
 
     const onDeleteCrop = async (cropId: string) => {
         try {
@@ -42,6 +44,7 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
             const response = await apiCrop.editCrop(cropId, newCropName);
 
             if (response.ok) {
+                navigate(`/service/crop/${cropId}`);
                 fetchCrops();
             } else {
                 const responseBody = await response.json();
@@ -81,6 +84,7 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
         setSelectedCropIdForEdit(cropId);
         setCurrentCropName(cropName);
         setOriginalCropName(cropName);
+        navigate(`/service/crop/${cropId}`);
     };
 
     const onDetailsClick = (cropId: string) => {
@@ -118,6 +122,7 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
         onDeleteConfirm,
         onEditConfirm,
         cropDetails,
+        selectedCropIdForEdit,
     };
 };
 
