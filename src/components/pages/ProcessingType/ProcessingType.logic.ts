@@ -16,7 +16,7 @@ const useProcessingType = () => {
     const fetchProcessingTypes = async () => {
         try {
             const processingsTypeData = await apiProcessingType.fetchProcessingTypes();
-            // new field to be last in the list
+            // new processingType to be last in the list
             setProcessingTypes((prevProcessingTypes) => {
                 const newProcessingTypes = processingsTypeData.data.filter(
                     (newProcessingType: ProcessingTypeProp) => !prevProcessingTypes.some((prevProcessingType: ProcessingTypeProp) => prevProcessingType.id === newProcessingType.id)
@@ -40,9 +40,7 @@ const useProcessingType = () => {
         try {
             const isCropValid = validateName(processingTypeName);
 
-            if (!isCropValid || !processingTypeName) {
-                console.log(`crop: ${processingTypeName}`);
-            } else {
+            if (isCropValid || processingTypeName) {
                 const response = await apiProcessingType.createProcessingType(processingTypeName);
 
                 if (response.ok) {
@@ -50,16 +48,12 @@ const useProcessingType = () => {
                     fetchProcessingTypes();
                 } else {
                     const responseData = await response.json();
-                    const errorMessage = responseData.message;
-                    console.log(errorMessage);
-                    setError(errorMessage);
-                    throw new Error(responseData.error.message);
+                    const errorMsg = responseData.error.message;
+                    setError(errorMsg);
                 }
             }
         } catch (error: any) {
-            const errorMessage = error.message || "An unexpected error occurred.";
-            console.log("errorMessage", errorMessage);
-            setError(errorMessage);
+            console.log("errorMessage", error);
         }
     };
 

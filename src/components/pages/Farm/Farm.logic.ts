@@ -6,7 +6,6 @@ import { useFormError } from "../../common/validations/useFormError";
 const useFarm = () => {
     const [farms, setFarms] = useState<FarmProp[]>([]);
     const [farmName, setFarmName] = useState("");
-    const [loading, setLoading] = useState<boolean>();
     const [error, setError] = useState<string | null>(null);
     const { formErrors, validateName } = useFormError();
 
@@ -39,19 +38,7 @@ const useFarm = () => {
         try {
             const isFarmValid = validateName(farmName);
 
-            if (!isFarmValid || !farmName) {
-                console.log(`crop: ${farmName}`);
-            } else {
-                setLoading(true);
-                // Assuming you have a function to get the coordinates, replace this with your logic
-                // const newFarmCoordinates = [42.6977, 23.3219];
-                // if (newFarmCoordinates.length === 0) {
-                //     console.error("Coordinates not selected.");
-                //     return;
-                // }
-                // console.log("ADDFARM:", newFarmCoordinates);
-                // const farmCoordinates = newFarmCoordinates.length > 0 ? newFarmCoordinates : [0, 0];
-
+            if (isFarmValid || farmName) {
                 const newFarm: FarmProp = {
                     name: farmName,
                     location: {
@@ -64,31 +51,15 @@ const useFarm = () => {
 
                 if (response.ok) {
                     setFarmName("");
-                    // setNewFarmCoordinates([]);
-                    //memoizedSetNewFarmCoordinates([]);
                     fetchFarms();
                 } else {
                     const responseData = await response.json();
-                    if (responseData.error && responseData.message) {
-                        const errorMessage = responseData.message;
-                        console.log(errorMessage);
-
-                        setError(errorMessage);
-                    } else {
-                        console.error("Unexpected error structure in response:", responseData);
-                        setError("Failed to create a new Farm");
-                    }
+                    const errorMsg = responseData.error.message;
+                    setError(errorMsg);
                 }
             }
         } catch (error: any) {
-            const errorMessage = error.message || "An unexpected error occurred.";
-            // setError(errorMessage);
-            // const errorMessage = error instanceof Error ? error.message : "non";
-
-            console.log("errorMessage", errorMessage);
-            setError(errorMessage);
-        } finally {
-            setLoading(false);
+            console.log("errorMessage", error);
         }
     }
 
@@ -96,7 +67,7 @@ const useFarm = () => {
         fetchFarms();
     }, []);
 
-    return { farms, createFarm, changeHandler, farmName, fetchFarms, loading, coordinates: selectedFarmCoordinates, setNewFarmCoordinates, error, formErrors, handleFarmNameBlur };
+    return { farms, createFarm, changeHandler, farmName, fetchFarms, coordinates: selectedFarmCoordinates, setNewFarmCoordinates, error, formErrors, handleFarmNameBlur };
 };
 
 export default useFarm;

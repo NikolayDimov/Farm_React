@@ -8,116 +8,68 @@ const user = getUser();
 
 export const apiProcessing = {
     fetchProcessings: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/${processing}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+        const response = await fetch(`${BASE_URL}/${processing}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                console.error(`Failed to fetch processing. Status: ${response.status}`);
-                throw new Error(`Failed to fetch processing. Status: ${response.status}`);
-            }
-            const processingData = await response.json();
-            return processingData;
-        } catch (error) {
-            console.error("Error in fetching fields", error);
-            throw error;
-        }
+        const processingData = await response.json();
+        return processingData;
     },
 
     getProcessingDetails: async (processingId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+        const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                throw new Error(`Failed to fetch processing details for ID: ${processingId}`);
-            }
-
-            return response;
-        } catch (error) {
-            console.error(`Error in fetching processing details for ID: ${processingId}`, error);
-            throw error;
-        }
+        return response;
     },
 
     createProcessing: async (newProcessing: Processing) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${processing}`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(newProcessing),
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to create Processing: ${response.statusText}`);
-            }
+        const response = await fetch(`${BASE_URL}/${processing}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(newProcessing),
+        });
 
-            // console.log("Processing Creation Response:", response);
-            return response;
-        } catch (error) {
-            console.error("Error creating a new processing:", error);
-            throw error;
-        }
+        return response;
     },
 
     editProcessing: async (processingId: string, newProcessingDate: Date, newProcessingTypeId: string, newMachineId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ id: processingId, date: newProcessingDate, processingTypeId: newProcessingTypeId, machineId: newMachineId }),
-            });
+        const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ id: processingId, date: newProcessingDate, processingTypeId: newProcessingTypeId, machineId: newMachineId }),
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to edit processing with ID: ${processingId}`, errorResponse);
-                throw new Error("Failed to edit processing");
-            }
-
-            return response;
-        } catch (error) {
-            console.error("Error editing processing:", error);
-            throw error;
-        }
+        return response;
     },
 
     deleteProcessing: async (processingId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
+        const response = await fetch(`${BASE_URL}/${processing}/${processingId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to delete processing with ID: ${processingId}`, errorResponse);
-                throw new Error("Failed to delete processing");
-            }
-            return response;
-        } catch (error) {
-            console.error("Error deleting processing:", error);
-            throw new Error("Failed to delete processing");
-        }
+        return response;
     },
 };

@@ -8,45 +8,30 @@ const user = getUser();
 
 export const apiGrowingCropPeriod = {
     fetchGCP: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/${gcp}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch GCP");
-            }
-            const growingCropPeriodData = await response.json();
-            return growingCropPeriodData;
-        } catch (error) {
-            console.error("Error in fetching growingCropPeriod", error);
-            throw error;
-        }
+        const response = await fetch(`${BASE_URL}/${gcp}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const growingCropPeriodData = await response.json();
+        return growingCropPeriodData;
     },
 
     createGrowingCropPeriod: async (newGrowingCropPeriodData: GrowingCropPeriod) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${gcp}`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(newGrowingCropPeriodData),
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch GCP");
-            }
+        const response = await fetch(`${BASE_URL}/${gcp}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(newGrowingCropPeriodData),
+        });
 
-            return response;
-        } catch (error) {
-            console.error("Error creating a new growingCropPeriod:", error);
-            throw error;
-        }
+        return response;
     },
 };
 

@@ -7,7 +7,7 @@ import { showFarmLocationOnMap } from "../../../utils/farmLocation";
 import InputField from "../../common/InputFiled/InputField";
 
 const Farm: React.FC = () => {
-    const { farms, createFarm, changeHandler, farmName, coordinates, setNewFarmCoordinates, fetchFarms, loading, error, formErrors, handleFarmNameBlur } = useFarm();
+    const { farms, createFarm, changeHandler, farmName, setNewFarmCoordinates, fetchFarms, error, formErrors, handleFarmNameBlur } = useFarm();
 
     return (
         <Layout>

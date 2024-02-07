@@ -8,116 +8,71 @@ const user = getUser();
 
 export const apiFarm = {
     fetchFarms: async () => {
-        try {
-            if (!user && !user.access_token) {
-                throw new Error("User not authenticated");
-            }
-            const response = await fetch(`${BASE_URL}/${farm}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch farms");
-            }
-            const farmData = await response.json();
-            return farmData;
-        } catch (error) {
-            console.error("Error in fetching farms", error);
-            throw error;
+        if (!user && !user.access_token) {
+            throw new Error("User not authenticated");
         }
+        const response = await fetch(`${BASE_URL}/${farm}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const farmData = await response.json();
+        return farmData;
     },
 
     getFarmDetails: async (farmId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+        const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                throw new Error(`Failed to fetch farm details for ID: ${farmId}`);
-            }
-
-            return response;
-        } catch (error) {
-            console.error(`Error in fetching farm details for ID: ${farmId}`, error);
-            throw error;
-        }
+        return response;
     },
 
     createFarm: async (newFarm: Farm) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${farm}`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(newFarm),
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to create Soil: ${response.statusText}`);
-            }
+        const response = await fetch(`${BASE_URL}/${farm}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(newFarm),
+        });
 
-            return response;
-        } catch (error) {
-            console.error("Error creating a new farm:", error);
-            throw error;
-        }
+        return response;
     },
 
     editFarm: async (farmId: string, newFarmName: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ name: newFarmName }),
-            });
+        const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ name: newFarmName }),
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to edit farm with ID: ${farmId}`, errorResponse);
-                throw new Error("Failed to edit farm");
-            }
-
-            return response;
-        } catch (error) {
-            console.error("Error editing farm:", error);
-            throw error;
-        }
+        return response;
     },
 
     deleteFarm: async (farmId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
+        const response = await fetch(`${BASE_URL}/${farm}/${farmId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to delete farm with ID: ${farmId}`, errorResponse);
-                throw new Error("Failed to delete farm");
-            }
-            return response;
-        } catch (error) {
-            console.error("Error deleting farm:", error);
-            throw new Error("Failed to delete farm");
-        }
+        return response;
     },
 };

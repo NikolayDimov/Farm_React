@@ -32,11 +32,7 @@ const useCrop = () => {
         try {
             const isCropValid = validateName(cropName);
 
-            if (!isCropValid || !cropName) {
-                console.log(`crop: ${cropName}`);
-            } else {
-                // formErrors.name = "";
-
+            if (isCropValid || cropName) {
                 const response = await apiCrop.createCrop(cropName);
 
                 if (response.ok) {
@@ -44,27 +40,12 @@ const useCrop = () => {
                     fetchCrops();
                 } else {
                     const responseData = await response.json();
-
-                    // throw new Error(responseData.error);
-
-                    if (responseData.error && responseData.message) {
-                        const errorMessage = responseData.message;
-                        console.log(errorMessage);
-
-                        setError(errorMessage);
-                    } else {
-                        console.error("Unexpected error structure in response:", responseData);
-                        setError("Failed to create a new Crop");
-                    }
+                    const errorMsg = responseData.error.message;
+                    setError(errorMsg);
                 }
             }
-        } catch (error: any) {
-            const errorMessage = error.message || "An unexpected error occurred.";
-            // setError(errorMessage);
-            // const errorMessage = error instanceof Error ? error.message : "non";
-
-            console.log("errorMessage", errorMessage);
-            setError(errorMessage);
+        } catch (error) {
+            console.log("errorMessage", error);
         }
     };
 

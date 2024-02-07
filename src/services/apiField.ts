@@ -8,116 +8,71 @@ const user = getUser();
 
 export const apiField = {
     fetchFields: async () => {
-        try {
-            if (!user && !user.access_token) {
-                throw new Error("User not authenticated");
-            }
-            const response = await fetch(`${BASE_URL}/${field}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-
-            if (!response.ok) {
-                console.error(`Failed to fetch fields. Status: ${response.status}`);
-                throw new Error(`Failed to fetch fields. Status: ${response.status}`);
-            }
-            const fieldData = await response.json();
-            // console.log("fieldData", fieldData);
-            return fieldData;
-        } catch (error) {
-            console.error("Error in fetching fields", error);
-            throw error;
+        if (!user && !user.access_token) {
+            throw new Error("User not authenticated");
         }
+        const response = await fetch(`${BASE_URL}/${field}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const fieldData = await response.json();
+        return fieldData;
     },
 
     getFieldDetails: async (fieldId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+        const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                throw new Error(`Failed to fetch field details for ID: ${fieldId}`);
-            }
-
-            return response;
-        } catch (error) {
-            console.error(`Error in fetching field details for ID: ${fieldId}`, error);
-            throw error;
-        }
+        return response;
     },
 
     createField: async (newField: Field) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${field}`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(newField),
-            });
+        const response = await fetch(`${BASE_URL}/${field}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(newField),
+        });
 
-            return response;
-        } catch (error) {
-            console.error("Error creating a new field:", error);
-            throw error;
-        }
+        return response;
     },
 
     editField: async (fieldId: string, newFieldName: string, newSoilId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify({ name: newFieldName, soilId: newSoilId }),
-            });
+        const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({ name: newFieldName, soilId: newSoilId }),
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to edit field with ID: ${fieldId}`, errorResponse);
-                throw new Error("Failed to edit field");
-            }
-
-            return response;
-        } catch (error) {
-            console.error("Error editing field:", error);
-            throw error;
-        }
+        return response;
     },
 
     deleteField: async (fieldId: string) => {
-        try {
-            const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
-                method: "DELETE",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
+        const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
 
-            if (!response.ok) {
-                const errorResponse = await response.json();
-                console.error(`Failed to delete field with ID: ${fieldId}`, errorResponse);
-                throw new Error("Failed to delete field");
-            }
-            return response;
-        } catch (error) {
-            console.error("Error deleting field:", error);
-            throw new Error("Failed to delete field");
-        }
+        return response;
     },
 };

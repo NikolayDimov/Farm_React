@@ -38,3 +38,26 @@ export const TableCell = styled.td`
     text-overflow: ellipsis;
     white-space: nowrap;
 `;
+
+export const ReportContainer = styled.div`
+    margin-top: 20px;
+    padding: 20px;
+`;
+
+export const GenerateTableButton = styled.button`
+    padding: 10px;
+    margin-right: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #2980b9;
+    }
+`;
+
+export const ButtonContainer = styled.div`
+    margin-bottom: 20px;
+`;

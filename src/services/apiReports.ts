@@ -10,92 +10,60 @@ const processingReport = apiEndpoints.processingReport;
 
 export const apiFarmWithMostMachines = {
     fetchFarmWithMostMachinesReport: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/report/${farmsWithMostMachines}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
+        const response = await fetch(`${BASE_URL}/report/${farmsWithMostMachines}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
 
-            if (!response.ok) {
-                const errorMessage = await response.text();
-                console.error(`Failed to fetch farmsWithMostMachines. Error: ${errorMessage}`);
-                throw new Error("Failed to fetch farmsWithMostMachines");
-            }
-
-            const farmWithMostMachineData = await response.json();
-            return farmWithMostMachineData;
-        } catch (error) {
-            console.error("Error in fetching farmsWithMostMachines", error);
-            throw error;
-        }
+        const farmWithMostMachineData = await response.json();
+        return farmWithMostMachineData;
     },
 };
 
 export const apiFieldCountPerFarmAndCrop = {
     fetchFieldCountPerFarmAndCropReport: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/report/${fieldCountPerFarmAndCrop}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch fieldCountPerFarmAndCrop");
-            }
-            const fieldCountPerFarmAndCropData = await response.json();
-            return fieldCountPerFarmAndCropData;
-        } catch (error) {
-            console.error("Error in fetching soils", error);
-            throw error;
-        }
+        const response = await fetch(`${BASE_URL}/report/${fieldCountPerFarmAndCrop}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const fieldCountPerFarmAndCropData = await response.json();
+        return fieldCountPerFarmAndCropData;
     },
 };
 
 export const apiMostCommonSoilPerFarm = {
     fetchMostCommonSoilPerFarmReport: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/report/${mostCommonSoilPerFarm}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch mostCommonSoilPerFarmData");
-            }
-            const mostCommonSoilPerFarmData = await response.json();
-            return mostCommonSoilPerFarmData;
-        } catch (error) {
-            console.error("Error in fetching soils", error);
-            throw error;
-        }
+        const response = await fetch(`${BASE_URL}/report/${mostCommonSoilPerFarm}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const mostCommonSoilPerFarmData = await response.json();
+        return mostCommonSoilPerFarmData;
     },
 };
 
 export const apiProcessingReport = {
     fetchProcessingReport: async () => {
-        try {
-            const response = await fetch(`${BASE_URL}/report/${processingReport}`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${user.access_token}`,
-                    "Content-Type": "application/json",
-                },
-            });
-            if (!response.ok) {
-                throw new Error("Failed to fetch processingReport");
-            }
-            const processingReportData = await response.json();
-            return processingReportData;
-        } catch (error) {
-            console.error("Error in fetching soils", error);
-            throw error;
-        }
+        const response = await fetch(`${BASE_URL}/report/${processingReport}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${user.access_token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        const processingReportData = await response.json();
+        return processingReportData;
     },
 };

@@ -32,11 +32,7 @@ const useSoil = () => {
         try {
             const isCropValid = validateName(soilName);
 
-            if (!isCropValid || !soilName) {
-                console.log(`crop: ${soilName}`);
-            } else {
-                // formErrors.name = "";
-
+            if (isCropValid || soilName) {
                 const response = await apiSoil.createSoil(soilName);
 
                 if (response.ok) {
@@ -44,16 +40,12 @@ const useSoil = () => {
                     fetchSoils();
                 } else {
                     const responseData = await response.json();
-                    console.error(responseData);
+                    const errorMsg = responseData.error.message;
+                    setError(errorMsg);
                 }
             }
         } catch (error: any) {
-            const errorMessage = error.message || "An unexpected error occurred.";
-            // setError(errorMessage);
-            // const errorMessage = error instanceof Error ? error.message : "non";
-
-            console.log("errorMessage", errorMessage);
-            setError(errorMessage);
+            console.log("errorMessage", error);
         }
     };
 
