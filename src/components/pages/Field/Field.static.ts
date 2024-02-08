@@ -1,5 +1,12 @@
 import { Farm } from "../Farm/Farm.static";
 import { Soil } from "../Soil/Soil.static";
+export interface UpdateField {
+    id?: string;
+    name: string;
+    boundary: { type: string; coordinates: number[][][] };
+    soilId: string;
+    soil?: Soil;
+}
 
 export interface Field {
     id?: string;

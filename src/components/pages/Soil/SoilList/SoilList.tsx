@@ -66,17 +66,17 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
             </List>
 
             <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
-                <p>Current Crop Name: {originalSoilName}</p>
-                <input type="text" placeholder="Enter new crop name" value={currentSoilName} onChange={(e) => setCurrentSoilName(e.target.value)} />
+                <p>Current Soil Name: {originalSoilName}</p>
+                <input type="text" placeholder="Enter new soil name" value={currentSoilName} onChange={(e) => setCurrentSoilName(e.target.value)} />
             </Modal>
             <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
-                <p>Are you sure you want to delete this crop?</p>
+                <p>Are you sure you want to delete this soil?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
-                <p>Crop Details:</p>
+                <p>Soil Details:</p>
                 {soilDetails && (
                     <div>
-                        <p>Crop Name: {soilDetails.name}</p>
+                        <p>Soil Name: {soilDetails.name}</p>
                     </div>
                 )}
             </Modal>

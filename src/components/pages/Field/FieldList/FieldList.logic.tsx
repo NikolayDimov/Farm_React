@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { apiField } from "../../../../services/apiField";
-import { Field as FieldProp } from "../Field.static";
+import { FieldCoordinates, UpdateField, Field as FieldProp } from "../Field.static";
 
 interface UseFieldListProps {
     fetchFields: () => Promise<void>;
@@ -15,6 +15,12 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [selectedSoilId, setSelectedSoilId] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [fieldDetails, setFieldDetails] = useState<FieldProp>();
+    const [newCoordinates, setFieldMapCoordinates] = useState<FieldCoordinates>();
+
+    const handleSelectLocation = (coordinates: FieldCoordinates) => {
+        console.log("Newly outlined coordinates:", coordinates);
+        setFieldMapCoordinates(coordinates);
+    };
 
     const onDeleteField = async (fieldId: string) => {
         try {
@@ -39,16 +45,33 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
-    const onEditField = async (fieldId: string, newFieldName: string, newSoilId: string) => {
+    const onEditField = async (fieldId: string, currentFieldName: string, selectedSoilId: string, newCoordinates: number[][][]) => {
+        console.log("onEditField function is called.");
         try {
             setLoading(true);
-            //const originalOrder: Field[] = [...fields];
-            const response = await apiField.editField(fieldId, newFieldName, newSoilId);
+
+            console.log("Edit Field Data:", {
+                fieldId,
+                currentFieldName,
+                selectedSoilId,
+                newCoordinates,
+            }); // Add this log
+
+            const updatedFieldData: UpdateField = {
+                name: currentFieldName,
+                soilId: selectedSoilId,
+                boundary: {
+                    type: "Polygon",
+                    coordinates: newCoordinates.coordinates,
+                },
+            };
+
+            console.log("Updated Field Data:", updatedFieldData);
+            const response = await apiField.editField(fieldId, updatedFieldData);
+            console.log("Response from Server:", response);
 
             if (response.ok) {
-                // const updatedFieldData = await apiField.fetchFields();
-                // setFields(originalOrder.map((originalField: FieldProp) => updatedFieldData.data.find((updatedField: FieldProp) => updatedField.id === originalField.id) as FieldProp));
-                fetchFields();
+                await fetchFields();
             } else {
                 const responseBody = await response.json();
                 console.error(`Failed to edit field with ID: ${fieldId}`, responseBody);
@@ -86,17 +109,19 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
-    const onEditClick = (fieldId: string | undefined, fieldName: string, soilId: string) => {
+    const onEditClick = (fieldId: string | undefined, updatedFieldData: UpdateField) => {
+        // console.log("Field ID:", fieldId);
+        // console.log("Updated Field Data:", updatedFieldData);
         if (fieldId) {
             setSelectedFieldIdForEdit(fieldId);
-            setCurrentFieldName(fieldName);
-            setOriginalFieldName(fieldName);
-            setSelectedSoilId(soilId);
+            setCurrentFieldName(updatedFieldData.name);
+            setOriginalFieldName(updatedFieldData.name);
+            setSelectedSoilId(updatedFieldData.soilId);
         }
     };
 
-    const onDetailsClick = (machineId: string) => {
-        onDetailField(machineId);
+    const onDetailsClick = (fieldId: string) => {
+        onDetailField(fieldId);
     };
 
     const onDeleteConfirm = async () => {
@@ -108,13 +133,20 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
 
     const onEditConfirm = async () => {
         try {
-            if (selectedFieldIdForEdit) {
-                await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId);
+            console.log("Before onEditField");
+            const updatedCoordinates = newCoordinates;
+            if (selectedFieldIdForEdit && updatedCoordinates) {
+                console.log("Calling onEditField");
+                await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId, updatedCoordinates);
             }
+            // console.log("Novi koordinati", newCoordinates);
+            // console.log("ime na pole:", currentFieldName);
 
+            console.log("After onEditField");
             setSelectedFieldIdForEdit(null);
             setCurrentFieldName("");
             setSelectedSoilId("");
+            setFieldMapCoordinates({ coordinates: [] });
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
@@ -134,6 +166,8 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         setCurrentFieldName,
         setSelectedSoilId,
         fieldDetails,
+        newCoordinates,
+        setFieldMapCoordinates,
     };
 };
 

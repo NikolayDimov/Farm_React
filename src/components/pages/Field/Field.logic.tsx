@@ -89,7 +89,7 @@ const useField = () => {
 
             setLoading(true);
 
-            const newFieldData = {
+            const newFieldData: FieldProp = {
                 name: createdValues.newFieldName,
                 boundary: {
                     type: "Polygon",

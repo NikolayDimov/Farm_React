@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Field as FieldProp } from "../Field.static";
+import React, { useState } from "react";
+import { Field as FieldProp, GOOGLE_MAPS_API_KEY } from "../Field.static";
 import { Soil as SoilProp } from "../../Soil/Soil.static";
 import EditIcon from "../../../common/icons/EditIcon";
 import DeleteIcon from "../../../common/icons/DeleteIcon";
+import DetailsIcon from "../../../common/icons/DetailsIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
 import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import UserRoleHOC from "../../UserRoleHOC";
 import useFieldList from "../FieldList/FieldList.logic";
 import useFilter from "../../../../utils/search";
 import SearchBar from "../../../common/searchBar/searchBar";
-import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
 import { FieldCoordinates } from "../Field.static";
+import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
+const libraries: ("drawing" | "geometry")[] = ["drawing"];
 
 interface FieldListProps {
     fields: FieldProp[];
@@ -23,27 +25,24 @@ interface FieldListProps {
     displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void;
 }
 
-interface FieldListProps {
-    // ...
-    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void;
-}
-
 const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName, displayFieldOnGoogleMap }) => {
     const {
         onDeleteClick,
         onEditClick,
         onDetailsClick,
-        originalFieldName,
         currentFieldName,
+        originalFieldName,
         selectedSoilId,
         onEditConfirm,
         onDeleteConfirm,
         setCurrentFieldName,
         setSelectedSoilId,
         fieldDetails,
+        setFieldMapCoordinates,
     } = useFieldList({ fetchFields });
 
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
+
     const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
     const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
     const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
@@ -51,13 +50,14 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     const [mapVisibility, setMapVisibility] = useState(false);
     const [mapCenter, setMapCenter] = useState({ lat: 46, lng: 15 });
 
+    const [mapLoaded, setMapLoaded] = useState(false);
+    const [mapZoom, setMapZoom] = useState(5);
+    const [selectedField, setSelectedField] = useState<FieldProp | null>(null);
+
     const handleShowFieldOnMap = (fieldMapCoordinates: FieldCoordinates) => {
-        // Check if there are coordinates to show
         if (fieldMapCoordinates.coordinates.length > 0) {
-            // Set the map visibility and coordinates
             setMapVisibility(true);
 
-            // Set the map center based on the field's coordinates
             const bounds = new window.google.maps.LatLngBounds();
 
             fieldMapCoordinates.coordinates.forEach((coordinateSet) => {
@@ -68,11 +68,13 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
             });
 
             const center = bounds.getCenter();
+            const zoom = 14;
 
             setMapCenter({
                 lat: center.lat(),
                 lng: center.lng(),
             });
+            setMapZoom(zoom);
         } else {
             console.warn("No field coordinates available to show on the map.");
         }
@@ -120,8 +122,26 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                     />
                                     <EditIcon
                                         onClick={() => {
-                                            onEditClick(field.id || "", field.name, field.soilId);
+                                            setSelectedField(field);
+                                            onEditClick(field.id || "", field);
                                             showEditModal();
+                                            console.log("Field Coordinates:", field.boundary?.coordinates);
+
+                                            // Display field
+                                            // if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
+                                            //     const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
+                                            //     console.log("Field Coordinates:", field.boundary?.coordinates);
+
+                                            //     const convertedCoordinates: FieldCoordinates = {
+                                            //         coordinates,
+                                            //     };
+
+                                            //     console.log("convertedCoordinates", convertedCoordinates);
+                                            //     displayFieldOnGoogleMap(convertedCoordinates);
+                                            //     handleShowFieldOnMap(convertedCoordinates);
+                                            // } else {
+                                            //     console.warn("Field boundary coordinates not available or not in the expected format.");
+                                            // }
                                         }}
                                     />
                                     <DeleteIcon
@@ -139,7 +159,38 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
+            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={() => onEditConfirm()} showConfirmButton={true}>
+                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries} onLoad={() => setMapLoaded(true)}>
+                    {mapLoaded && (
+                        <GoogleMap center={mapCenter} zoom={15} mapContainerStyle={{ height: "500px", width: "400px" }}>
+                            <DrawingManager
+                                options={{
+                                    drawingControl: true,
+                                    drawingControlOptions: {
+                                        position: window.google.maps.ControlPosition.TOP_CENTER,
+                                        drawingModes: [window.google.maps.drawing.OverlayType.POLYGON],
+                                    },
+                                    polygonOptions: {
+                                        editable: true,
+                                    },
+                                }}
+                                onPolygonComplete={(polygon: google.maps.Polygon) => {
+                                    const coordinates = polygon
+                                        .getPath()
+                                        .getArray()
+                                        .map(({ lat, lng }: google.maps.LatLng) => [lat(), lng()]);
+                                    handleShowFieldOnMap({ coordinates: [coordinates] });
+                                    console.log("Updated Coordinates:", coordinates);
+                                    setFieldMapCoordinates({ coordinates: [coordinates] });
+                                }}
+                            />
+                            {selectedField?.boundary.coordinates.map((coordinates, index) => (
+                                <Polygon key={index} paths={coordinates.map((coord) => ({ lat: coord[0], lng: coord[1] }))} editable={true} />
+                            ))}
+                        </GoogleMap>
+                    )}
+                </LoadScript>
+
                 <p>Current Field Name: {originalFieldName}</p>
                 <p>Current Field Soil: {findSoilName(selectedSoilId)}</p>
                 <input type="text" placeholder="Enter new machine brand" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />

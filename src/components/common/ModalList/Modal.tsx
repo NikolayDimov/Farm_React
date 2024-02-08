@@ -4,8 +4,8 @@ import { ModalOverlay, StyledModalContainer, ModalContent, ModalActions, ModalBu
 interface ModalProps {
     isVisible: boolean;
     hideModal: () => void;
-    onConfirm?: () => void; // Make onConfirm optional
-    showConfirmButton?: boolean; // New prop to conditionally show confirm button
+    onConfirm?: () => void;
+    showConfirmButton?: boolean;
     children: React.ReactNode;
 }
 

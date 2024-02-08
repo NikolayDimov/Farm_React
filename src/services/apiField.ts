@@ -1,7 +1,7 @@
 import { BASE_URL } from "../static/baseUrl";
 import { apiEndpoints } from "../static/apiEndpoints";
 import { getUser } from "./authHeaders";
-import { Field } from "../components/pages/Field/Field.static";
+import { Field, FieldCoordinates, UpdateField } from "../components/pages/Field/Field.static";
 
 const field = apiEndpoints.field;
 const user = getUser();
@@ -49,7 +49,7 @@ export const apiField = {
         return response;
     },
 
-    editField: async (fieldId: string, newFieldName: string, newSoilId: string) => {
+    editField: async (fieldId: string, updatedFieldData: UpdateField) => {
         const response = await fetch(`${BASE_URL}/${field}/${fieldId}`, {
             method: "PATCH",
             headers: {
@@ -57,7 +57,7 @@ export const apiField = {
                 "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ name: newFieldName, soilId: newSoilId }),
+            body: JSON.stringify({ fieldId, updatedFieldData }),
         });
 
         return response;

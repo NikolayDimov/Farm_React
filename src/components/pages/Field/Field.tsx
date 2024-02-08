@@ -5,6 +5,7 @@ import FieldList from "./FieldList/FieldList";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from "./Field.static";
 import { FieldCoordinates } from "./Field.static";
+import ErrorBoundary from "./FieldList/ErrorBoundary";
 
 const Field: React.FC = () => {
     const { fields, farms, soils, fetchFields, changeHandler, createField, createdValues, errorMessage, findFarmName, findSoilName, loading, handleSelectLocation } = useField();
@@ -19,25 +20,29 @@ const Field: React.FC = () => {
     const [mapZoom, setMapZoom] = useState(5);
 
     useEffect(() => {
-        if (fieldMapCoordinates.length > 0) {
-            const bounds = new window.google.maps.LatLngBounds();
+        try {
+            if (fieldMapCoordinates.length > 0) {
+                const bounds = new window.google.maps.LatLngBounds();
 
-            fieldMapCoordinates.forEach((coordinateSet) => {
-                coordinateSet.forEach(([lat, lng]) => {
-                    bounds.extend(new window.google.maps.LatLng(lat, lng));
+                fieldMapCoordinates.forEach((coordinateSet) => {
+                    coordinateSet.forEach(([lat, lng]) => {
+                        bounds.extend(new window.google.maps.LatLng(lat, lng));
+                    });
                 });
-            });
 
-            const center = bounds.getCenter();
-            const zoom = 14;
+                const center = bounds.getCenter();
+                const zoom = 14;
 
-            setMapCenter({
-                lat: center.lat(),
-                lng: center.lng(),
-            });
-            setMapZoom(zoom);
-        } else {
-            console.warn("No field coordinates available to show on the map.");
+                setMapCenter({
+                    lat: center.lat(),
+                    lng: center.lng(),
+                });
+                setMapZoom(zoom);
+            } else {
+                console.warn("No field coordinates available to show on the map.");
+            }
+        } catch (error) {
+            console.error("Error in useEffect:", error);
         }
     }, [fieldMapCoordinates]);
 
@@ -89,11 +94,15 @@ const Field: React.FC = () => {
                                     },
                                 }}
                                 onPolygonComplete={(polygon: google.maps.Polygon) => {
-                                    const coordinates = polygon
-                                        .getPath()
-                                        .getArray()
-                                        .map(({ lat, lng }: google.maps.LatLng) => [lat(), lng()]);
-                                    handleSelectLocation([coordinates]);
+                                    try {
+                                        const coordinates = polygon
+                                            .getPath()
+                                            .getArray()
+                                            .map(({ lat, lng }: google.maps.LatLng) => [lat(), lng()]);
+                                        handleSelectLocation([coordinates]);
+                                    } catch (error) {
+                                        console.error("Error in onPolygonComplete:", error);
+                                    }
                                 }}
                             />
                             {fieldMapCoordinates.map((coordinates, index) => (
@@ -104,29 +113,31 @@ const Field: React.FC = () => {
                 </LoadScript>
             </div>
 
-            <FieldList
-                fields={fields}
-                soils={soils}
-                findFarmName={findFarmName}
-                findSoilName={findSoilName}
-                fetchFields={fetchFields}
-                displayFieldOnGoogleMap={(fieldBoundary: FieldCoordinates) => {
-                    console.log("Newly outlined coordinates:", fieldBoundary);
+            <ErrorBoundary>
+                <FieldList
+                    fields={fields}
+                    soils={soils}
+                    findFarmName={findFarmName}
+                    findSoilName={findSoilName}
+                    fetchFields={fetchFields}
+                    displayFieldOnGoogleMap={(fieldBoundary: FieldCoordinates) => {
+                        console.log("Newly outlined coordinates:", fieldBoundary);
 
-                    const coordinates = fieldBoundary.coordinates;
+                        const coordinates = fieldBoundary.coordinates;
 
-                    if (Array.isArray(coordinates) && coordinates.length > 0 && Array.isArray(coordinates[0])) {
-                        const convertedCoordinates = coordinates.map((coordinateSet) => coordinateSet.map(([lat, lng]) => [lat, lng]));
+                        if (Array.isArray(coordinates) && coordinates.length > 0 && Array.isArray(coordinates[0])) {
+                            const convertedCoordinates = coordinates.map((coordinateSet) => coordinateSet.map(([lat, lng]) => [lat, lng]));
 
-                        console.log("Converted Coordinates:", convertedCoordinates);
+                            console.log("Converted Coordinates:", convertedCoordinates);
 
-                        setFieldMapCoordinates(convertedCoordinates);
-                        setMapVisibility(true);
-                    } else {
-                        console.error("Invalid coordinates format:", coordinates);
-                    }
-                }}
-            />
+                            setFieldMapCoordinates(convertedCoordinates);
+                            setMapVisibility(true);
+                        } else {
+                            console.error("Invalid coordinates format:", coordinates);
+                        }
+                    }}
+                />
+            </ErrorBoundary>
         </>
     );
 };
