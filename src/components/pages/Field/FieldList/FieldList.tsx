@@ -74,7 +74,6 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 lng: center.lng(),
             });
         } else {
-            // No coordinates to show
             console.warn("No field coordinates available to show on the map.");
         }
     };
@@ -110,7 +109,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                             }
                                         }}
                                     >
-                                        Show Field Boundary on Map
+                                        Show Field
                                     </button>
 
                                     <DetailsIcon

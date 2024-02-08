@@ -77,14 +77,14 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                             <strong>Machine:</strong> {findMachineName(processing.machineId)} |&nbsp;
                             <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
                             <strong>Soil:</strong> {findSoilNameForProcessing(processing.growingCropPeriodId)} |&nbsp;
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(processing.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(processing.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(processing.id, new Date(processing.date), processing.processingTypeId, processing.machineId);
@@ -97,8 +97,8 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (

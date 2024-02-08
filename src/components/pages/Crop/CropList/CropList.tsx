@@ -57,14 +57,14 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                     filteredItems.map((crop) => (
                         <ListItem key={crop.id}>
                             {crop.name}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(crop.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(crop.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(crop.id || "", crop.name);
@@ -77,8 +77,8 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (

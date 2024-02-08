@@ -36,14 +36,14 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                     filteredItems.map((soil) => (
                         <ListItem key={soil.id}>
                             {soil.name}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(soil.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(soil.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(soil.id || "", soil.name);
@@ -56,8 +56,8 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (

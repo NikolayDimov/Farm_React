@@ -3,7 +3,6 @@ import EditIcon from "../../../common/icons/EditIcon";
 import DeleteIcon from "../../../common/icons/DeleteIcon";
 import { ListContainer, ListHeader, List, ListItem } from "../../../common/ListStyles";
 import { ButtonContainer } from "../../../common/icons/ButtonContainer";
-import { StyledModalContainer, ModalContent, ModalActions, ModalButton, ModalOverlay } from "../../../common/ModalList/Modal.style";
 import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingTypeList from "./ProcessingTypeList.logic";
 import { ProcessingType as ProcessingTypeProp } from "../ProcessingType.static";
@@ -45,14 +44,14 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                     filteredItems.map((processingType) => (
                         <ListItem key={processingType.id}>
                             {processingType.name}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(processingType.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(processingType.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(processingType.id || "", processingType.name);
@@ -65,8 +64,8 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (
@@ -75,17 +74,17 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
             </List>
 
             <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
-                <p>Current Crop Name: {originalProcessingTypeName}</p>
+                <p>Current Processing Type Name: {originalProcessingTypeName}</p>
                 <input type="text" placeholder="Enter new crop name" value={currentProcessingTypeName} onChange={(e) => setCurrentProcessingTypeName(e.target.value)} />
             </Modal>
             <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
-                <p>Are you sure you want to delete this crop?</p>
+                <p>Are you sure you want to delete this processing type?</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
-                <p>Crop Details:</p>
+                <p>Processing Type Details:</p>
                 {processingTypeDetails && (
                     <div>
-                        <p>Crop Name: {processingTypeDetails.name}</p>
+                        <p>Processing Type Name: {processingTypeDetails.name}</p>
                     </div>
                 )}
             </Modal>

@@ -56,14 +56,14 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                             <strong>Model:</strong> {machine.model} |&nbsp;
                             <strong>Register Number:</strong> {machine.registerNumber} |&nbsp;
                             <strong>Farm:</strong> {findFarmName(machine.farmId)}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(machine.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(machine.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(machine.id || "", machine.brand, machine.model, machine.registerNumber);
@@ -76,8 +76,8 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (

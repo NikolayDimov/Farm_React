@@ -15,7 +15,7 @@ import Modal from "../../../common/ModalList/Modal";
 interface FarmListProps {
     farms: FarmProp[];
     fetchFarms: () => Promise<void>;
-    showFarmLocationOnMap: (coordinates: number[] | undefined) => void;
+    showFarmLocationOnMap: (coordinates: number[]) => void;
 }
 
 const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocationOnMap }) => {
@@ -46,14 +46,15 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
                     filteredItems.map((farm) => (
                         <ListItem key={farm.id}>
                             {farm.name}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <DetailsIcon
-                                        onClick={() => {
-                                            onDetailsClick(farm.id || "");
-                                            showDetailsModal();
-                                        }}
-                                    />
+                            <ButtonContainer>
+                                <button onClick={() => showFarmLocationOnMap(farm.location?.coordinates || [])}>Show Pin</button>
+                                <DetailsIcon
+                                    onClick={() => {
+                                        onDetailsClick(farm.id || "");
+                                        showDetailsModal();
+                                    }}
+                                />
+                                <UserRoleHOC>
                                     <EditIcon
                                         onClick={() => {
                                             onEditClick(farm.id || "", farm.name);
@@ -66,8 +67,8 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (
