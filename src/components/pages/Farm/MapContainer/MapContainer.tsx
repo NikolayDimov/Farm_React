@@ -75,12 +75,10 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
     }, [onSelectLocation]);
 
     const dropPinOnMap = (coordinates: number[]) => {
-        // Check if a marker already exists, if yes, remove it
         if (marker.current) {
             marker.current.setMap(null);
         }
 
-        // Add a new marker at the selected farm's location
         const newMarker = new window.google.maps.Marker({
             position: { lat: coordinates[0], lng: coordinates[1] },
             map: map.current,
@@ -88,6 +86,10 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
         });
 
         marker.current = newMarker;
+
+        // Set the map center to the coordinates of the pin
+        map.current?.setCenter({ lat: coordinates[0], lng: coordinates[1] });
+        map.current?.setZoom(10);
     };
 
     useEffect(() => {
