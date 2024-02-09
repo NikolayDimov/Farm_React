@@ -12,9 +12,7 @@ import useFilter from "../../../../utils/search";
 import SearchBar from "../../../common/searchBar/searchBar";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
-import { FieldCoordinates } from "../Field.static";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
-const libraries: ("drawing" | "geometry")[] = ["drawing"];
 
 interface FieldListProps {
     fields: FieldProp[];
@@ -22,10 +20,11 @@ interface FieldListProps {
     fetchFields: () => Promise<void>;
     findFarmName: (farmId: string) => string;
     findSoilName: (soilId: string) => string;
-    displayFieldOnGoogleMap: (fieldBoundary: FieldCoordinates) => void;
+    displayFieldOnGoogleMap: (fieldBoundary: number[][][]) => void;
 }
 
 const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findFarmName, findSoilName, displayFieldOnGoogleMap }) => {
+    console.log("FieldList rendered");
     const {
         onDeleteClick,
         onEditClick,
@@ -39,8 +38,10 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
         setSelectedSoilId,
         fieldDetails,
         setFieldMapCoordinates,
+        handleSelectLocation,
     } = useFieldList({ fetchFields });
 
+    const libraries: ("drawing" | "geometry")[] = ["drawing"];
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
 
     const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
@@ -54,13 +55,13 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     const [mapZoom, setMapZoom] = useState(5);
     const [selectedField, setSelectedField] = useState<FieldProp | null>(null);
 
-    const handleShowFieldOnMap = (fieldMapCoordinates: FieldCoordinates) => {
-        if (fieldMapCoordinates.coordinates.length > 0) {
+    const handleShowFieldOnMap = (fieldMapCoordinates: number[][][]) => {
+        if (fieldMapCoordinates.length > 0) {
             setMapVisibility(true);
 
             const bounds = new window.google.maps.LatLngBounds();
 
-            fieldMapCoordinates.coordinates.forEach((coordinateSet) => {
+            fieldMapCoordinates.forEach((coordinateSet) => {
                 coordinateSet.forEach((coordinate) => {
                     const [lat, lng] = coordinate;
                     bounds.extend(new window.google.maps.LatLng(lat, lng));
@@ -97,14 +98,12 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                         onClick={() => {
                                             if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
                                                 const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
-                                                console.log("Field Coordinates:", field.boundary?.coordinates);
+                                                // console.log("Field Coordinates:", field.boundary?.coordinates);
 
-                                                const convertedCoordinates: FieldCoordinates = {
-                                                    coordinates,
-                                                };
+                                                const convertedCoordinates: number[][][] = coordinates;
 
-                                                console.log(convertedCoordinates);
-                                                displayFieldOnGoogleMap(convertedCoordinates);
+                                                // console.log(convertedCoordinates);
+                                                displayFieldOnGoogleMap(coordinates);
                                                 handleShowFieldOnMap(convertedCoordinates);
                                             } else {
                                                 console.warn("Field boundary coordinates not available or not in the expected format.");
@@ -122,10 +121,10 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                     />
                                     <EditIcon
                                         onClick={() => {
-                                            setSelectedField(field);
                                             onEditClick(field.id || "", field);
+                                            setSelectedField(field);
                                             showEditModal();
-                                            console.log("Field Coordinates:", field.boundary?.coordinates);
+                                            console.log("Old Coordinates:", field.boundary?.coordinates);
 
                                             // Display field
                                             // if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
@@ -175,13 +174,15 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                     },
                                 }}
                                 onPolygonComplete={(polygon: google.maps.Polygon) => {
+                                    console.log("Polygon completed");
                                     const coordinates = polygon
                                         .getPath()
                                         .getArray()
                                         .map(({ lat, lng }: google.maps.LatLng) => [lat(), lng()]);
-                                    handleShowFieldOnMap({ coordinates: [coordinates] });
-                                    console.log("Updated Coordinates:", coordinates);
-                                    setFieldMapCoordinates({ coordinates: [coordinates] });
+                                    console.log("Coordinates:", coordinates);
+                                    handleShowFieldOnMap([coordinates]);
+                                    handleSelectLocation([coordinates]);
+                                    console.log("handleSelectLocation in FieldList.tsx:", coordinates);
                                 }}
                             />
                             {selectedField?.boundary.coordinates.map((coordinates, index) => (

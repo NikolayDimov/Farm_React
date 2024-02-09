@@ -15,10 +15,10 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [selectedSoilId, setSelectedSoilId] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [fieldDetails, setFieldDetails] = useState<FieldProp>();
-    const [newCoordinates, setFieldMapCoordinates] = useState<FieldCoordinates>();
+    const [newCoordinates, setFieldMapCoordinates] = useState<number[][][]>();
 
-    const handleSelectLocation = (coordinates: FieldCoordinates) => {
-        console.log("Newly outlined coordinates:", coordinates);
+    const handleSelectLocation = (coordinates: number[][][]) => {
+        console.log("handleSelectLocation in FieldList.logic:", coordinates);
         setFieldMapCoordinates(coordinates);
     };
 
@@ -46,7 +46,8 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     };
 
     const onEditField = async (fieldId: string, currentFieldName: string, selectedSoilId: string, newCoordinates: number[][][]) => {
-        console.log("onEditField function is called.");
+        console.log("onEditField called");
+
         try {
             setLoading(true);
 
@@ -62,7 +63,7 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
                 soilId: selectedSoilId,
                 boundary: {
                     type: "Polygon",
-                    coordinates: newCoordinates.coordinates,
+                    coordinates: newCoordinates,
                 },
             };
 
@@ -109,14 +110,30 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
+    // const onEditClick = (fieldId: string | undefined, updatedFieldData: UpdateField) => {
+    //     console.log("Field ID:", fieldId);
+    //     console.log("Updated Field Data:", updatedFieldData);
+    //     if (fieldId) {
+    //         setSelectedFieldIdForEdit(fieldId);
+    //         setCurrentFieldName(updatedFieldData.name);
+    //         setOriginalFieldName(updatedFieldData.name);
+    //         setSelectedSoilId(updatedFieldData.soilId);
+    //         // setFieldMapCoordinates(updatedFieldData.boundary.coordinates);
+    //     }
+    // };
+
     const onEditClick = (fieldId: string | undefined, updatedFieldData: UpdateField) => {
-        // console.log("Field ID:", fieldId);
-        // console.log("Updated Field Data:", updatedFieldData);
         if (fieldId) {
             setSelectedFieldIdForEdit(fieldId);
             setCurrentFieldName(updatedFieldData.name);
             setOriginalFieldName(updatedFieldData.name);
             setSelectedSoilId(updatedFieldData.soilId);
+
+            // Comment out the modal interaction for now
+            // await showEditModal();
+
+            // Directly call onEditField
+            onEditField(fieldId, currentFieldName, selectedSoilId, updatedFieldData.boundary.coordinates);
         }
     };
 
@@ -132,21 +149,22 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     };
 
     const onEditConfirm = async () => {
+        console.log("Entering onEditConfirm");
         try {
             console.log("Before onEditField");
-            const updatedCoordinates = newCoordinates;
+            console.log("selectedFieldIdForEdit:", selectedFieldIdForEdit);
+
+            const updatedCoordinates: number[][][] | undefined = newCoordinates;
+            console.log("updatedCoordinates:", updatedCoordinates);
             if (selectedFieldIdForEdit && updatedCoordinates) {
                 console.log("Calling onEditField");
                 await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId, updatedCoordinates);
             }
-            // console.log("Novi koordinati", newCoordinates);
-            // console.log("ime na pole:", currentFieldName);
 
             console.log("After onEditField");
             setSelectedFieldIdForEdit(null);
             setCurrentFieldName("");
             setSelectedSoilId("");
-            setFieldMapCoordinates({ coordinates: [] });
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
         }
@@ -168,7 +186,11 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         fieldDetails,
         newCoordinates,
         setFieldMapCoordinates,
+        handleSelectLocation,
     };
 };
 
 export default useFieldList;
+function setIsEditModalVisible(arg0: boolean) {
+    throw new Error("Function not implemented.");
+}

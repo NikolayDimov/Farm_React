@@ -120,10 +120,10 @@ const Field: React.FC = () => {
                     findFarmName={findFarmName}
                     findSoilName={findSoilName}
                     fetchFields={fetchFields}
-                    displayFieldOnGoogleMap={(fieldBoundary: FieldCoordinates) => {
+                    displayFieldOnGoogleMap={(fieldBoundary: number[][][]) => {
                         console.log("Newly outlined coordinates:", fieldBoundary);
 
-                        const coordinates = fieldBoundary.coordinates;
+                        const coordinates = fieldBoundary;
 
                         if (Array.isArray(coordinates) && coordinates.length > 0 && Array.isArray(coordinates[0])) {
                             const convertedCoordinates = coordinates.map((coordinateSet) => coordinateSet.map(([lat, lng]) => [lat, lng]));
