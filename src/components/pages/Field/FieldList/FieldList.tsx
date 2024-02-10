@@ -44,58 +44,58 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     } = useFieldList({ fetchFields });
 
     const polygonRef = useRef<google.maps.Polygon | null>(null);
+
+    // const onPolygonComplete = async (polygon: google.maps.Polygon, destroy = false) => {
+    //     // Set the polygon instance in the ref
+    //     polygonRef.current = polygon;
+
+    //     // Call onUnmountHandler to get the updated coordinates
+    //     const updatedCoordsArray = onUnmountHandler(polygonRef.current);
+
+    //     // Ensure you are updating the correct field's coordinates
+    //     setUpdatedCoordinates((prevCoordinates) => {
+    //         // If prevCoordinates is undefined, initialize it with an empty array
+    //         const existingCoordinates = prevCoordinates || [];
+
+    //         // Logic to associate updatedCoords with the specific field
+    //         const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
+
+    //         // Call onUnmountHandler only if destroy is true
+    //         if (destroy) {
+    //             polygon.setMap(null);
+    //         }
+
+    //         return combinedCoordinates;
+    //     });
+
+    //     return updatedCoordsArray;
+    // };
+
     const onPolygonComplete = async (polygon: google.maps.Polygon, destroy = false) => {
         // Set the polygon instance in the ref
         polygonRef.current = polygon;
 
-        // Call onUnmountHandler to get the updated coordinates
-        const updatedCoordsArray = onUnmountHandler();
+        // Call onUnmountHandler to get the updated coordinates after a delay
+        setTimeout(() => {
+            const updatedCoordsArray = onUnmountHandler(polygon);
 
-        // Ensure you are updating the correct field's coordinates
-        setUpdatedCoordinates((prevCoordinates) => {
-            // If prevCoordinates is undefined, initialize it with an empty array
-            const existingCoordinates = prevCoordinates || [];
+            // Ensure you are updating the correct field's coordinates
+            setUpdatedCoordinates((prevCoordinates) => {
+                // If prevCoordinates is undefined, initialize it with an empty array
+                const existingCoordinates = prevCoordinates || [];
 
-            // Logic to associate updatedCoords with the specific field
-            const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
+                // Logic to associate updatedCoords with the specific field
+                const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
 
-            // Call onUnmountHandler only if destroy is true
-            if (destroy) {
-                polygon.setMap(null);
-            }
+                // Call onUnmountHandler only if destroy is true
+                if (destroy) {
+                    polygon.setMap(null);
+                }
 
-            return combinedCoordinates;
-        });
-
-        return updatedCoordsArray;
+                return combinedCoordinates;
+            });
+        }, 9000);
     };
-
-    // const handleConfirm = async () => {
-    //     const updatedCoordinates = await onPolygonComplete(polygon);
-    //     // Now you can use updatedCoordinates as needed
-    // };
-
-    // const onPolygonComplete = (polygon: google.maps.Polygon, destroy = false) => {
-    //     const updatedCoords = polygon
-    //         .getPath()
-    //         .getArray()
-    //         .map((x) => [x.lat(), x.lng()] as [number, number]);
-
-    //     // Ensure you are updating the correct field's coordinates
-    //     setUpdatedCoordinates((prevCoordinates) => {
-    //         // If prevCoordinates is undefined, initialize it as an empty array
-    //         const coordinatesArray = prevCoordinates || [];
-
-    //         // Logic to associate updatedCoords with the specific field
-    //         return [...coordinatesArray, updatedCoords];
-    //     });
-
-    //     // Call onUnmountHandler only if destroy is true
-    //     if (destroy) {
-    //         onUnmountHandler(polygon);
-    //         polygon.setMap(null);
-    //     }
-    // };
 
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
 
@@ -224,18 +224,18 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                             {selectedField?.boundary.coordinates.map((coordinates, index) => (
                                 <Polygon
                                     key={index}
-                                    // onUnmount={(polygon) => onUnmountHandler(polygon)}
-                                    onUnmount={(e) => {
-                                        console.log(
-                                            "onUnmount",
-                                            e
-                                                .getPaths()
-                                                .getArray()
-                                                .map((c) => c.getArray().map((x) => x.toJSON()))
-                                        );
+                                    onUnmount={(polygon) => onUnmountHandler(polygon)}
+                                    // onUnmount={(e) => {
+                                    //     console.log(
+                                    //         "onUnmount",
+                                    //         e
+                                    //             .getPaths()
+                                    //             .getArray()
+                                    //             .map((c) => c.getArray().map((x) => x.toJSON()))
+                                    //     );
 
-                                        onUnmountHandler(e);
-                                    }}
+                                    //     onUnmountHandler(e);
+                                    // }}
                                     paths={coordinates.map((coord) => ({ lat: coord[0], lng: coord[1] }))}
                                     editable={true}
                                 />

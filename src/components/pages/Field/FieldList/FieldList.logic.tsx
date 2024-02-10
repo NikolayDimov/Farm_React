@@ -17,8 +17,8 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
 
     const [updatedCoordinates, setUpdatedCoordinates] = useState<[number, number][][] | undefined>(undefined);
 
-    const polygonRef = useRef<google.maps.Polygon | null>(null);
-    const onUnmountHandler = (polygon?: google.maps.Polygon | null): [number, number][][] => {
+    const onUnmountHandler = (polygon: google.maps.Polygon | null): [number, number][][] => {
+        // Ensure polygon is defined before proceeding
         if (!polygon) {
             console.error("Polygon is not defined");
             return [];
