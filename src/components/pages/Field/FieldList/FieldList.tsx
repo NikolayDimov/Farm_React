@@ -12,6 +12,7 @@ import useFilter from "../../../../utils/search";
 import SearchBar from "../../../common/searchBar/searchBar";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
+
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
 
 const libraries: ("drawing" | "geometry")[] = ["drawing"];
@@ -38,9 +39,63 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
         setCurrentFieldName,
         setSelectedSoilId,
         fieldDetails,
-        setUpdatedCoordinates,
         onUnmountHandler,
+        setUpdatedCoordinates,
     } = useFieldList({ fetchFields });
+
+    const polygonRef = useRef<google.maps.Polygon | null>(null);
+    const onPolygonComplete = async (polygon: google.maps.Polygon, destroy = false) => {
+        // Set the polygon instance in the ref
+        polygonRef.current = polygon;
+
+        // Call onUnmountHandler to get the updated coordinates
+        const updatedCoordsArray = onUnmountHandler();
+
+        // Ensure you are updating the correct field's coordinates
+        setUpdatedCoordinates((prevCoordinates) => {
+            // If prevCoordinates is undefined, initialize it with an empty array
+            const existingCoordinates = prevCoordinates || [];
+
+            // Logic to associate updatedCoords with the specific field
+            const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
+
+            // Call onUnmountHandler only if destroy is true
+            if (destroy) {
+                polygon.setMap(null);
+            }
+
+            return combinedCoordinates;
+        });
+
+        return updatedCoordsArray;
+    };
+
+    // const handleConfirm = async () => {
+    //     const updatedCoordinates = await onPolygonComplete(polygon);
+    //     // Now you can use updatedCoordinates as needed
+    // };
+
+    // const onPolygonComplete = (polygon: google.maps.Polygon, destroy = false) => {
+    //     const updatedCoords = polygon
+    //         .getPath()
+    //         .getArray()
+    //         .map((x) => [x.lat(), x.lng()] as [number, number]);
+
+    //     // Ensure you are updating the correct field's coordinates
+    //     setUpdatedCoordinates((prevCoordinates) => {
+    //         // If prevCoordinates is undefined, initialize it as an empty array
+    //         const coordinatesArray = prevCoordinates || [];
+
+    //         // Logic to associate updatedCoords with the specific field
+    //         return [...coordinatesArray, updatedCoords];
+    //     });
+
+    //     // Call onUnmountHandler only if destroy is true
+    //     if (destroy) {
+    //         onUnmountHandler(polygon);
+    //         polygon.setMap(null);
+    //     }
+    // };
 
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
 
@@ -55,14 +110,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
     const [mapZoom, setMapZoom] = useState(5);
     const [selectedField, setSelectedField] = useState<FieldProp | null>(null);
 
-    const polygonRef = useRef<google.maps.Polygon | null>(null);
-    const [isMapVisible, setIsMapVisible] = useState<boolean>(true);
-
-    // useEffect(() => {
-    //     if (polygonRef.current) {
-    //         // Perform actions using polygonRef.current
-    //     }
-    // }, [polygonRef.current]);
+    // const polygonRef = useRef<google.maps.Polygon | null>(null);
 
     const handleShowFieldOnMap = (fieldMapCoordinates: number[][][]) => {
         console.log("Field Coordinates:", fieldMapCoordinates);
@@ -90,34 +138,6 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
             console.warn("No field coordinates available to show on the map.");
         }
     };
-
-    const extractCoordinatesFromPolygon = (polygon: google.maps.Polygon): [number, number][][] => {
-        // Implement logic to extract coordinates from the polygon object
-        // based on your specific requirements and data format
-        const paths = polygon.getPaths().getArray();
-        return paths.map((path) => path.getArray().map((latLng) => [latLng.lat(), latLng.lng()]));
-    };
-
-    // Function to save the field and unmount the map
-    const saveFieldAndUnmountMap = () => {
-        console.log("Polygon reference:", polygonRef.current);
-
-        if (polygonRef.current) {
-            const updatedCoordinates = extractCoordinatesFromPolygon(polygonRef.current);
-            setUpdatedCoordinates(updatedCoordinates);
-            setMapLoaded(false);
-            polygonRef.current.setMap(null);
-            setIsMapVisible(true); // Show the map again
-        } else {
-            console.error("Polygon reference not available.");
-        }
-    };
-
-    // const [map, setMap] = useState(null);
-
-    // const onUnmount = React.useCallback(() => {
-    //     setMap(null);
-    // }, []);
 
     return (
         <ListContainer>
@@ -195,13 +215,16 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                     },
                                 }}
                                 onPolygonComplete={(polygon: google.maps.Polygon) => {
+                                    // Set the polygon instance in the ref
                                     polygonRef.current = polygon;
-                                    console.log("Polygon completed:", polygon);
+                                    // Call onPolygonComplete function
+                                    onPolygonComplete(polygon);
                                 }}
                             />
                             {selectedField?.boundary.coordinates.map((coordinates, index) => (
                                 <Polygon
                                     key={index}
+                                    // onUnmount={(polygon) => onUnmountHandler(polygon)}
                                     onUnmount={(e) => {
                                         console.log(
                                             "onUnmount",
@@ -219,21 +242,6 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                             ))}
                         </GoogleMap>
                     )}
-
-                    <button
-                        style={{
-                            position: "absolute",
-                            top: "10px",
-                            left: "10px",
-                            zIndex: 1000,
-                        }}
-                        onClick={() => {
-                            saveFieldAndUnmountMap();
-                            setIsMapVisible(false); // Hide the map
-                        }}
-                    >
-                        Save Field and Unmount Map
-                    </button>
                 </LoadScript>
 
                 <p>Current Field Name: {originalFieldName}</p>
@@ -253,6 +261,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                     </select>
                 </div>
             </Modal>
+
             <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
                 <p>Are you sure you want to delete this field?</p>
             </Modal>
