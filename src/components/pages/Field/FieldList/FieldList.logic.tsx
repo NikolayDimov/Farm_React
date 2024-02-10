@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { apiField } from "../../../../services/apiField";
-import { FieldCoordinates, UpdateField, Field as FieldProp } from "../Field.static";
+import { UpdateField, Field as FieldProp } from "../Field.static";
 
 interface UseFieldListProps {
     fetchFields: () => Promise<void>;
@@ -13,19 +13,45 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [originalFieldName, setOriginalFieldName] = useState<string>("");
     const [selectedFarmId, setSelectedFarmId] = useState<string>("");
     const [selectedSoilId, setSelectedSoilId] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
     const [fieldDetails, setFieldDetails] = useState<FieldProp>();
-    const [newCoordinates, setFieldMapCoordinates] = useState<number[][][]>();
 
-    const handleSelectLocation = (coordinates: number[][][]) => {
-        console.log("handleSelectLocation in FieldList.logic:", coordinates);
-        setFieldMapCoordinates(coordinates);
+    // const [updatedCoordinates, setUpdatedCoordinates] = useState<number[][][] | undefined>();
+
+    const [updatedCoordinates, setUpdatedCoordinates] = useState<[number, number][][] | undefined>(undefined);
+
+    // const onUnmountHandler = (polygon: google.maps.Polygon) => {
+    //     if (isMounted.current) {
+    //         // Perform actions using polygon
+    //         const updatedCoordinates = extractCoordinatesFromPolygon(polygon);
+    //         setUpdatedCoordinates(updatedCoordinates);
+    //         // Set any other state or perform actions as needed
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     return () => {
+    //         // Cleanup when the component is unmounted
+    //         isMounted.current = false;
+    //         if (polygonRef.current) {
+    //             polygonRef.current.setMap(null);
+    //         }
+    //     };
+    // }, []);
+
+    const onUnmountHandler = (polygon: google.maps.Polygon) => {
+        // Convert LatLngLiteral to [number, number][]
+        const paths = polygon.getPaths().getArray();
+        const updatedCoords = paths[0].getArray().map((x) => [x.lat(), x.lng()] as [number, number]);
+
+        // Convert [number, number][] to [number, number][][]
+        const updatedCoordsArray: [number, number][][] = [updatedCoords];
+
+        // Set the state with the converted type
+        setUpdatedCoordinates(updatedCoordsArray);
     };
 
     const onDeleteField = async (fieldId: string) => {
         try {
-            setLoading(true);
-
             const response = await apiField.deleteField(fieldId);
 
             if (response.ok) {
@@ -40,36 +66,25 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             }
         } catch (error) {
             console.error("Error deleting Field:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
     const onEditField = async (fieldId: string, currentFieldName: string, selectedSoilId: string, newCoordinates: number[][][]) => {
-        console.log("onEditField called");
-
         try {
-            setLoading(true);
-
-            console.log("Edit Field Data:", {
-                fieldId,
-                currentFieldName,
-                selectedSoilId,
-                newCoordinates,
-            }); // Add this log
-
             const updatedFieldData: UpdateField = {
                 name: currentFieldName,
-                soilId: selectedSoilId,
                 boundary: {
                     type: "Polygon",
                     coordinates: newCoordinates,
                 },
+                soilId: selectedSoilId,
             };
 
             console.log("Updated Field Data:", updatedFieldData);
             const response = await apiField.editField(fieldId, updatedFieldData);
             console.log("Response from Server:", response);
+            // const responseBody = await response.json();
+            // console.log("Response Body:", responseBody);
 
             if (response.ok) {
                 await fetchFields();
@@ -79,14 +94,11 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             }
         } catch (error) {
             console.error("Error editing field:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
     const onDetailField = async (fieldId: string) => {
         try {
-            setLoading(true);
             const response = await apiField.getFieldDetails(fieldId);
 
             if (response.ok) {
@@ -99,8 +111,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             }
         } catch (error) {
             console.error("Error editing field:", error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -110,30 +120,15 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
-    // const onEditClick = (fieldId: string | undefined, updatedFieldData: UpdateField) => {
-    //     console.log("Field ID:", fieldId);
-    //     console.log("Updated Field Data:", updatedFieldData);
-    //     if (fieldId) {
-    //         setSelectedFieldIdForEdit(fieldId);
-    //         setCurrentFieldName(updatedFieldData.name);
-    //         setOriginalFieldName(updatedFieldData.name);
-    //         setSelectedSoilId(updatedFieldData.soilId);
-    //         // setFieldMapCoordinates(updatedFieldData.boundary.coordinates);
-    //     }
-    // };
-
     const onEditClick = (fieldId: string | undefined, updatedFieldData: UpdateField) => {
+        // console.log("Field ID:", fieldId);
+        // console.log("Updated Field Data:", updatedFieldData);
         if (fieldId) {
             setSelectedFieldIdForEdit(fieldId);
             setCurrentFieldName(updatedFieldData.name);
             setOriginalFieldName(updatedFieldData.name);
+            console.log("onEditClick", updatedFieldData.name);
             setSelectedSoilId(updatedFieldData.soilId);
-
-            // Comment out the modal interaction for now
-            // await showEditModal();
-
-            // Directly call onEditField
-            onEditField(fieldId, currentFieldName, selectedSoilId, updatedFieldData.boundary.coordinates);
         }
     };
 
@@ -149,19 +144,14 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     };
 
     const onEditConfirm = async () => {
-        console.log("Entering onEditConfirm");
         try {
-            console.log("Before onEditField");
-            console.log("selectedFieldIdForEdit:", selectedFieldIdForEdit);
-
-            const updatedCoordinates: number[][][] | undefined = newCoordinates;
-            console.log("updatedCoordinates:", updatedCoordinates);
+            console.log("selectedFieldIdForEdit", selectedFieldIdForEdit);
+            console.log("newCoordinates", updatedCoordinates);
             if (selectedFieldIdForEdit && updatedCoordinates) {
                 console.log("Calling onEditField");
                 await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId, updatedCoordinates);
             }
 
-            console.log("After onEditField");
             setSelectedFieldIdForEdit(null);
             setCurrentFieldName("");
             setSelectedSoilId("");
@@ -184,13 +174,9 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         setCurrentFieldName,
         setSelectedSoilId,
         fieldDetails,
-        newCoordinates,
-        setFieldMapCoordinates,
-        handleSelectLocation,
+        setUpdatedCoordinates,
+        onUnmountHandler,
     };
 };
 
 export default useFieldList;
-function setIsEditModalVisible(arg0: boolean) {
-    throw new Error("Function not implemented.");
-}

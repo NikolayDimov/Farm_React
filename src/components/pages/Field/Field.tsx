@@ -4,13 +4,11 @@ import UserRoleHOC from "../UserRoleHOC";
 import FieldList from "./FieldList/FieldList";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from "./Field.static";
-import { FieldCoordinates } from "./Field.static";
 import ErrorBoundary from "./FieldList/ErrorBoundary";
+const libraries: ("drawing" | "geometry")[] = ["drawing"];
 
 const Field: React.FC = () => {
     const { fields, farms, soils, fetchFields, changeHandler, createField, createdValues, errorMessage, findFarmName, findSoilName, loading, handleSelectLocation } = useField();
-
-    const libraries: ("drawing" | "geometry")[] = ["drawing"];
 
     const [isMapVisible, setMapVisibility] = useState(false);
     const [fieldMapCoordinates, setFieldMapCoordinates] = useState<number[][][]>([]);
@@ -94,6 +92,7 @@ const Field: React.FC = () => {
                                     },
                                 }}
                                 onPolygonComplete={(polygon: google.maps.Polygon) => {
+                                    console.log("Paraten comp");
                                     try {
                                         const coordinates = polygon
                                             .getPath()
@@ -121,14 +120,14 @@ const Field: React.FC = () => {
                     findSoilName={findSoilName}
                     fetchFields={fetchFields}
                     displayFieldOnGoogleMap={(fieldBoundary: number[][][]) => {
-                        console.log("Newly outlined coordinates:", fieldBoundary);
+                        // console.log("Newly outlined coordinates:", fieldBoundary);
 
                         const coordinates = fieldBoundary;
 
                         if (Array.isArray(coordinates) && coordinates.length > 0 && Array.isArray(coordinates[0])) {
                             const convertedCoordinates = coordinates.map((coordinateSet) => coordinateSet.map(([lat, lng]) => [lat, lng]));
 
-                            console.log("Converted Coordinates:", convertedCoordinates);
+                            // console.log("Converted Coordinates:", convertedCoordinates);
 
                             setFieldMapCoordinates(convertedCoordinates);
                             setMapVisibility(true);

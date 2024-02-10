@@ -57,7 +57,7 @@ export const apiField = {
                 "Content-Type": "application/json",
             },
             credentials: "include",
-            body: JSON.stringify({ fieldId, updatedFieldData }),
+            body: JSON.stringify(updatedFieldData),
         });
 
         return response;

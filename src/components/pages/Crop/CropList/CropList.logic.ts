@@ -80,6 +80,7 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
     const onEditClick = (cropId: string, cropName: string) => {
         setSelectedCropIdForEdit(cropId);
         setCurrentCropName(cropName);
+        console.log("onEditClick", cropName);
         setOriginalCropName(cropName);
     };
 
@@ -100,6 +101,8 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
                 await onEditCrop(selectedCropIdForEdit, currentCropName);
                 fetchCrops();
             }
+
+            console.log("onEditConfirm", currentCropName);
 
             setSelectedCropIdForEdit(null);
             setCurrentCropName("");

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 interface UseModalProps {
     initialVisibility?: boolean;
-    onModalOpen?: () => void; // New callback for modal opening
+    onModalOpen?: () => void;
 }
 
 const useModal = ({ initialVisibility = false, onModalOpen }: UseModalProps = {}) => {

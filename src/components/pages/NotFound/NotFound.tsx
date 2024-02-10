@@ -8,7 +8,7 @@ const NotFoundContainer = styled.div`
 `;
 
 const NotFoundTitle = styled.h1`
-    color: #ff6347; /* or any other color you prefer */
+    color: #ff6347;
 `;
 
 const NotFound = () => {

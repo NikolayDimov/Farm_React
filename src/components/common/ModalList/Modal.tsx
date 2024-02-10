@@ -25,6 +25,7 @@ const Modal: React.FC<ModalProps> = ({ isVisible, hideModal, onConfirm, showConf
                             Confirm
                         </ModalButton>
                     )}
+
                     <ModalButton onClick={hideModal}>Close</ModalButton>
                 </ModalActions>
             </StyledModalContainer>
