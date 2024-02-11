@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { apiField } from "../../../../services/apiField";
 import { UpdateField, Field as FieldProp } from "../Field.static";
 
@@ -18,6 +18,7 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
     const [updatedCoordinates, setUpdatedCoordinates] = useState<[number, number][][] | undefined>(undefined);
 
     const onUnmountHandler = (polygon: google.maps.Polygon | null): [number, number][][] => {
+        console.log("onUnmountHandler called");
         // Ensure polygon is defined before proceeding
         if (!polygon) {
             console.error("Polygon is not defined");
@@ -31,12 +32,22 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         // Convert [number, number][] to [number, number][][]
         const updatedCoordsArray: [number, number][][] = [updatedCoords];
 
+        // Clear the state explicitly
+        setUpdatedCoordinates(undefined);
+
         // Set the state with the converted type
         setUpdatedCoordinates(updatedCoordsArray);
         console.log("List logic Coordinates coming", updatedCoordsArray);
 
         return updatedCoordsArray;
     };
+
+    useEffect(() => {
+        console.log("useEffect updatedCoordinates:", updatedCoordinates);
+        // Logic to handle the updated state
+        console.log("List logic Coordinates changed", updatedCoordinates);
+        // setUpdatedCoordinates(undefined);
+    }, [updatedCoordinates]);
 
     const onDeleteField = async (fieldId: string) => {
         try {
@@ -129,23 +140,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         }
     };
 
-    // const onEditConfirm = async () => {
-    //     try {
-    //         console.log("selectedFieldIdForEdit", selectedFieldIdForEdit);
-    //         console.log("newCoordinates", updatedCoordinates);
-    //         if (selectedFieldIdForEdit && updatedCoordinates) {
-    //             console.log("Calling onEditField");
-    //             await onEditField(selectedFieldIdForEdit, currentFieldName, selectedSoilId, updatedCoordinates);
-    //         }
-
-    //         setSelectedFieldIdForEdit(null);
-    //         setCurrentFieldName("");
-    //         setSelectedSoilId("");
-    //     } catch (error) {
-    //         console.error("Error handling edit confirmation:", error);
-    //     }
-    // };
-
     const onEditConfirm = async () => {
         try {
             console.log("selectedFieldIdForEdit", selectedFieldIdForEdit);
@@ -159,16 +153,14 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
             setSelectedFieldIdForEdit(null);
             setCurrentFieldName("");
             setSelectedSoilId("");
-            setUpdatedCoordinates(undefined); // Reset the coordinates after use
+            // setUpdatedCoordinates(undefined); // Reset the coordinates after use
         } catch (error) {
             console.error("Error handling edit confirmation:", error);
+        } finally {
+            // Ensure that the coordinates state is cleared after it has been processed
+            setUpdatedCoordinates(undefined);
         }
     };
-
-    useEffect(() => {
-        // Logic to handle the updated state
-        console.log("List logic Coordinates changed", updatedCoordinates);
-    }, [updatedCoordinates]);
 
     return {
         onDeleteClick,

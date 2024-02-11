@@ -12,7 +12,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isVisible, hideModal, onConfirm, showConfirmButton = true, children }) => {
     return (
         <ModalOverlay $show={isVisible} $confirmation={showConfirmButton}>
-            <StyledModalContainer $confirmation={showConfirmButton}>
+            <StyledModalContainer $show={isVisible} $confirmation={showConfirmButton}>
                 <ModalContent>{children}</ModalContent>
                 <ModalActions>
                     {showConfirmButton && (

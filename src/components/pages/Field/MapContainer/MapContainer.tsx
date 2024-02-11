@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from "../Field.static";
@@ -28,6 +28,11 @@ const StyledMapContainer = styled.div`
 const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, initialCoordinates, isMapVisible }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const [userDrawnCoordinates, setUserDrawnCoordinates] = useState<number[][][]>(initialCoordinates || []);
+
+    useEffect(() => {
+        // Handle changes to initialCoordinates
+        setUserDrawnCoordinates(initialCoordinates || []);
+    }, [initialCoordinates]);
 
     const onLoad = (map: google.maps.Map) => {
         const drawingManager = new window.google.maps.drawing.DrawingManager({

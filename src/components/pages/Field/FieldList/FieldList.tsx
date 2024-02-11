@@ -12,7 +12,6 @@ import useFilter from "../../../../utils/search";
 import SearchBar from "../../../common/searchBar/searchBar";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
-
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
 
 const libraries: ("drawing" | "geometry")[] = ["drawing"];
@@ -45,32 +44,6 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
 
     const polygonRef = useRef<google.maps.Polygon | null>(null);
 
-    // const onPolygonComplete = async (polygon: google.maps.Polygon, destroy = false) => {
-    //     // Set the polygon instance in the ref
-    //     polygonRef.current = polygon;
-
-    //     // Call onUnmountHandler to get the updated coordinates
-    //     const updatedCoordsArray = onUnmountHandler(polygonRef.current);
-
-    //     // Ensure you are updating the correct field's coordinates
-    //     setUpdatedCoordinates((prevCoordinates) => {
-    //         // If prevCoordinates is undefined, initialize it with an empty array
-    //         const existingCoordinates = prevCoordinates || [];
-
-    //         // Logic to associate updatedCoords with the specific field
-    //         const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
-
-    //         // Call onUnmountHandler only if destroy is true
-    //         if (destroy) {
-    //             polygon.setMap(null);
-    //         }
-
-    //         return combinedCoordinates;
-    //     });
-
-    //     return updatedCoordsArray;
-    // };
-
     const onPolygonComplete = async (polygon: google.maps.Polygon, destroy = false) => {
         // Set the polygon instance in the ref
         polygonRef.current = polygon;
@@ -87,6 +60,9 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 // Logic to associate updatedCoords with the specific field
                 const combinedCoordinates = [...existingCoordinates, ...updatedCoordsArray];
 
+                // Clear polygonRef after processing
+                polygonRef.current = null;
+
                 // Call onUnmountHandler only if destroy is true
                 if (destroy) {
                     polygon.setMap(null);
@@ -94,8 +70,17 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
 
                 return combinedCoordinates;
             });
-        }, 9000);
+        }, 16000);
     };
+
+    useEffect(() => {
+        return () => {
+            // Reset or clear any necessary state when the component unmounts
+            console.log("Cleanup function executed");
+            polygonRef.current = null;
+            setUpdatedCoordinates(undefined); // Clear the coordinates state
+        };
+    }, []);
 
     const { filteredItems, setSearchQuery } = useFilter<FieldProp>({ items: fields });
 
@@ -202,7 +187,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
             <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={() => onEditConfirm()} showConfirmButton={true}>
                 <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries} onLoad={() => setMapLoaded(true)}>
                     {mapLoaded && isEditModalVisible && (
-                        <GoogleMap center={mapCenter} zoom={15} mapContainerStyle={{ height: "500px", width: "400px" }}>
+                        <GoogleMap center={mapCenter} zoom={14} mapContainerStyle={{ height: "500px", width: "800px" }}>
                             <DrawingManager
                                 options={{
                                     drawingControl: true,
@@ -225,6 +210,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                 <Polygon
                                     key={index}
                                     onUnmount={(polygon) => onUnmountHandler(polygon)}
+                                    //onUnmount={(polygon) => onUnmountHandler(polygon, true)}
                                     // onUnmount={(e) => {
                                     //     console.log(
                                     //         "onUnmount",
