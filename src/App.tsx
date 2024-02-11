@@ -10,7 +10,6 @@ import WithNavbar from "./components/pages/Navbar/ToggleWithNavbar";
 import WithoutNavbar from "./components/pages/Navbar/ToggleWithoutNavbar";
 import { routes } from "./static/routes";
 import NotFound from "./components/pages/NotFound/NotFound";
-// import EditFieldPage from "./components/pages/Field/FieldList/EditFieldPage";
 
 function App() {
     return (
@@ -27,7 +26,6 @@ function App() {
                         <Route path={routes.service} element={<Service />} />
                         <Route path={routes.report} element={<Report />} />
                         <Route path={routes.notFound} element={<NotFound />} />
-                        {/* <Route path="service/edit/:fieldId" element={<EditFieldPage />} /> */}
                     </Route>
                 </Route>
             </Routes>

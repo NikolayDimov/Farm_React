@@ -5,7 +5,6 @@ export const apiEndpoints = {
     // Crop
     crop: "crop",
     createCrop: "crop",
-    // cropId: "cropid",
     // Soil
     soil: "soil",
     createSoil: "soil",

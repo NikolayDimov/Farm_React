@@ -1,19 +1,16 @@
 import { useAuth } from "../../../context/AuthContext";
+import { routes } from "../../../static/routes";
 
-import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, NavbarButton, UserRoleText, WelcomeTitle } from "./Navbar.styles";
+import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, UserRoleText, WelcomeTitle } from "./Navbar.styles";
 
 const Navbar = () => {
     const { user } = useAuth();
-    const { isLoggedIn, logout } = useAuth();
-
-    const handleLogout = async () => {
-        await logout();
-    };
+    const { isLoggedIn } = useAuth();
 
     return (
         <NavbarContainer>
             <ContentWrapper>
-                <Logo to="/">MyFarm</Logo>
+                <Logo to={routes.service}>MyFarm</Logo>
                 <NavbarButtons>
                     {!isLoggedIn ? (
                         <></>
@@ -21,11 +18,6 @@ const Navbar = () => {
                         <>
                             <WelcomeTitle>Welcome, {user?.email}</WelcomeTitle>
                             <UserRoleText>User role: {user?.role}</UserRoleText>
-                            <NavbarButton to="/home">Contacts</NavbarButton>
-                            <NavbarButton to="/service">Service</NavbarButton>
-                            <NavbarButton to="/" onClick={handleLogout}>
-                                Logout
-                            </NavbarButton>
                         </>
                     )}
                 </NavbarButtons>

@@ -2,8 +2,10 @@ import styled from "styled-components";
 import Layout from "../../../common/Layout";
 
 const Container = styled.div`
-    background-color: #f8f9fa;
-    width: 100vw;
+    /* background-color: #f8f9fa; */
+    width: 100%;
+    max-width: 1200px; /* Set a max-width to limit the width */
+    margin: 0 auto; /* Center the container */
 `;
 
 const ContentWrapper = styled.div`
@@ -119,9 +121,9 @@ const Contact = () => {
                     </Form>
 
                     <ContactInfo>
-                        <Address>123 Main Street, Cityville, Country</Address>
+                        <Address>123 Main Port, Varna, Bulgaria</Address>
                         <Email>info@example.com</Email>
-                        <PhoneNumber>+1 (123) 456-7890</PhoneNumber>
+                        <PhoneNumber>+359 (123) 456-7890</PhoneNumber>
                         <GoogleMap
                             src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d38005.71174407845!2d27.918253009488133!3d43.21863228930401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbg!4v1707318749225!5m2!1sen!2sbg"
                             title="Google Map"

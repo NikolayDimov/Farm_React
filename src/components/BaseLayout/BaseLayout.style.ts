@@ -38,18 +38,39 @@ const PageContainer = styled.div`
 `;
 
 const Sidebar = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 150px;
     padding: 20px;
     background-color: #f0f0f0;
     z-index: 2;
     height: 100vh;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`;
+
+export const TopButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+`;
+
+export const BottomButtonsContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 `;
 
 const SidebarButton = styled.button`
     display: block;
     width: 100%;
     margin-bottom: 10px;
+    padding: 5px 10px 5px 10px;
+    cursor: pointer;
     z-index: 4;
+    &:hover {
+        background-color: #ccc;
+    }
 `;
 
 const Content = styled.div`
