@@ -41,12 +41,13 @@ const Sidebar = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 150px;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.8);
     z-index: 2;
-    height: 100vh;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 0 0 150px;
+    overflow-y: auto;
+    min-height: calc(100vh - 40px);
 `;
 
 export const TopButtonsContainer = styled.div`

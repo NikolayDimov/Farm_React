@@ -6,7 +6,6 @@ const GlobalStyles = createGlobalStyle`
     font-family: 'Noto Sans', sans-serif;
     display: block;
     margin: 0;
-    /* overflow: hidden; */
   }`;
 
 type LayoutProps = {

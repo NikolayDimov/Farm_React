@@ -26,6 +26,7 @@ const ServicePage: React.FC = () => {
     return (
         <Layout>
             <BackgroundImage />
+
             <PageContainer>
                 <Sidebar>
                     <TopButtonsContainer>
