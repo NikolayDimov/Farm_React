@@ -58,12 +58,12 @@ const useField = () => {
             const fieldsData = await apiField.fetchFields();
 
             // new field to be last in the list
-            // setFields((prevFields) => {
-            //     const newFields = fieldsData.data.filter((newField: FieldProp) => !prevFields.some((prevField: FieldProp) => prevField.id === newField.id));
-            //     return [...prevFields, ...newFields];
-            // });
+            setFields((prevFields) => {
+                const newFields = fieldsData.data.filter((newField: FieldProp) => !prevFields.some((prevField: FieldProp) => prevField.id === newField.id));
+                return [...prevFields, ...newFields];
+            });
 
-            setFields(fieldsData.data);
+            // setFields(fieldsData.data);
         } catch (error) {
             console.error("Error in fetching Field", error);
         }

@@ -1,6 +1,6 @@
 import useLogin from "./Login.logic";
 import { Link } from "react-router-dom";
-import Layout from "../../../common/Layout";
+
 import InputField from "../AuthForm";
 import { Container, ErrorStyles, FormBlock, FormGroup, LeftPanel, Logo, RightPanel, StyledButton, Title } from "../StyledComponents";
 import { AuthLink } from "../StyledComponents";
@@ -10,7 +10,7 @@ function Login() {
 
     return (
         <>
-            <Layout>
+            <>
                 <Container>
                     <LeftPanel>
                         <Logo>MyFarm</Logo>
@@ -54,7 +54,7 @@ function Login() {
                     </LeftPanel>
                     <RightPanel />
                 </Container>
-            </Layout>
+            </>
         </>
     );
 }

@@ -7,7 +7,7 @@ import DeleteIcon from "../../../common/icons/DeleteIcon";
 import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import { Farm as FarmProp } from "../Farm.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/searchBar/searchBar";
+import SearchBar from "../../../common/SearchBar/SearchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";

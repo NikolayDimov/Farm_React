@@ -1,20 +1,16 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import servicePageImage from "../../assets/nivaSand.jpg";
 
-export const Container = styled.div`
-    width: 94%;
-    max-width: 1400px;
-    margin: 20px auto;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+export const GlobalStyles = createGlobalStyle`
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    display: block;
+    margin: 0;
+  }
 `;
 
-export const MapWrapper = styled.div`
-    width: 100%;
-    height: 400px;
-    margin-bottom: 20px;
+export const PageWrapper = styled.div`
+    display: flex;
 `;
 
 export const BackgroundImage = styled.div`
@@ -29,58 +25,29 @@ export const BackgroundImage = styled.div`
     background-position: center;
     background-attachment: fixed;
     z-index: -1;
-    /* filter: blur(2px); */
 `;
 
-const PageContainer = styled.div`
-    display: flex;
-    overflow: hidden;
-`;
-
-const Sidebar = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 2;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 0 0 150px;
-    overflow-y: auto;
-    min-height: calc(100vh - 40px);
-`;
-
-export const TopButtonsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-`;
-
-export const BottomButtonsContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-`;
-
-const SidebarButton = styled.button`
-    display: block;
+export const Container = styled.div`
     width: 100%;
-    margin-bottom: 10px;
-    padding: 5px 10px 5px 10px;
-    cursor: pointer;
-    z-index: 4;
-    &:hover {
-        background-color: #ccc;
-    }
+    max-width: 1400px;
+    margin: 0px auto;
+    padding: 15px;
 `;
 
-const Content = styled.div`
-    flex-grow: 1;
-    position: relative;
+export const SidebarWrapper = styled.div`
+    flex: 0 0 150px;
+    height: 100%;
+    overflow-y: auto;
 `;
 
-const MainContent = styled.div`
-    margin: 20px;
+export const MainContainer = styled.div`
+    flex: 1;
+    margin-left: 151px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin: 0px auto;
 `;
-
-export { PageContainer, Sidebar, SidebarButton, Content, Container as MainContent };

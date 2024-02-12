@@ -9,7 +9,7 @@ import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import UserRoleHOC from "../../UserRoleHOC";
 import useFieldList from "../FieldList/FieldList.logic";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/searchBar/searchBar";
+import SearchBar from "../../../common/SearchBar/SearchBar";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
@@ -135,25 +135,24 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                             <strong>Name:</strong> {field.name}
                             <strong>Farm:</strong> {findFarmName(field.farmId)}
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
-                            <UserRoleHOC>
-                                <ButtonContainer>
-                                    <button
-                                        onClick={() => {
-                                            if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
-                                                const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
-                                                // console.log("Field Coordinates:", field.boundary?.coordinates);
-                                                const convertedCoordinates: number[][][] = coordinates;
-                                                // console.log(convertedCoordinates);
-                                                displayFieldOnGoogleMap(coordinates);
-                                                handleShowFieldOnMap(convertedCoordinates);
-                                            } else {
-                                                console.warn("Field boundary coordinates not available or not in the expected format.");
-                                            }
-                                        }}
-                                    >
-                                        Show Field
-                                    </button>
-
+                            <ButtonContainer>
+                                <button
+                                    onClick={() => {
+                                        if (field.boundary && field.boundary.type === "Polygon" && Array.isArray(field.boundary.coordinates)) {
+                                            const coordinates: number[][][] = (field.boundary?.coordinates || []).map((set) => set.map(([lat, lng]: number[]) => [lat, lng]));
+                                            // console.log("Field Coordinates:", field.boundary?.coordinates);
+                                            const convertedCoordinates: number[][][] = coordinates;
+                                            // console.log(convertedCoordinates);
+                                            displayFieldOnGoogleMap(coordinates);
+                                            handleShowFieldOnMap(convertedCoordinates);
+                                        } else {
+                                            console.warn("Field boundary coordinates not available or not in the expected format.");
+                                        }
+                                    }}
+                                >
+                                    Show Field
+                                </button>
+                                <UserRoleHOC>
                                     <DetailsIcon
                                         onClick={() => {
                                             onDetailsClick(field.id || "");
@@ -175,8 +174,8 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                                             showDeleteModal();
                                         }}
                                     />
-                                </ButtonContainer>
-                            </UserRoleHOC>
+                                </UserRoleHOC>
+                            </ButtonContainer>
                         </ListItem>
                     ))
                 ) : (

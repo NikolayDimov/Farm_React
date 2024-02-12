@@ -6,7 +6,6 @@ import { JwtPayload } from "./AuthContext.static";
 import { useNavigate } from "react-router-dom";
 import { AuthContextType } from "./AuthContext.static";
 import { User } from "./AuthContext.static";
-import { AuthProviderProps } from "./AuthContext.static";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -32,7 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         try {
             const userData = await loginUser({ email, password });
             handleLogin(userData);
-            navigate("/service");
+            navigate("/farm");
         } catch (error) {
             console.error("Login error:", error);
             return Promise.reject(error);
@@ -44,7 +43,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const userData = await registerUser({ email, password });
             // login( email, password )
             handleLogin(userData);
-            navigate("/service");
+            navigate("/farm");
         } catch (error) {
             console.error("Registration error:", error);
         }
@@ -52,10 +51,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logout = async () => {
         try {
-            handleLogout();
+            await handleLogout();
         } catch (error) {
             console.error("Logout error:", error);
-            navigate("/");
+            navigate("/login");
         }
     };
 
@@ -75,6 +74,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const handleLogout = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("isUserLoggedIn");
+        navigate("/login");
         setUser(null);
         setIsLoggedIn(false);
     };

@@ -8,6 +8,9 @@ const ModalContainer = styled.div`
     padding: 20px;
     margin-top: 20px;
     z-index: 4;
+    @media (max-width: 768px) {
+        width: 80%;
+    }
 `;
 
 const ModalHeader = styled.div`

@@ -1,6 +1,5 @@
 import useRegister from "./Register.logic";
 import { Link } from "react-router-dom";
-import Layout from "../../../common/Layout";
 import InputField from "../AuthForm";
 import { Container, ErrorStyles, FormBlock, FormGroup, LeftPanel, Logo, RightPanel, StyledButton, Title } from "../StyledComponents";
 import { AuthLink } from "../StyledComponents";
@@ -10,7 +9,7 @@ function Register() {
 
     return (
         <>
-            <Layout>
+            <>
                 <Container>
                     <LeftPanel>
                         <Logo>MyFarm</Logo>
@@ -57,13 +56,13 @@ function Register() {
                             </form>
 
                             <AuthLink>
-                                <Link to="/">Have an account Login here</Link>
+                                <Link to="/login">Have an account Login here</Link>
                             </AuthLink>
                         </FormBlock>
                     </LeftPanel>
                     <RightPanel />
                 </Container>
-            </Layout>
+            </>
         </>
     );
 }

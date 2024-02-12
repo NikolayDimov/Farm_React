@@ -7,7 +7,7 @@ import UserRoleHOC from "../../UserRoleHOC";
 import useSoilList from "./SoilList.logic";
 import { Soil as SoilProp } from "../Soil.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/searchBar/searchBar";
+import SearchBar from "../../../common/SearchBar/SearchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { apiProcessingType } from "../../../services/apiProcessingType";
 import { ProcessingType as ProcessingTypeProp } from "./ProcessingType.static";
-import { useFormError } from "../../common/validations/useFormError";
+import { useFormError } from "../../common/Validations/useFormError";
 
 const useProcessingType = () => {
     const [processingTypes, setProcessingTypes] = useState<ProcessingTypeProp[]>([]);

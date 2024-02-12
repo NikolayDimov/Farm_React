@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import Layout from "../../../common/Layout";
 
 const Container = styled.div`
     /* background-color: #f8f9fa; */
@@ -100,7 +99,7 @@ const GoogleMap = styled.iframe`
 
 const Contact = () => {
     return (
-        <Layout>
+        <>
             <Container>
                 <ContentWrapper>
                     <Title>Contact Us</Title>
@@ -132,7 +131,7 @@ const Contact = () => {
                     </ContactInfo>
                 </ContentWrapper>
             </Container>
-        </Layout>
+        </>
     );
 };
 

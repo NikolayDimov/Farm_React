@@ -1,5 +1,5 @@
+import React from "react";
 import MapContainer from "./MapContainer/MapContainer";
-import Layout from "../../common/Layout";
 import useFarm from "./Farm.logic";
 import FarmList from "./FarmList/FarmList";
 import UserRoleHOC from "../UserRoleHOC";
@@ -20,7 +20,7 @@ const Farm: React.FC = () => {
     };
 
     return (
-        <Layout>
+        <>
             <UserRoleHOC>
                 <h3>Add a New Farm</h3>
                 <form onSubmit={createFarm}>
@@ -43,7 +43,7 @@ const Farm: React.FC = () => {
                 selectedFarmCoordinates={selectedFarmCoordinates}
             />
             <FarmList farms={farms} fetchFarms={fetchFarms} showFarmLocationOnMap={showFarmLocationOnMap} />
-        </Layout>
+        </>
     );
 };
 

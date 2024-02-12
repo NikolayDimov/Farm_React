@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { apiSoil } from "../../../services/apiSoil";
 import { Soil as SoilProp } from "./Soil.static";
-import { useFormError } from "../../common/validations/useFormError";
+import { useFormError } from "../../common/Validations/useFormError";
 
 const useSoil = () => {
     const [soils, setSoils] = useState<SoilProp[]>([]);

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Layout from "../../common/Layout.tsx";
 import Modal, { BottomBar, GenerateTableButton, MinimizedTableButton } from "./ReportModal.tsx";
 import { FarmsWithMostMachinesReportListProps, FieldCountPerFarmAndCropProps, MostCommonSoilPerFarmProps, ProcessingReportProps } from "./Report.static.ts";
 import { apiFarmWithMostMachines, apiFieldCountPerFarmAndCrop, apiMostCommonSoilPerFarm, apiProcessingReport } from "../../../services/apiReports";
@@ -66,10 +65,10 @@ const ReportPage: React.FC = () => {
     };
 
     return (
-        <Layout>
+        <>
             <ButtonContainer>
-                <GenerateTableButton onClick={() => openModal("Most Machine")}>Most Machine</GenerateTableButton>
-                <GenerateTableButton onClick={() => openModal("Field Count Table Per Crop")}>Field Count Table Per Crop</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Most Machine")}>Generate Most Machine Table</GenerateTableButton>
+                <GenerateTableButton onClick={() => openModal("Field Count Table Per Crop")}>Generate Field Count Table Per Crop table</GenerateTableButton>
                 <GenerateTableButton onClick={() => openModal("Soil Table")}>Generate Soil Table</GenerateTableButton>
                 <GenerateTableButton onClick={() => openModal("Processing Report Table")}>Generate Processing Report Table</GenerateTableButton>
             </ButtonContainer>
@@ -92,7 +91,7 @@ const ReportPage: React.FC = () => {
                     </MinimizedTableButton>
                 ))}
             </BottomBar>
-        </Layout>
+        </>
     );
 };
 
