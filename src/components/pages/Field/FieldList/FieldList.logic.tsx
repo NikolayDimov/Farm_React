@@ -32,9 +32,6 @@ const useFieldList = ({ fetchFields }: UseFieldListProps) => {
         // Convert [number, number][] to [number, number][][]
         const updatedCoordsArray: [number, number][][] = [updatedCoords];
 
-        // Clear the state explicitly
-        setUpdatedCoordinates(undefined);
-
         // Set the state with the converted type
         setUpdatedCoordinates(updatedCoordsArray);
         console.log("List logic Coordinates coming", updatedCoordsArray);

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 export const NavbarContainer = styled.nav`
     background-color: #00205b;
     padding: 20px;
+    z-index: 1000;
 `;
 
 export const ContentWrapper = styled.div`

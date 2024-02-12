@@ -70,13 +70,13 @@ const ProcessingList: React.FC<ProcessingListProps> = ({
                 {Array.isArray(filteredItems) ? (
                     filteredItems.map((processing) => (
                         <ListItem key={processing.id}>
-                            <strong>Date:</strong> {new Date(processing.date).toLocaleDateString("en-GB")} |&nbsp;
-                            <strong>ProcessingType:</strong> {findProcessingTypeName(processing.processingTypeId)} |&nbsp;
-                            <strong>Field:</strong> {findGrowingCropPeriodField(processing.growingCropPeriodId)} |&nbsp;
-                            <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)} |&nbsp;
-                            <strong>Machine:</strong> {findMachineName(processing.machineId)} |&nbsp;
-                            <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)} |&nbsp;
-                            <strong>Soil:</strong> {findSoilNameForProcessing(processing.growingCropPeriodId)} |&nbsp;
+                            <strong>Date:</strong> {new Date(processing.date).toLocaleDateString("en-GB")}
+                            <strong>ProcessingType:</strong> {findProcessingTypeName(processing.processingTypeId)}
+                            <strong>Field:</strong> {findGrowingCropPeriodField(processing.growingCropPeriodId)}
+                            <strong>Crop:</strong> {findGrowingCropPeriodCrop(processing.growingCropPeriodId)}
+                            <strong>Machine:</strong> {findMachineName(processing.machineId)}
+                            <strong>Farm:</strong> {findFarmNameByMachineId(processing.machineId)}
+                            <strong>Soil:</strong> {findSoilNameForProcessing(processing.growingCropPeriodId)}
                             <ButtonContainer>
                                 <DetailsIcon
                                     onClick={() => {

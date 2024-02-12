@@ -14,7 +14,6 @@ import NotFound from "./components/pages/NotFound/NotFound";
 function App() {
     return (
         <AuthProvider>
-            {/* <Navbar /> */}
             <Routes>
                 <Route element={<WithoutNavbar />}>
                     <Route path={routes.login} element={<Login />} />

@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import UserRoleHOC from "../UserRoleHOC";
 import useProcessing from "./Processing.logic";
 import ProcessingList from "./ProcessingList/ProcessingList";
+import { StyledButton, StyledForm, StyledLabel, StyledSelect } from "../../common/InputFiled/InputFieldMachineAndField.styles";
 
 const Processing: React.FC = () => {
     const {
@@ -32,12 +33,12 @@ const Processing: React.FC = () => {
             <UserRoleHOC>
                 <div>
                     <h3>Add a New Processing</h3>
-                    <form onSubmit={createProcessing}>
-                        <label>Processing date:</label>
+                    <StyledForm onSubmit={createProcessing}>
+                        <StyledLabel>Processing date:</StyledLabel>
                         <DatePicker selected={createdValues.newProcessingDate} onChange={(date: Date) => setCreatedValues((state) => ({ ...state, newProcessingDate: date }))} />
 
-                        <label>Processing Type:</label>
-                        <select name="processingTypeId" value={createdValues.processingTypeId} onChange={changeHandler}>
+                        <StyledLabel>Processing Type:</StyledLabel>
+                        <StyledSelect name="processingTypeId" value={createdValues.processingTypeId} onChange={changeHandler}>
                             <option key="" value="">
                                 Select Processing Type
                             </option>
@@ -46,10 +47,10 @@ const Processing: React.FC = () => {
                                     {processingType.name}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
 
-                        <label>Field:</label>
-                        <select name="fieldId" value={createdValues.fieldId} onChange={changeHandler}>
+                        <StyledLabel>Field:</StyledLabel>
+                        <StyledSelect name="fieldId" value={createdValues.fieldId} onChange={changeHandler}>
                             <option key="" value="">
                                 Select Field
                             </option>
@@ -58,10 +59,10 @@ const Processing: React.FC = () => {
                                     {field.name}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
 
-                        <label>Crop:</label>
-                        <select name="cropId" value={createdValues.cropId} onChange={changeHandler}>
+                        <StyledLabel>Crop:</StyledLabel>
+                        <StyledSelect name="cropId" value={createdValues.cropId} onChange={changeHandler}>
                             <option key="" value="">
                                 Select Crop
                             </option>
@@ -70,10 +71,10 @@ const Processing: React.FC = () => {
                                     {crop.name}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
 
-                        <label>Machine:</label>
-                        <select name="machineId" value={createdValues.machineId} onChange={changeHandler}>
+                        <StyledLabel>Machine:</StyledLabel>
+                        <StyledSelect name="machineId" value={createdValues.machineId} onChange={changeHandler}>
                             <option key="" value="">
                                 Select Machine
                             </option>
@@ -82,13 +83,13 @@ const Processing: React.FC = () => {
                                     {machine.brand}, {machine.model}, {machine.registerNumber}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
 
                         {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                        <button type="submit" disabled={loading}>
-                            {loading ? "Creating Processing..." : "Create processing"}
-                        </button>
-                    </form>
+                        <StyledButton type="submit" disabled={loading}>
+                            <span>{loading ? "Add Processing..." : "Add processing"}</span>
+                        </StyledButton>
+                    </StyledForm>
                 </div>
             </UserRoleHOC>
 

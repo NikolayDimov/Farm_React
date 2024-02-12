@@ -43,7 +43,7 @@ const Sidebar = styled.div`
     justify-content: space-between;
     width: 150px;
     padding: 20px;
-    background-color: #f0f0f0;
+    background-color: rgba(255, 255, 255, 0.8);
     z-index: 2;
     height: 100vh;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

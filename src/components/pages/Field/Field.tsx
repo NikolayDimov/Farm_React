@@ -5,6 +5,8 @@ import FieldList from "./FieldList/FieldList";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";
 import { GOOGLE_MAPS_API_KEY } from "./Field.static";
 import ErrorBoundary from "./FieldList/ErrorBoundary";
+import { StyledButton } from "../../common/InputFiled/InputField.styles";
+import { StyledForm, StyledInput, StyledLabel, StyledSelect } from "../../common/InputFiled/InputFieldMachineAndField.styles";
 const libraries: ("drawing" | "geometry")[] = ["drawing"];
 
 const Field: React.FC = () => {
@@ -49,37 +51,37 @@ const Field: React.FC = () => {
             <div>
                 <UserRoleHOC>
                     <h3>Add a New Field</h3>
-                    <form onSubmit={createField}>
-                        <label>Field name:</label>
-                        <input type="text" name="newFieldName" value={createdValues.newFieldName} onChange={changeHandler} />
-                        <label>Farm:</label>
-                        <select name="newFarmId" value={createdValues.newFarmId} onChange={changeHandler}>
+                    <StyledForm onSubmit={createField}>
+                        <StyledLabel>Field name:</StyledLabel>
+                        <StyledInput type="text" placeholder="Add Field Name" name="newFieldName" value={createdValues.newFieldName} onChange={changeHandler} />
+                        <StyledLabel>Farm:</StyledLabel>
+                        <StyledSelect name="newFarmId" value={createdValues.newFarmId} onChange={changeHandler}>
                             <option value="">Select Farm</option>
                             {farms.map((farm) => (
                                 <option key={farm.id} value={farm.id}>
                                     {farm.name}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
                         <label>Soil:</label>
-                        <select name="newSoilId" value={createdValues.newSoilId} onChange={changeHandler}>
+                        <StyledSelect name="newSoilId" value={createdValues.newSoilId} onChange={changeHandler}>
                             <option value="">Select Soil</option>
                             {soils.map((soil) => (
                                 <option key={soil.id} value={soil.id}>
                                     {soil.name}
                                 </option>
                             ))}
-                        </select>
+                        </StyledSelect>
                         {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                        <button type="submit" disabled={loading}>
-                            {loading ? "Creating Field..." : "Create Field"}
-                        </button>
-                    </form>
+                        <StyledButton type="submit" disabled={loading}>
+                            <span>{loading ? "Add Field..." : "Add Field"}</span>
+                        </StyledButton>
+                    </StyledForm>
                 </UserRoleHOC>
 
                 <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries} onLoad={() => setMapLoaded(true)}>
                     {mapLoaded && (
-                        <GoogleMap center={mapCenter} zoom={mapZoom} mapContainerStyle={{ height: "500px", width: "100%" }}>
+                        <GoogleMap center={mapCenter} zoom={mapZoom} mapContainerStyle={{ height: "600px", width: "100%" }}>
                             <DrawingManager
                                 options={{
                                     drawingControl: true,

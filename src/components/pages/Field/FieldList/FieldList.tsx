@@ -132,8 +132,8 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
                 {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
                     filteredItems.map((field) => (
                         <ListItem key={field.id}>
-                            <strong>Name:</strong> {field.name} |&nbsp;
-                            <strong>Farm:</strong> {findFarmName(field.farmId)} |&nbsp;
+                            <strong>Name:</strong> {field.name}
+                            <strong>Farm:</strong> {findFarmName(field.farmId)}
                             <strong>Soil:</strong> {findSoilName(field.soilId)}
                             <UserRoleHOC>
                                 <ButtonContainer>

@@ -47,7 +47,7 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
                         <ListItem key={farm.id}>
                             {farm.name}
                             <ButtonContainer>
-                                <button onClick={() => showFarmLocationOnMap(farm.location?.coordinates || [])}>Show Pin</button>
+                                <button onClick={() => showFarmLocationOnMap(farm.location?.coordinates || [])}>Show Farm Location</button>
                                 <DetailsIcon
                                     onClick={() => {
                                         onDetailsClick(farm.id || "");

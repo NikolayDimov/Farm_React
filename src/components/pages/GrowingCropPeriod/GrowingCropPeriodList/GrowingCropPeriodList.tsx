@@ -20,7 +20,7 @@ const GrowingCropPeriodList: React.FC<GrowingCropPeriodListProps> = ({ growingCr
                 {Array.isArray(growingCropPeriods) && growingCropPeriods.length > 0 ? (
                     growingCropPeriods.map((gcp) => (
                         <ListItem key={gcp.id}>
-                            <strong>Farm:</strong> {findFieldName(gcp.fieldId)} |&nbsp;
+                            <strong>Farm:</strong> {findFieldName(gcp.fieldId)}
                             <strong>Soil:</strong> {findCropName(gcp.cropId)}
                         </ListItem>
                     ))

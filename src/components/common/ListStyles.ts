@@ -20,4 +20,5 @@ export const ListItem = styled.li`
     padding: 10px;
     margin-bottom: 5px;
     backdrop-filter: blur(5px);
+    gap: 10px;
 `;

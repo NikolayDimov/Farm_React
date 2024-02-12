@@ -14,8 +14,7 @@ import Contacts from "../pages/Home/HomePages/Contact.tsx";
 
 const ServicePage: React.FC = () => {
     const [selectedComponent, setSelectedComponent] = useState<string | null>("Field");
-    const { user } = useAuth();
-    const { isLoggedIn, logout } = useAuth();
+    const { logout } = useAuth();
     const handleLogout = async () => {
         await logout();
     };
@@ -26,6 +25,7 @@ const ServicePage: React.FC = () => {
 
     return (
         <Layout>
+            <BackgroundImage />
             <PageContainer>
                 <Sidebar>
                     <TopButtonsContainer>
@@ -47,55 +47,46 @@ const ServicePage: React.FC = () => {
                 <Content>
                     {selectedComponent === "Farm" && (
                         <Container>
-                            <BackgroundImage />
                             <Farm />
                         </Container>
                     )}
                     {selectedComponent === "Field" && (
                         <Container>
-                            <BackgroundImage />
                             <Field />
                         </Container>
                     )}
                     {selectedComponent === "Soil" && (
                         <Container>
-                            <BackgroundImage />
                             <Soil />
                         </Container>
                     )}
                     {selectedComponent === "Crop" && (
                         <Container>
-                            <BackgroundImage />
                             <Crop />
                         </Container>
                     )}
                     {selectedComponent === "Processing Type" && (
                         <Container>
-                            <BackgroundImage />
                             <ProcessingType />
                         </Container>
                     )}
                     {selectedComponent === "Machine" && (
                         <Container>
-                            <BackgroundImage />
                             <Machine />
                         </Container>
                     )}
                     {selectedComponent === "Processing" && (
                         <Container>
-                            <BackgroundImage />
                             <Processing />
                         </Container>
                     )}
                     {selectedComponent === "Reports" && (
                         <Container>
-                            <BackgroundImage />
                             <ReportPage />
                         </Container>
                     )}
                     {selectedComponent === "Contacts" && (
                         <Container>
-                            <BackgroundImage />
                             <Contacts />
                         </Container>
                     )}

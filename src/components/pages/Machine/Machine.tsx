@@ -3,6 +3,7 @@ import useMachine from "./Machine.logic";
 import UserRoleHOC from "../UserRoleHOC";
 import MachineList from "./MachineList/MachineList";
 import TransferMachine from "./TransferMachine/TransferMachine";
+import { StyledForm, StyledLabel, StyledSelect, StyledButton, StyledInput } from "../../common/InputFiled/InputFieldMachineAndField.styles";
 
 const Machine: React.FC = () => {
     const { createdValues, createMachine, changeHandler, machines, farms, errorMessage, loading, findFarmName, fetchMachines, setTransferMode, transferMode, onTransferSuccess } =
@@ -12,27 +13,38 @@ const Machine: React.FC = () => {
         <>
             <UserRoleHOC>
                 <h3>Add a New Machine</h3>
-                <form onSubmit={createMachine}>
-                    <label>Machine Brand:</label>
-                    <input type="text" name="newMachineBrand" value={createdValues.newMachineBrand} onChange={changeHandler} />
-                    <label>Machine Model:</label>
-                    <input type="text" name="newMachineModel" value={createdValues.newMachineModel} onChange={changeHandler} />
-                    <label>Machine Register Number:</label>
-                    <input type="text" name="newMachineRegNumber" value={createdValues.newMachineRegNumber} onChange={changeHandler} />
-                    <label>Farm:</label>
-                    <select name="newMachineFarmId" value={createdValues.newMachineFarmId} onChange={changeHandler}>
+                <StyledForm onSubmit={createMachine}>
+                    <StyledLabel>Machine Brand:</StyledLabel>
+                    <StyledInput type="text" placeholder="Enter Machine Brand" name="newMachineBrand" value={createdValues.newMachineBrand} onChange={changeHandler} />
+
+                    <StyledLabel>Machine Model:</StyledLabel>
+                    <StyledInput type="text" placeholder="Enter Machine Model" name="newMachineModel" value={createdValues.newMachineModel} onChange={changeHandler} />
+
+                    <StyledLabel>Machine Register Number:</StyledLabel>
+                    <StyledInput
+                        type="text"
+                        placeholder="Enter Machine Register Number"
+                        name="newMachineRegNumber"
+                        value={createdValues.newMachineRegNumber}
+                        onChange={changeHandler}
+                    />
+
+                    <StyledLabel>Farm:</StyledLabel>
+                    <StyledSelect name="newMachineFarmId" value={createdValues.newMachineFarmId} onChange={changeHandler}>
                         <option value="">Select Farm</option>
                         {farms.map((farm) => (
                             <option key={farm.id} value={farm.id}>
                                 {farm.name}
                             </option>
                         ))}
-                    </select>
+                    </StyledSelect>
+
                     {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-                    <button type="submit" disabled={loading}>
-                        {loading ? "Creating Machine..." : "Create Machine"}
-                    </button>
-                </form>
+
+                    <StyledButton type="submit" disabled={loading}>
+                        <span>{loading ? "Add Machine..." : "Add Machine"}</span>
+                    </StyledButton>
+                </StyledForm>
             </UserRoleHOC>
 
             <MachineList machines={machines} farms={farms} findFarmName={findFarmName} fetchMachines={fetchMachines} />

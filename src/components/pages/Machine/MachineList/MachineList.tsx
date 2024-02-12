@@ -52,9 +52,9 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                 {Array.isArray(filteredItems) ? (
                     filteredItems.map((machine) => (
                         <ListItem key={machine.id}>
-                            <strong>Brand:</strong> {machine.brand} |&nbsp;
-                            <strong>Model:</strong> {machine.model} |&nbsp;
-                            <strong>Register Number:</strong> {machine.registerNumber} |&nbsp;
+                            <strong>Brand:</strong> {machine.brand}
+                            <strong>Model:</strong> {machine.model}
+                            <strong>Register Number:</strong> {machine.registerNumber}
                             <strong>Farm:</strong> {findFarmName(machine.farmId)}
                             <ButtonContainer>
                                 <DetailsIcon
