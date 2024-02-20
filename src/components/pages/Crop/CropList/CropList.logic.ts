@@ -96,13 +96,16 @@ const useCropList = ({ fetchCrops }: UseCropListProps) => {
     };
 
     const onEditConfirm = async () => {
+        console.log("Entering onEditConfirm before try");
         try {
+            console.log("Entering onEditConfirm");
             if (selectedCropIdForEdit) {
                 await onEditCrop(selectedCropIdForEdit, currentCropName);
-                fetchCrops();
+                await fetchCrops();
             }
 
             console.log("onEditConfirm", currentCropName);
+            console.log("Exiting onEditConfirm");
 
             setSelectedCropIdForEdit(null);
             setCurrentCropName("");

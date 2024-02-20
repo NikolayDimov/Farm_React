@@ -6,8 +6,8 @@ import Register from "./components/pages/Auth/Register/Register";
 import WithNavbar from "./components/common/Navbar/ToggleWithNavbar";
 import WithoutNavbar from "./components/common/Navbar/ToggleWithoutNavbar";
 import { routes } from "./static/routes";
-import PageLayout from "./components/BaseLayout/BaseLayout";
 import { BackgroundImage, GlobalStyles } from "./components/BaseLayout/BaseLayout.style";
+import BaseLayout from "./components/BaseLayout/BaseLayout";
 
 function App() {
     return (
@@ -22,7 +22,7 @@ function App() {
                 </Route>
                 <Route element={<AuthGuard />}>
                     <Route element={<WithNavbar />}>
-                        <Route path="/*" element={<PageLayout />} />
+                        <Route path="/*" element={<BaseLayout />} />
                     </Route>
                 </Route>
             </Routes>

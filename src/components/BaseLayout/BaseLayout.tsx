@@ -1,6 +1,6 @@
 import { routes } from "../../static/routes";
 import Sidebar from "../common/Sidebar/Sidebar";
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import Farm from "../pages/Farm/Farm";
 import Field from "../pages/Field/Field";
 import Crop from "../pages/Crop/Crop";
@@ -13,7 +13,7 @@ import NotFound from "../pages/NotFound/NotFound";
 import { Container, MainContainer, PageWrapper, SidebarWrapper } from "./BaseLayout.style";
 import Contact from "../pages/Home/HomePages/Contact";
 
-const PageLayout = () => {
+const BaseLayout = () => {
     return (
         <PageWrapper>
             <SidebarWrapper>
@@ -39,4 +39,4 @@ const PageLayout = () => {
     );
 };
 
-export default PageLayout;
+export default BaseLayout;

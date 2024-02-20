@@ -25,7 +25,6 @@ export const StyledModalContainer = styled.div<ModalProps>`
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    /* width: ${($props) => ($props.$confirmation ? "600px" : "800px")}; */
     text-align: center;
     padding-left: ${(props) => (props.$confirmation ? "20px" : "40px")};
     padding-right: ${(props) => (props.$confirmation ? "20px" : "40px")};

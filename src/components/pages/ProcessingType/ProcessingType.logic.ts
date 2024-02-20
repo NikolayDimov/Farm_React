@@ -52,7 +52,7 @@ const useProcessingType = () => {
                     setError(errorMsg);
                 }
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log("errorMessage", error);
         }
     };
