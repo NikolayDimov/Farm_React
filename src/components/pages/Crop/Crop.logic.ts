@@ -17,6 +17,7 @@ const useCrop = () => {
         try {
             const cropData = await apiCrop.fetchCrops();
             setCrops(cropData.data);
+            // setCrops([...cropData.data.reverse()]);
         } catch (error) {
             console.error("Error in fetching crops", error);
         }

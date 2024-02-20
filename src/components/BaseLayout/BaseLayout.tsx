@@ -1,6 +1,6 @@
 import { routes } from "../../static/routes";
 import Sidebar from "../common/Sidebar/Sidebar";
-import { Outlet, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Farm from "../pages/Farm/Farm";
 import Field from "../pages/Field/Field";
 import Crop from "../pages/Crop/Crop";
