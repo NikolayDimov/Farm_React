@@ -10,7 +10,10 @@ import useFilter from "../../../../utils/search";
 import SearchBar from "../../../common/SearchBar/SearchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
-import Modal from "../../../common/ModalList/Modal";
+import { useNavigate } from "react-router-dom";
+import DetailsSoilModal from "./SoilListModal/DetailsModal";
+import EditSoilModal from "./SoilListModal/EditModal";
+import DeleteSoilModal from "./SoilListModal/DeleteModal";
 
 interface SoilListProps {
     soils: SoilProp[];
@@ -26,6 +29,7 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
     const { isVisible: isDeleteModalVisible, showModal: showDeleteModal, hideModal: hideDeleteModal } = useModal();
     const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
     const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
+    const navigate = useNavigate();
 
     return (
         <ListContainer>
@@ -41,6 +45,7 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                                     onClick={() => {
                                         onDetailsClick(soil.id || "");
                                         showDetailsModal();
+                                        navigate(`/soil/${soil.id}/details`);
                                     }}
                                 />
                                 <UserRoleHOC>
@@ -48,12 +53,14 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                                         onClick={() => {
                                             onEditClick(soil.id || "", soil.name);
                                             showEditModal();
+                                            navigate(`/soil/${soil.id}/edit`);
                                         }}
                                     />
                                     <DeleteIcon
                                         onClick={() => {
                                             onDeleteClick(soil.id || "");
                                             showDeleteModal();
+                                            navigate(`/soil/${soil.id}/delete`);
                                         }}
                                     />
                                 </UserRoleHOC>
@@ -65,21 +72,19 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                 )}
             </List>
 
-            <Modal isVisible={isEditModalVisible} hideModal={hideEditModal} onConfirm={onEditConfirm} showConfirmButton={true}>
-                <p>Current Soil Name: {originalSoilName}</p>
-                <input type="text" placeholder="Enter new soil name" value={currentSoilName} onChange={(e) => setCurrentSoilName(e.target.value)} />
-            </Modal>
-            <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
-                <p>Are you sure you want to delete this soil?</p>
-            </Modal>
-            <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
-                <p>Soil Details:</p>
-                {soilDetails && (
-                    <div>
-                        <p>Soil Name: {soilDetails.name}</p>
-                    </div>
-                )}
-            </Modal>
+            {isDeleteModalVisible && <DeleteSoilModal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onDeleteConfirm={onDeleteConfirm} />}
+
+            {isEditModalVisible && originalSoilName !== undefined && (
+                <EditSoilModal
+                    isVisible={isEditModalVisible}
+                    hideModal={hideEditModal}
+                    currentSoilName={originalSoilName}
+                    onConfirm={onEditConfirm}
+                    setCurrentSoilName={setCurrentSoilName}
+                />
+            )}
+
+            {isDetailsModalVisible && soilDetails !== undefined && <DetailsSoilModal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} soilDetails={soilDetails} />}
         </ListContainer>
     );
 };

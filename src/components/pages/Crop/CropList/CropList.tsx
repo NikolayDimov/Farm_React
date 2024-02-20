@@ -87,7 +87,7 @@
 
 // export default CropList;
 
-import React, { useEffect } from "react";
+import React from "react";
 import EditIcon from "../../../common/icons/EditIcon";
 import DeleteIcon from "../../../common/icons/DeleteIcon";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
