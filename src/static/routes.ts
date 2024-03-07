@@ -8,6 +8,7 @@ export const routes = {
     soil: "/soil",
     crop: "/crop",
     processingType: "/processingType",
+    updateProcessingType: ":PTId/update",
     machine: "/machine",
     processing: "/processing",
     reports: "/reports",

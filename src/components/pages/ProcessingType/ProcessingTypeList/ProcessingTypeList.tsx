@@ -11,6 +11,8 @@ import SearchBar from "../../../common/SearchBar/SearchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
+import { useLocation, useNavigate } from "react-router-dom";
+import { routes } from "../../../../static/routes";
 
 interface ProcessingTypeListProps {
     processingTypes: ProcessingTypeProp[];
@@ -35,6 +37,9 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
     const { isVisible: isEditModalVisible, showModal: showEditModal, hideModal: hideEditModal } = useModal();
     const { isVisible: isDetailsModalVisible, showModal: showDetailsModal, hideModal: hideDetailsModal } = useModal();
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     return (
         <ListContainer>
             <ListHeader>ProcessingType List</ListHeader>
@@ -56,6 +61,9 @@ const ProcessingTypeList: React.FC<ProcessingTypeListProps> = ({ processingTypes
                                         onClick={() => {
                                             onEditClick(processingType.id || "", processingType.name);
                                             showEditModal();
+                                            // navigate(routes.updateProcessingType.replace(":PTId", `${processingType.id}`), {
+                                            //     state: { background: location, processingType: processingType },
+                                            // });
                                         }}
                                     />
                                     <DeleteIcon

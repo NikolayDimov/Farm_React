@@ -1,4 +1,4 @@
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { BottomButtonsContainer, LogoutButton, SidebarButton, SidebarContainer, TopButtonsContainer } from "./Sidebar.style";
 
 const Sidebar = () => {
@@ -16,6 +16,7 @@ const Sidebar = () => {
                 <SidebarButton to="/crop">Crop</SidebarButton>
                 <SidebarButton to="/soil">Soil</SidebarButton>
                 <SidebarButton to="/processingType">Processing Type</SidebarButton>
+                <SidebarButton to="/machine">Machine</SidebarButton>
                 <SidebarButton to="/processing">Processing</SidebarButton>
                 <SidebarButton to="/reports">Reports</SidebarButton>
             </TopButtonsContainer>

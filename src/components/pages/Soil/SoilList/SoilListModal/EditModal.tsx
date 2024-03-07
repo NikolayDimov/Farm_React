@@ -9,13 +9,7 @@ interface EditModalProps {
     onConfirm: (newSoilName: string) => void;
 }
 
-const EditSoilModal: React.FC<EditModalProps> = ({
-    isVisible,
-    hideModal,
-    currentSoilName,
-    setCurrentSoilName, // Add this prop
-    onConfirm,
-}) => {
+const EditSoilModal: React.FC<EditModalProps> = ({ isVisible, hideModal, currentSoilName, setCurrentSoilName, onConfirm }) => {
     const [newSoilName, setNewSoilName] = useState(currentSoilName);
 
     useEffect(() => {

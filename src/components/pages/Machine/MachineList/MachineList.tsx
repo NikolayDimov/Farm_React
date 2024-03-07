@@ -89,17 +89,26 @@ const MachineList: React.FC<MachineListProps> = ({ machines, fetchMachines, find
                 <p>Current Machine Brand: {originalMachineBrand}</p>
                 <p>Current Machine Model: {originalMachineModel}</p>
                 <p>Current Machine Register Number: {originalMachineRegisterNumber}</p>
-                <input type="text" placeholder="Enter new machine brand" value={currentMachineBrand} onChange={(e) => setCurrentMachineBrand(e.target.value)} />
-                <input type="text" placeholder="Enter new machine model" value={currentMachineModel} onChange={(e) => setCurrentMachineModel(e.target.value)} />
-                <input
-                    type="text"
-                    placeholder="Enter new machine regoster number"
-                    value={currentMachineRegisterNumber}
-                    onChange={(e) => setCurrentMachineRegisterNumber(e.target.value)}
-                />
+                <div>
+                    <label htmlFor="brand">Machine Brand:</label>
+                    <input type="text" placeholder="Enter new machine brand" value={currentMachineBrand} onChange={(e) => setCurrentMachineBrand(e.target.value)} />
+                </div>
+                <div>
+                    <label htmlFor="model">Machine Model:</label>
+                    <input type="text" placeholder="Enter new machine model" value={currentMachineModel} onChange={(e) => setCurrentMachineModel(e.target.value)} />
+                </div>
+                <div>
+                    <label htmlFor="registerNumber">Machine Register Number:</label>
+                    <input
+                        type="text"
+                        placeholder="Enter new machine regoster number"
+                        value={currentMachineRegisterNumber}
+                        onChange={(e) => setCurrentMachineRegisterNumber(e.target.value)}
+                    />
+                </div>
             </Modal>
             <Modal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onConfirm={onDeleteConfirm} showConfirmButton={true}>
-                <p>Are you sure you want to delete this machine?</p>
+                <p>Are you sure you want to delete this machine</p>
             </Modal>
             <Modal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} showConfirmButton={false}>
                 <p>Machine Details:</p>

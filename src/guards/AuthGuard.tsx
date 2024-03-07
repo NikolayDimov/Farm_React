@@ -1,48 +1,25 @@
-
-import { useEffect, useState } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../context/AuthContext/AuthContext";
 
 export default function AuthGuard() {
-  const { isAuthenticated } = useAuth();
-  const [loading, setLoading] = useState(true);
+    const { isAuthenticated } = useAuth();
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setLoading(false);
-  }, [isAuthenticated]);
+    useEffect(() => {
+        setLoading(false);
+    }, [isAuthenticated]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
+    if (!isAuthenticated) {
+        return <Navigate to="/" />;
+    }
 
-  return <Outlet />;
+    return <Outlet />;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import { Navigate, Outlet } from 'react-router-dom';
 // import { useAuth } from "../context/AuthContext";

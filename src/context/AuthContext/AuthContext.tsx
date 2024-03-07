@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { loginUser, registerUser } from "../services/apiService";
+import { loginUser, registerUser } from "../../services/apiService";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "./AuthContext.static";
 

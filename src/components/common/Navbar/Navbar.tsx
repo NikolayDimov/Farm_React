@@ -1,4 +1,4 @@
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/AuthContext/AuthContext";
 import { routes } from "../../../static/routes";
 
 import { NavbarContainer, ContentWrapper, Logo, NavbarButtons, UserRoleText, WelcomeTitle } from "./Navbar.styles";

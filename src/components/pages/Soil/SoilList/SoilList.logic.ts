@@ -94,7 +94,7 @@ const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
         }
     };
 
-    const onEditConfirm = async () => {
+    const onEditSoilConfirm = async () => {
         try {
             if (selectedSoilIdForEdit) {
                 await onEditSoil(selectedSoilIdForEdit, currentSoilName);
@@ -116,7 +116,7 @@ const useSoilList = ({ fetchSoils }: UseSoilListProps) => {
         setCurrentSoilName,
         originalSoilName,
         onDeleteConfirm,
-        onEditConfirm,
+        onEditSoilConfirm,
         soilDetails,
     };
 };

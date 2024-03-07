@@ -1,6 +1,6 @@
-import { SignInDto, User } from "../context/AuthContext.static";
+import { SignInDto, User } from "../context/AuthContext/AuthContext.static";
 import { jwtDecode } from "jwt-decode";
-import { JwtPayload } from "../context/AuthContext.static";
+import { JwtPayload } from "../context/AuthContext/AuthContext.static";
 import { BASE_URL } from "../static/baseUrl";
 import { getUser } from "./authHeaders";
 

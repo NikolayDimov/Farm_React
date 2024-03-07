@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import AuthGuard from "./guards/AuthGuard";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext/AuthContext";
 import Login from "./components/pages/Auth/Login/Login";
 import Register from "./components/pages/Auth/Register/Register";
 import WithNavbar from "./components/common/Navbar/ToggleWithNavbar";

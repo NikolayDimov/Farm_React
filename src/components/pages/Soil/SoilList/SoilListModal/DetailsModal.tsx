@@ -5,7 +5,7 @@ import { Soil as SoilProp } from "../../Soil.static";
 interface DetailsSoilModalProps {
     isVisible: boolean;
     hideModal: () => void;
-    soilDetails: SoilProp | null;
+    soilDetails: SoilProp | undefined;
 }
 
 const DetailsSoilModal: React.FC<DetailsSoilModalProps> = ({ isVisible, hideModal, soilDetails }) => {

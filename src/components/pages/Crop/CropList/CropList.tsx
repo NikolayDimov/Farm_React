@@ -132,7 +132,7 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                                     onClick={() => {
                                         const cropId = crop.id;
                                         const currentPathname = location.pathname;
-                                        const newUrl = `${currentPathname}/${cropId}`;
+                                        const newUrl = `${currentPathname}/${cropId}/details`;
                                         window.history.pushState(null, "", newUrl);
                                         onDetailsClick(crop.id || "");
                                         showDetailsModal();
@@ -144,7 +144,7 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                                         onClick={() => {
                                             const cropId = crop.id;
                                             const currentPathname = location.pathname;
-                                            const newUrl = `${currentPathname}/${cropId}`;
+                                            const newUrl = `${currentPathname}/${cropId}/edit`;
                                             window.history.pushState(null, "", newUrl);
                                             onEditClick(crop.id || "", crop.name);
                                             showEditModal();
@@ -154,7 +154,7 @@ const CropList: React.FC<CropListProps> = ({ crops, fetchCrops }) => {
                                         onClick={() => {
                                             const cropId = crop.id;
                                             const currentPathname = location.pathname;
-                                            const newUrl = `${currentPathname}/${cropId}`;
+                                            const newUrl = `${currentPathname}/${cropId}/delete`;
                                             window.history.pushState(null, "", newUrl);
                                             onDeleteClick(crop.id || "");
                                             showDeleteModal();
