@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import AuthGuard from "./guards/AuthGuard";
 import { AuthProvider } from "./context/AuthContext/AuthContext";
 import Login from "./components/pages/Auth/Login/Login";
@@ -17,6 +17,7 @@ function App() {
 
             <Routes>
                 <Route element={<WithoutNavbar />}>
+                    <Route index element={<Navigate to={routes.login} />} />
                     <Route path={routes.login} element={<Login />} />
                     <Route path={routes.register} element={<Register />} />
                 </Route>
