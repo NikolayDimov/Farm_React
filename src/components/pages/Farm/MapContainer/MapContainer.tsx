@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface MapContainerProps {
     coordinates?: number[];
     onSelectLocation: (coordinates: number[]) => void;
-    onShowFarmClick: () => void; // Added onShowFarmClick prop
+    onShowFarmClick: () => void;
     selectedFarmCoordinates?: number[];
 }
 
@@ -56,11 +56,15 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
                     zoom: 5,
                 });
 
-                newMap.addListener("click", (event) => {
-                    const clickedCoordinates: number[] = [event.latLng.lat(), event.latLng.lng()];
-                    console.log("Selected coordinates:", clickedCoordinates);
-                    onSelectLocation(clickedCoordinates);
-                    dropPinOnMap(clickedCoordinates);
+                newMap.addListener("click", (event: google.maps.MapMouseEvent) => {
+                    if (event.latLng) {
+                        const clickedCoordinates: number[] = [event.latLng.lat(), event.latLng.lng()];
+                        console.log("Selected coordinates:", clickedCoordinates);
+                        onSelectLocation(clickedCoordinates);
+                        dropPinOnMap(clickedCoordinates);
+                    } else {
+                        console.log("No coordinates available for this click event.");
+                    }
                 });
 
                 map.current = newMap;

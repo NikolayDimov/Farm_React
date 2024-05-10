@@ -26,7 +26,14 @@ interface UseSoilListProps {
 //     fetchProcessingTypes: () => Promise<void>;
 // }
 
-const BaseLayout = ({ fetchSoils, fetchProcessingTypes }: { children: React.ReactNode; fetchSoils: () => Promise<void>; fetchProcessingTypes: () => Promise<void> }) => {
+const BaseLayout = ({
+    fetchSoils = () => Promise.resolve(),
+    fetchProcessingTypes,
+}: {
+    children?: React.ReactNode;
+    fetchSoils?: () => Promise<void>;
+    fetchProcessingTypes?: () => Promise<void>;
+}) => {
     const location = useLocation();
     const background = location.state as { background?: Location };
 
@@ -54,7 +61,16 @@ const BaseLayout = ({ fetchSoils, fetchProcessingTypes }: { children: React.Reac
                         <Route path={routes.crop} element={<Crop />} />
 
                         <Route path={routes.soil} element={<Soil />}>
-                            <Route path=":id/details" element={<DetailsSoilModal isVisible={isDetailsModalVisible} hideModal={hideDetailsModal} soilDetails={soilDetails} />} />
+                            <Route
+                                path=":id/details"
+                                element={
+                                    <DetailsSoilModal
+                                        isVisible={isDetailsModalVisible}
+                                        hideModal={hideDetailsModal}
+                                        soilDetails={soilDetails}
+                                    />
+                                }
+                            />
                             <Route
                                 path=":id/edit"
                                 element={
@@ -67,7 +83,16 @@ const BaseLayout = ({ fetchSoils, fetchProcessingTypes }: { children: React.Reac
                                     />
                                 }
                             />
-                            <Route path=":id/delete" element={<DeleteModal isVisible={isDeleteModalVisible} hideModal={hideDeleteModal} onDeleteConfirm={onDeleteConfirm} />} />
+                            <Route
+                                path=":id/delete"
+                                element={
+                                    <DeleteModal
+                                        isVisible={isDeleteModalVisible}
+                                        hideModal={hideDeleteModal}
+                                        onDeleteConfirm={onDeleteConfirm}
+                                    />
+                                }
+                            />
                         </Route>
 
                         <Route path={routes.processingType} element={<ProcessingType />} />
