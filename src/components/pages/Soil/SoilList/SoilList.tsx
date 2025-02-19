@@ -21,7 +21,7 @@ interface SoilListProps {
 }
 
 const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
-    const { onDeleteClick, onEditClick, onDetailsClick, setCurrentSoilName, originalSoilName, onDeleteConfirm, onEditConfirm, soilDetails } = useSoilList({
+    const { onDeleteClick, onEditClick, onDetailsClick, setCurrentSoilName, originalSoilName, onDeleteConfirm, onEditSoilConfirm, soilDetails } = useSoilList({
         fetchSoils,
     });
 
@@ -79,7 +79,7 @@ const SoilList: React.FC<SoilListProps> = ({ soils, fetchSoils }) => {
                     isVisible={isEditModalVisible}
                     hideModal={hideEditModal}
                     currentSoilName={originalSoilName}
-                    onConfirm={onEditConfirm}
+                    onConfirm={onEditSoilConfirm}
                     setCurrentSoilName={setCurrentSoilName}
                 />
             )}

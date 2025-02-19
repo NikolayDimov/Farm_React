@@ -1,5 +1,6 @@
 import React, { MouseEventHandler } from "react";
 import styled from "styled-components";
+import { TiDeleteOutline } from "react-icons/ti";
 
 interface DeleteIconProps {
     onClick: MouseEventHandler;
@@ -11,8 +12,8 @@ const RedDeleteIcon = styled.span`
 `;
 
 const DeleteIcon: React.FC<DeleteIconProps> = ({ onClick }) => (
-    <RedDeleteIcon onClick={onClick} role="img" aria-label="Delete">
-        ❌
+    <RedDeleteIcon onClick={onClick} aria-label="Delete">
+        <TiDeleteOutline />
     </RedDeleteIcon>
 );
 
