@@ -8,7 +8,7 @@ import { Machine as MachineProp } from "../Machine.static";
 import useMachineList from "../MachineList/MachineList.logic";
 import { Farm } from "../../Farm/Farm.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/SearchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";

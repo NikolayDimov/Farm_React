@@ -7,7 +7,7 @@ import UserRoleHOC from "../../UserRoleHOC";
 import useSoilList from "./SoilList.logic";
 import { Soil as SoilProp } from "../Soil.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/SearchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import { useNavigate } from "react-router-dom";

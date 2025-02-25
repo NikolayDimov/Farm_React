@@ -9,7 +9,7 @@ import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import UserRoleHOC from "../../UserRoleHOC";
 import useFieldList from "../FieldList/FieldList.logic";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/SearchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
 import { LoadScript, GoogleMap, DrawingManager, Polygon } from "@react-google-maps/api";

@@ -7,7 +7,7 @@ import UserRoleHOC from "../../UserRoleHOC";
 import useProcessingTypeList from "./ProcessingTypeList.logic";
 import { ProcessingType as ProcessingTypeProp } from "../ProcessingType.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/SearchBar/SearchBar";
+import SearchBar from "../../../common/searchBar/searchBar";
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
