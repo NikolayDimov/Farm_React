@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback, memo } from "react";
 import styled from "styled-components";
 
 interface MapContainerProps {
@@ -18,11 +18,11 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
     const markerRef = useRef<any | null>(null);
     const mapRef = useRef<google.maps.Map | null>(null);
 
-    const showFarmOnMap = () => {
+    const showFarmOnMap = useCallback(() => {
         if (coordinates && coordinates.length === 2 && mapRef.current) {
             dropPinOnMap(coordinates);
         }
-    };
+    }, [coordinates]);
 
     useEffect(() => {
         const initMap = () => {
@@ -69,7 +69,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
         }
     }, [onSelectLocation]);
 
-    const dropPinOnMap = async (coordinates: number[]) => {
+    const dropPinOnMap = useCallback(async (coordinates: number[]) => {
         if (!mapRef.current) {
             console.error("Map is not initialized.");
             return;
@@ -92,19 +92,19 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
         mapRef.current?.setCenter({ lat: coordinates[0], lng: coordinates[1] });
         mapRef.current?.setZoom(10);
         console.log("Pin dropped at coordinates:", coordinates);
-    };
+    }, []);
 
     useEffect(() => {
         if (coordinates && coordinates.length === 2 && mapRef.current) {
             dropPinOnMap(coordinates);
         }
-    }, [coordinates]);
+    }, [coordinates, dropPinOnMap]);
 
     useEffect(() => {
         if (selectedFarmCoordinates && selectedFarmCoordinates.length === 2 && mapRef.current) {
             dropPinOnMap(selectedFarmCoordinates);
         }
-    }, [selectedFarmCoordinates]);
+    }, [selectedFarmCoordinates, dropPinOnMap]);
 
     return (
         <StyledMapContainer ref={mapContainerRef}>
@@ -114,4 +114,8 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
     );
 };
 
-export default MapContainer;
+const areEqual = (prevProps: MapContainerProps, nextProps: MapContainerProps) => {
+    return prevProps.selectedFarmCoordinates === nextProps.selectedFarmCoordinates;
+};
+
+export default memo(MapContainer, areEqual);

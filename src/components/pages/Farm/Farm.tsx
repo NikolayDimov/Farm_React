@@ -1,23 +1,22 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import MapContainer from "./MapContainer/MapContainer";
 import useFarm from "./Farm.logic";
 import FarmList from "./FarmList/FarmList";
 import UserRoleHOC from "../UserRoleHOC";
 import InputField from "../../common/InputFiled/InputField";
-import { useState } from "react";
 
 const Farm: React.FC = () => {
     const { farms, createFarm, changeHandler, farmName, setNewFarmCoordinates, fetchFarms, error, formErrors, handleFarmNameBlur } = useFarm();
     const [selectedFarmCoordinates, setSelectedFarmCoordinates] = useState<number[]>([]);
 
-    const showFarmLocationOnMap = (coordinates: number[]) => {
+    const showFarmLocationOnMap = useCallback((coordinates: number[]) => {
         console.log("Show Farm Location on Map:", coordinates);
         setSelectedFarmCoordinates(coordinates);
-    };
+    }, []);
 
-    const handleShowFarmClick = () => {
+    const handleShowFarmClick = useCallback(() => {
         console.log("Show Farm clicked on the map!");
-    };
+    }, []);
 
     return (
         <>

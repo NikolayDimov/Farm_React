@@ -14,14 +14,14 @@
   <script type="module">
     const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
     const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
-    if (apiKey) {
+    if (apiKey && mapId) {
       const script = document.createElement('script');
       script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&map_ids=${mapId}`;
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
     } else {
-      console.error("Google Maps API key is not defined.");
+      console.error("Google Maps API key or Map ID is not defined.");
     }
   </script>
 </head>

@@ -7,10 +7,12 @@ import DeleteIcon from "../../../common/icons/DeleteIcon";
 import { ButtonContainer } from "../../../common/icons/ButtonContainer";
 import { Farm as FarmProp } from "../Farm.static";
 import useFilter from "../../../../utils/search";
-import SearchBar from "../../../common/SearchBar/SearchBar";
+
 import DetailsIcon from "../../../common/icons/DetailsIcon";
 import useModal from "../../../common/ModalList/useModal";
 import Modal from "../../../common/ModalList/Modal";
+import SearchBar from "../../../common/searchBar/searchBar";
+
 
 interface FarmListProps {
     farms: FarmProp[];
@@ -32,14 +34,6 @@ const FarmList: React.FC<FarmListProps> = ({ farms, fetchFarms, showFarmLocation
         <ListContainer>
             <ListHeader>Farm List</ListHeader>
             <SearchBar placeholder="Search by farm name" onSearch={setSearchQuery} />
-
-            {/* <List>
-                {Array.isArray(farms) && farms.length > 0 ? (
-                    farms.map((farm) => <FarmCard key={farm.id} farm={farm} onEditClick={onEditClick} onDeleteClick={onDeleteClick} />)
-                ) : (
-                    <ListItem>No farms available</ListItem>
-                )}
-            </List> */}
 
             <List>
                 {Array.isArray(filteredItems) && filteredItems.length > 0 ? (
