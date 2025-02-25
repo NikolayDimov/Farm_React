@@ -231,7 +231,7 @@ const FieldList: React.FC<FieldListProps> = ({ fields, soils, fetchFields, findF
 
                 <p>Current Field Name: {originalFieldName}</p>
                 <p>Current Field Soil: {findSoilName(selectedSoilId)}</p>
-                <input type="text" placeholder="Enter new machine brand" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />
+                <input type="text" placeholder="Enter new field name" value={currentFieldName} onChange={(e) => setCurrentFieldName(e.target.value)} />
                 <div>
                     <label>Select Soil:</label>
                     <select value={selectedSoilId} onChange={(e) => setSelectedSoilId(e.target.value)}>
