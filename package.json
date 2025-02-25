@@ -1,7 +1,7 @@
 {
-    "name": "my-app",
+    "name": "MyFarm",
     "private": true,
-    "version": "0.0.0",
+    "version": "1.0.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -10,8 +10,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@react-google-maps/api": "^2.19.2",
-        "@vis.gl/react-google-maps": "^0.5.4",
+        "@react-google-maps/api": "^2.20.6",
+        "@vis.gl/react-google-maps": "^1.5.1",
         "axios": "^1.6.5",
         "formik": "^2.4.5",
         "latest": "^0.2.0",
@@ -31,7 +31,7 @@
         "styled-components": "^6.1.8"
     },
     "devDependencies": {
-        "@types/google.maps": "^3.54.10",
+        "@types/google.maps": "^3.58.1",
         "@types/googlemaps": "^3.43.3",
         "@types/jwt-decode": "^3.1.0",
         "@types/loadjs": "^4.0.4",

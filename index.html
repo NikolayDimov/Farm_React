@@ -7,23 +7,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MyFarm</title>
 
-  <!-- Add the following script tags -->
+  <!-- Main entry point for React application -->
   <script type="module" src="/src/main.tsx"></script>
-  <script type="module">
-    window.onload = function () {
-      var script = document.createElement('script');
-      script.type = 'module';
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.GOOGLE_MAPS_API_KEY}&libraries=drawing`;
-      document.head.appendChild(script);
-    };
-  </script>
 
+  <!-- Load Google Maps API script asynchronously -->
+  <script type="module">
+    const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const mapId = import.meta.env.VITE_GOOGLE_MAPS_MAP_ID;
+    if (apiKey) {
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&map_ids=${mapId}`;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    } else {
+      console.error("Google Maps API key is not defined.");
+    }
+  </script>
 </head>
 
 <body>
   <div id="root"></div>
-
-  </script>
 </body>
 
 </html>

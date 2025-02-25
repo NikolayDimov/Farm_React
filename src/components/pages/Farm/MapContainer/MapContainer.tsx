@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 interface MapContainerProps {
@@ -15,61 +15,52 @@ const StyledMapContainer = styled.div`
 
 const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocation, onShowFarmClick, selectedFarmCoordinates }) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const [isNode, setIsNode] = useState<boolean>(false);
-    const marker = useRef<google.maps.Marker | null>(null);
-    const map = useRef<google.maps.Map | null>(null);
+    const markerRef = useRef<any | null>(null);
+    const mapRef = useRef<google.maps.Map | null>(null);
 
     const showFarmOnMap = () => {
-        if (coordinates && coordinates.length === 2 && map.current) {
+        if (coordinates && coordinates.length === 2 && mapRef.current) {
             dropPinOnMap(coordinates);
         }
     };
 
     useEffect(() => {
-        setIsNode(typeof process !== "undefined" && process.versions != null && process.versions.node != null);
-    }, []);
+        const initMap = () => {
+            if (!mapContainerRef.current) {
+                console.error("Map container element not found.");
+                return;
+            }
 
-    useEffect(() => {
-        const googleApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-        if (!googleApiKey) {
-            console.error("Google Maps API key is not defined.");
-            return;
-        }
-
-        const existingScript = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
-
-        if (!existingScript) {
-            const script = document.createElement("script");
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=places`;
-            script.async = true;
-            script.defer = true;
-
-            script.onload = () => {
-                if (!mapContainerRef.current) {
-                    console.error("Map container element not found.");
-                    return;
-                }
-
-                const newMap = new window.google.maps.Map(mapContainerRef.current, {
-                    center: { lat: 46, lng: 15 },
-                    zoom: 5,
-                });
-
-                newMap.addListener("click", (event: google.maps.MapMouseEvent) => {
-                    if (event.latLng) {
-                        const clickedCoordinates: number[] = [event.latLng.lat(), event.latLng.lng()];
-                        console.log("Selected coordinates:", clickedCoordinates);
-                        onSelectLocation(clickedCoordinates);
-                        dropPinOnMap(clickedCoordinates);
-                    } else {
-                        console.log("No coordinates available for this click event.");
-                    }
-                });
-
-                map.current = newMap;
+            const mapOptions: google.maps.MapOptions = {
+                center: { lat: 46, lng: 15 },
+                zoom: 5,
+                mapId: import.meta.env.VITE_GOOGLE_MAPS_MAP_ID
             };
 
+            const newMap = new google.maps.Map(mapContainerRef.current, mapOptions);
+
+            newMap.addListener("click", (event: google.maps.MapMouseEvent) => {
+                if (event.latLng) {
+                    const clickedCoordinates: number[] = [event.latLng.lat(), event.latLng.lng()];
+                    console.log("Selected coordinates:", clickedCoordinates);
+                    onSelectLocation(clickedCoordinates);
+                    dropPinOnMap(clickedCoordinates);
+                } else {
+                    console.log("No coordinates available for this click event.");
+                }
+            });
+
+            mapRef.current = newMap;
+        };
+
+        if (window.google && window.google.maps) {
+            initMap();
+        } else {
+            const script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places&map_ids=${import.meta.env.VITE_GOOGLE_MAPS_MAP_ID}`;
+            script.async = true;
+            script.defer = true;
+            script.onload = initMap;
             script.onerror = (error) => {
                 console.error("Error loading Google Maps script:", error);
             };
@@ -78,35 +69,42 @@ const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocati
         }
     }, [onSelectLocation]);
 
-    const dropPinOnMap = (coordinates: number[]) => {
-        if (marker.current) {
-            marker.current.setMap(null);
+    const dropPinOnMap = async (coordinates: number[]) => {
+        if (!mapRef.current) {
+            console.error("Map is not initialized.");
+            return;
         }
 
-        const newMarker = new window.google.maps.Marker({
+        if (markerRef.current) {
+            markerRef.current.map = null;
+        }
+
+        const { AdvancedMarkerElement }: any = await google.maps.importLibrary("marker");
+
+        const newMarker = new AdvancedMarkerElement({
             position: { lat: coordinates[0], lng: coordinates[1] },
-            map: map.current,
-            animation: window.google.maps.Animation.DROP,
+            map: mapRef.current,
         });
 
-        marker.current = newMarker;
+        markerRef.current = newMarker;
 
         // Set the map center to the coordinates of the pin
-        map.current?.setCenter({ lat: coordinates[0], lng: coordinates[1] });
-        map.current?.setZoom(10);
+        mapRef.current?.setCenter({ lat: coordinates[0], lng: coordinates[1] });
+        mapRef.current?.setZoom(10);
+        console.log("Pin dropped at coordinates:", coordinates);
     };
 
     useEffect(() => {
-        if (coordinates && coordinates.length === 2 && map.current) {
+        if (coordinates && coordinates.length === 2 && mapRef.current) {
             dropPinOnMap(coordinates);
         }
-    }, [coordinates, map]);
+    }, [coordinates]);
 
     useEffect(() => {
-        if (selectedFarmCoordinates && selectedFarmCoordinates.length === 2 && map.current) {
+        if (selectedFarmCoordinates && selectedFarmCoordinates.length === 2 && mapRef.current) {
             dropPinOnMap(selectedFarmCoordinates);
         }
-    }, [selectedFarmCoordinates, map]);
+    }, [selectedFarmCoordinates]);
 
     return (
         <StyledMapContainer ref={mapContainerRef}>
