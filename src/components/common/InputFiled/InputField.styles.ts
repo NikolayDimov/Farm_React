@@ -31,6 +31,11 @@ export const StyledButton = styled.button`
     border-radius: 5px;
     cursor: pointer;
 
+    &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
     span {
         font-size: 12px;
         font-weight: bold;
@@ -47,4 +52,10 @@ export const ErrorStylesMachine = styled.p`
     color: red;
     font-size: 12px;
     margin-left: 15px;
+`;
+
+export const Instructions = styled.p`
+    color: black;
+    font-size: 14px;
+    margin-bottom: 20px;
 `;

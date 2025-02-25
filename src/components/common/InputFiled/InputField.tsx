@@ -11,13 +11,14 @@ interface InputFieldProps {
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
     error?: string | null;
     buttonText?: string;
+    disabled?: boolean;
 }
 
-const InputField: React.FC<InputFieldProps> = ({ label, type, id, name, value, onChange, onBlur, error, buttonText }) => (
+const InputField: React.FC<InputFieldProps> = ({ label, type, id, name, value, onChange, onBlur, error, buttonText, disabled }) => (
     <FormGroup>
         <LabelForm htmlFor={id}>{label}</LabelForm>
         <StyledInput type={type} placeholder={`Enter your ${label.toLowerCase()}`} id={id} name={name} value={value} onChange={onChange} onBlur={onBlur} />
-        <StyledButton type="submit">
+        <StyledButton type="submit" disabled={disabled}>
             <span>{buttonText}</span>
         </StyledButton>
         {error !== undefined && error !== null && <ErrorStyles>{error}</ErrorStyles>}
