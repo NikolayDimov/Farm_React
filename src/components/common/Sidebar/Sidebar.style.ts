@@ -6,25 +6,23 @@ export const SidebarContainer = styled.div`
     flex-direction: column;
     justify-content: space-between;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 2;
+    background-color: rgba(255, 255, 255, 0.9);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 0 0 150px;
-    overflow-y: auto;
-    min-height: calc(100vh - 40px);
+    height: calc(100vh - 84px);
 `;
 
 export const TopButtonsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
 `;
 
 export const BottomButtonsContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2px;
-    margin-top: auto; /* Push it to the bottom */
+    margin-top: auto;
 `;
 
 export const SidebarButton = styled(Link)`

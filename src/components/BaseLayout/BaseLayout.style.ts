@@ -28,16 +28,18 @@ export const BackgroundImage = styled.div`
 `;
 
 export const Container = styled.div`
-    width: 100%;
-    max-width: 1400px;
-    margin: 0px auto;
-    padding: 15px;
+  flex: 1;
+  padding: 15px;
+  margin-left: 180px; 
+  overflow: hidden
 `;
 
 export const SidebarWrapper = styled.div`
-    flex: 0 0 150px;
-    height: 100%;
-    overflow-y: auto;
+  position: fixed;
+  left: 0;
+  width: 180px;
+  z-index: 10;
+  padding-bottom: 40px;
 `;
 
 export const MainContainer = styled.div`
@@ -45,9 +47,10 @@ export const MainContainer = styled.div`
     margin-left: 151px;
     padding: 20px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     margin: 0px auto;
+    overflow-y: auto;
 `;
