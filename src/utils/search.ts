@@ -13,16 +13,28 @@ interface UseFilterResult<T> {
 
 const useFilter = <T>({ items, initialItems }: UseFilterProps<T>): UseFilterResult<T> => {
     const [searchQuery, setSearchQuery] = useState<string>("");
+    const [debouncedQuery, setDebouncedQuery] = useState<string>(searchQuery);
     const [filteredItems, setFilteredItems] = useState<T[]>(initialItems || items);
+
+    // Debounce effect
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedQuery(searchQuery);
+        }, 800);
+
+        return () => clearTimeout(handler);
+    }, [searchQuery]);
+
 
     useEffect(() => {
         const filterItems = () => {
-            const filtered = items.filter((item) => JSON.stringify(item).toLowerCase().includes(searchQuery.toLowerCase()));
+            const filtered = items.filter((item) =>
+                JSON.stringify(item).toLowerCase().includes(debouncedQuery.toLowerCase()));
             setFilteredItems(filtered);
         };
 
         filterItems();
-    }, [items, searchQuery]);
+    }, [items, debouncedQuery]);
 
     return { filteredItems, setSearchQuery };
 };
