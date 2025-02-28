@@ -10,7 +10,9 @@ interface MapContainerProps {
 
 const StyledMapContainer = styled.div`
     height: 500px;
-    width: 100%;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;
 `;
 
 const MapContainer: React.FC<MapContainerProps> = ({ coordinates, onSelectLocation, onShowFarmClick, selectedFarmCoordinates }) => {

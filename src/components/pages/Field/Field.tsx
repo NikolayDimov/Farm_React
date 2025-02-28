@@ -81,7 +81,7 @@ const Field: React.FC = () => {
 
                 <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={libraries} onLoad={() => setMapLoaded(true)}>
                     {mapLoaded && (
-                        <GoogleMap center={mapCenter} zoom={mapZoom} mapContainerStyle={{ height: "600px", width: "100%" }}>
+                        <GoogleMap center={mapCenter} zoom={mapZoom} mapContainerStyle={{ height: "500px", width: "90%", margin: "0 auto", borderRadius: "10px" }}>
                             <DrawingManager
                                 options={{
                                     drawingControl: true,
@@ -112,7 +112,7 @@ const Field: React.FC = () => {
                         </GoogleMap>
                     )}
                 </LoadScript>
-            </div>
+            </div >
 
             <ErrorBoundary>
                 <FieldList

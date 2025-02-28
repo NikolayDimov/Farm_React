@@ -1,3 +1,7 @@
+// TODO
+// Currently mapcontainer is in Field.tsx
+// To check do I need this MapContainer.tsx for editing field boundary
+
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
@@ -10,8 +14,10 @@ interface MapContainerProps {
 }
 
 const StyledMapContainer = styled.div`
-    height: 500px;
-    width: 100%;
+   height: 500px;
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 10px;
 `;
 
 // const drawingManagerOptions = {
@@ -70,7 +76,7 @@ const MapContainer: React.FC<MapContainerProps> = ({ onSelectLocation, initialCo
                 onError={(error) => console.error("LoadScript error:", error)}
                 onLoad={() => console.log("LoadScript loaded successfully")}
             >
-                <GoogleMap center={{ lat: 46, lng: 15 }} zoom={5} mapContainerStyle={{ height: "100%", width: "100%" }} onLoad={onLoad} />
+                {/* <GoogleMap center={{ lat: 46, lng: 15 }} zoom={5} mapContainerStyle={{ height: "100%", width: "100%" }} onLoad={onLoad} /> */}
             </LoadScript>
         </StyledMapContainer>
     );
